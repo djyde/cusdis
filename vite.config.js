@@ -1,9 +1,11 @@
 module.exports = {
-  root: 'widget',
+  root: "widget",
   server: {
-    port: 3001
+    port: 3001,
   },
   plugins: [
-    require('rollup-plugin-svelte')()
-  ]
-}
+    require("rollup-plugin-svelte")({
+      emitCss: false
+    }),
+  ],
+};

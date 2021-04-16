@@ -1,4 +1,5 @@
 {
+  "name": "comment",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -6,19 +7,24 @@
     "db:migrate": "prisma migrate dev --preview-feature",
     "db:generate": "prisma generate",
     "admin": "prisma studio",
-    "widget": "vite --root widget"
+    "widget": "vite",
+    "build:widget": "vite build --config vite.library.config.js"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.1.4",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
     "@prisma/client": "^2.19.0",
+    "autoprefixer": "^10.2.5",
     "axios": "^0.21.1",
     "class-validator": "^0.13.1",
     "cors": "^2.8.5",
+    "dayjs": "^1.10.4",
     "framer-motion": "^3.2.1",
+    "milligram": "^1.4.1",
     "next": "^10.0.5",
     "next-auth": "^3.1.0",
+    "postcss": "^8.2.10",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^7.1.1",
@@ -28,6 +34,8 @@
     "rollup-plugin-svelte": "^7.1.0",
     "sqlite3": "^5.0.2",
     "svelte": "^3.37.0",
+    "svelte-preprocess": "^4.7.0",
+    "tailwindcss": "^2.1.1",
     "vite": "^2.1.5"
   },
   "devDependencies": {

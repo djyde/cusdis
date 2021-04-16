@@ -19,6 +19,7 @@
     appId,
     pageId
   })
+  setContext('refresh', getComments)
 
   async function getComments() {
     const res = await api.get(`/api/open/comments`, {
@@ -35,7 +36,7 @@
   });
 </script>
 
-<div>
+<div class="comment-main">
   {#if comments.length === 0}
     No comment
   {/if}
@@ -44,7 +45,13 @@
 
   <div>
     {#each comments as comment (comment.id)}
-      <Comment comment={comment} />
+      <Comment comment={comment} firstFloor={true} />
     {/each}
   </div>
 </div>
+
+<style>
+  .comment-main {
+    font-size: 16px;
+  }
+</style>
