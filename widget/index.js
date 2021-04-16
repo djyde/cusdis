@@ -7,7 +7,7 @@ if (target) {
   new Widget({
     target,
     props: {
-      appId, pageId
+      attrs: target.dataset
     }
   });
 }

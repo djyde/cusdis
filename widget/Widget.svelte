@@ -3,9 +3,8 @@
   import axios from "redaxios";
   import Comment from './components/Comment.svelte'
   import Reply from './components/Reply.svelte'
-  export let pageId;
-  export let appId;
 
+  export let attrs
   export let comments = [];
 
   const endpoint = "http://localhost:3000";
@@ -15,17 +14,14 @@
   });
 
   setContext('api', api)
-  setContext('info', {
-    appId,
-    pageId
-  })
+  setContext('attrs', attrs)
   setContext('refresh', getComments)
 
   async function getComments() {
     const res = await api.get(`/api/open/comments`, {
       params: {
-        appId,
-        pageId,
+        appId: attrs.appId,
+        pageId: attrs.pageId,
       },
     });
     comments = res.data.data;

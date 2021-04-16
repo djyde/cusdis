@@ -10,7 +10,7 @@
   export let onSuccess;
 
   const api = getContext("api");
-  const { appId, pageId } = getContext("info");
+  const { appId, pageId } = getContext("attrs");
   const refresh = getContext("refresh");
 
   async function addComment() {
@@ -58,7 +58,7 @@
   input {
     width: 100%;
     border: 2px solid #ddd;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem;
     border-radius: 4px;
   }
 
@@ -67,7 +67,6 @@
   }
 
   input {
-    padding: 0.25rem 0.5rem;
   }
 
   .reply-info div {

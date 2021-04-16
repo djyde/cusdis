@@ -5,9 +5,11 @@
   export let comment;
   export let firstFloor = false;
   export let showReplyForm = false;
+
+  const { showIndicator } = getContext('attrs')
 </script>
 
-<div class:padding={!firstFloor} style="margin-top: 2rem; margin-bottom: 2rem;">
+<div class:padding={true} class:indicator={showIndicator} style="margin-top: 2rem; margin-bottom: 2rem;">
   <div style="margin-bottom: .5rem;">
     <div class="nickname inline font-bold">{comment.by_nickname}</div>
     <div class="date inline">{comment.parsedCreatedAt}</div>
@@ -33,6 +35,10 @@
 <style>
   .padding {
     padding-left: 1rem;
+  }
+
+  .indicator {
+    border-left: 2px solid #ddd;
   }
   .font-bold {
     font-weight: bold;
