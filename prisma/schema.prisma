@@ -58,6 +58,8 @@ model User {
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
 
+  projects Project[]
+
   @@map(name: "users")
 }
 
@@ -73,3 +75,51 @@ model VerificationRequest {
 }
 
 // next-auth END
+
+model Project {
+  id String @default(uuid()) @id
+  title String
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+  
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id])
+
+  pages Page[]
+
+  @@map(name: "projects")
+}
+
+model Page {
+  id String @default(uuid()) @id
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+
+  projectId String
+  project Project @relation(fields: [projectId], references: [id])
+
+  comments Comment[]
+
+  @@map("pages")
+}
+
+model Comment {
+  id String @default(uuid()) @id
+
+  pageId String
+  page Page @relation(fields: [pageId], references: [id])
+
+  createdAt  DateTime  @default(now()) @map(name: "created_at")
+  updatedAt  DateTime  @default(now()) @map(name: "updated_at")
+
+  by_email String
+  by_nickname String
+
+  approved Boolean @default(false)
+
+  parentId String?
+  parent Comment? @relation("replies", fields: [parentId], references: [id])
+  replies Comment[] @relation("replies")
+
+  @@map("comments")
+}
