@@ -101,6 +101,8 @@ model Page {
   comments Comment[]
 
   @@map("pages")
+
+  @@index([projectId], name: "projectId")
 }
 
 model Comment {
@@ -114,6 +116,7 @@ model Comment {
 
   by_email String
   by_nickname String
+  content String
 
   approved Boolean @default(false)
 

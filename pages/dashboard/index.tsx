@@ -2,8 +2,8 @@ import * as React from 'react'
 import { signIn, useSession } from 'next-auth/client'
 import { apiClient } from '../../utils.client'
 import { useMutation } from 'react-query'
-import { Box } from '@chakra-ui/react'
-
+import { Box, Button, FormControl, Input } from '@chakra-ui/react'
+import { useForm } from 'react-hook-form'
 export const createProject = async (body: {
   title: string
 }) => {
@@ -15,10 +15,21 @@ export const createProject = async (body: {
 
 function CreateProjectForm() {
   const mutation = useMutation(createProject)
+  const form = useForm()
+  async function onSubmit(data) {
+    await mutation.mutate({
+      title: data.title
+    })
+  }
   return (
-    <div>
-
-    </div>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <FormControl id="title">
+        <Input type="text" {...form.register('title')}></Input>
+      </FormControl>
+      <FormControl>
+        <Button type="submit">Create Project</Button>
+      </FormControl>
+    </form>
   )
 }
 

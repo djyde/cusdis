@@ -1,14 +1,10 @@
-# nextjs-saas-starter
+# Comment
 
-WIP...
-
-## Features
-
-- [x] NextAuth
-- [x] Prisma
-- [x] Chakra UI
-- [ ] Payment
+Privacy friendly embed comment system.
 
 ## Usage
 
-WIP...
+```js
+<div id="comment" data-app-id="foo" data-page-id="foo"></div>
+<script src="foo.com/embed.js"></script>
+```

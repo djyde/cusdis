@@ -19,6 +19,7 @@ specifiers:
   prisma: ^2.19.0
   react: ^17.0.1
   react-dom: ^17.0.1
+  react-hook-form: ^7.1.1
   react-query: ^3.6.0
   reflect-metadata: ^0.1.13
   sqlite3: ^5.0.2
@@ -37,6 +38,7 @@ dependencies:
   next-auth: 3.14.7_react-dom@17.0.2+react@17.0.2
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
+  react-hook-form: 7.1.1_react@17.0.2
   react-query: 3.13.9_react-dom@17.0.2+react@17.0.2
   reflect-metadata: 0.1.13
   sqlite3: 5.0.2
@@ -4533,6 +4535,14 @@ packages:
       use-sidecar: 1.0.5_react@17.0.2
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /react-hook-form/7.1.1_react@17.0.2:
+    resolution: {integrity: sha512-d+tE+8FKLXioxemPnMnBOniMgmbCmAhBkP6EdOaJbqVpeRxfCfySMmg6EU9oruwnJbYpjx+IHTgheADqE8ruGA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17
+    dependencies:
+      react: 17.0.2
     dev: false
 
   /react-is/16.13.1:
