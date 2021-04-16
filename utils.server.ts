@@ -25,3 +25,15 @@ export const singletonSync = <T>(id: string, fn: () => T) => {
 export const prisma = singletonSync("prisma", () => {
   return new PrismaClient();
 });
+
+export function initMiddleware(middleware) {
+  return (req, res) =>
+    new Promise((resolve, reject) => {
+      middleware(req, res, (result) => {
+        if (result instanceof Error) {
+          return reject(result);
+        }
+        return resolve(result);
+      });
+    });
+}

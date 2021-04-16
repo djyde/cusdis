@@ -2,18 +2,19 @@ import { RequestScopeService } from ".";
 import { prisma } from "../utils.server";
 
 export class PageService extends RequestScopeService {
-  async upsertPage(id: string, projectId: string) {
+  async upsertPage(slug: string, projectId: string) {
+
     const exist = await prisma.page.findFirst({
       where: {
         projectId,
-        id
+        slug
       }
     })
 
     if (!exist) {
       return await prisma.page.create({
         data: {
-          id,
+          slug,
           projectId
         }
       })

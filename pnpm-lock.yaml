@@ -13,6 +13,7 @@ specifiers:
   axios: ^0.21.1
   babel-plugin-transform-typescript-metadata: ^0.3.1
   class-validator: ^0.13.1
+  cors: ^2.8.5
   framer-motion: ^3.2.1
   next: ^10.0.5
   next-auth: ^3.1.0
@@ -21,10 +22,14 @@ specifiers:
   react-dom: ^17.0.1
   react-hook-form: ^7.1.1
   react-query: ^3.6.0
+  redaxios: ^0.4.1
   reflect-metadata: ^0.1.13
+  rollup-plugin-svelte: ^7.1.0
   sqlite3: ^5.0.2
+  svelte: ^3.37.0
   typegraphql-prisma: ^0.9.4
   typescript: ^4.1.3
+  vite: ^2.1.5
 
 dependencies:
   '@chakra-ui/react': 1.5.1_4e43a38a0d3ced6e3a93acbcb053422e
@@ -33,6 +38,7 @@ dependencies:
   '@prisma/client': 2.21.2_prisma@2.21.2
   axios: 0.21.1
   class-validator: 0.13.1
+  cors: 2.8.5
   framer-motion: 3.10.6_react-dom@17.0.2+react@17.0.2
   next: 10.1.3_507781d099a67956587e23f5ac79078b
   next-auth: 3.14.7_react-dom@17.0.2+react@17.0.2
@@ -40,8 +46,12 @@ dependencies:
   react-dom: 17.0.2_react@17.0.2
   react-hook-form: 7.1.1_react@17.0.2
   react-query: 3.13.9_react-dom@17.0.2+react@17.0.2
+  redaxios: 0.4.1
   reflect-metadata: 0.1.13
+  rollup-plugin-svelte: 7.1.0_svelte@3.37.0
   sqlite3: 5.0.2
+  svelte: 3.37.0
+  vite: 2.1.5
 
 devDependencies:
   '@babel/core': 7.13.15
@@ -2286,6 +2296,14 @@ packages:
   /core-util-is/1.0.2:
     resolution: {integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=}
 
+  /cors/2.8.5:
+    resolution: {integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      object-assign: 4.1.1
+      vary: 1.1.2
+    dev: false
+
   /cosmiconfig/6.0.0:
     resolution: {integrity: sha512-xb3ZL6+L8b9JLLCx3ZdoZy4+2ECphCMo2PwqgP1tlfVq6M6YReyzBJtvWWtbDSpNr9hn96pkCiZqUcFEc+54Qg==}
     engines: {node: '>=8'}
@@ -2633,6 +2651,12 @@ packages:
     resolution: {integrity: sha1-wsNYJlYkfDnqEHyx5mUrb58kUjw=}
     dev: false
 
+  /esbuild/0.9.7:
+    resolution: {integrity: sha512-VtUf6aQ89VTmMLKrWHYG50uByMF4JQlVysb8dmg6cOgW8JnFCipmz7p+HNBl+RR3LLCuBxFGVauAe2wfnF9bLg==}
+    hasBin: true
+    requiresBuild: true
+    dev: false
+
   /escalade/3.1.1:
     resolution: {integrity: sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==}
     engines: {node: '>=6'}
@@ -2644,6 +2668,10 @@ packages:
   /escape-string-regexp/4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
+    dev: false
+
+  /estree-walker/0.6.1:
+    resolution: {integrity: sha512-SqmZANLWS0mnatqbSfRP5g8OXZC12Fgg1IwNtLsyHDzJizORW4khDfjPqJZsemPWBB2uqykUah5YpQ6epsqC/w==}
     dev: false
 
   /esutils/2.0.3:
@@ -4355,6 +4383,15 @@ packages:
       source-map: 0.6.1
     dev: false
 
+  /postcss/8.2.10:
+    resolution: {integrity: sha512-b/h7CPV7QEdrqIxtAf2j31U5ef05uBDuvoXv6L51Q4rcS1jdlXAVKJv+atCFdUXYl9dyTHGyoMzIepwowRJjFw==}
+    engines: {node: ^10 || ^12 || >=14}
+    dependencies:
+      colorette: 1.2.2
+      nanoid: 3.1.22
+      source-map: 0.6.1
+    dev: false
+
   /preact-render-to-string/5.1.19_preact@10.5.13:
     resolution: {integrity: sha512-bj8sn/oytIKO6RtOGSS/1+5CrQyRSC99eLUnEVbqUa6MzJX5dYh7wu9bmT0d6lm/Vea21k9KhCQwvr2sYN3rrQ==}
     peerDependencies:
@@ -4678,6 +4715,10 @@ packages:
       picomatch: 2.2.3
     dev: false
 
+  /redaxios/0.4.1:
+    resolution: {integrity: sha512-+Jhh1j8/H0KBro+Hih/MrDEJ1PICaU10JA6iu5b3+uvgRI+5n2M7qpMNXq7eC/0fspP0tTq49ONXlGWFdRoNLg==}
+    dev: false
+
   /reflect-metadata/0.1.13:
     resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
     dev: false
@@ -4721,6 +4762,10 @@ packages:
   /require-directory/2.1.1:
     resolution: {integrity: sha1-jGStX9MNqxyXbiNE/+f3kqam30I=}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /require-relative/0.8.7:
+    resolution: {integrity: sha1-eZlTn8ngR6N5KPoZb44VY9q9Nt4=}
     dev: false
 
   /require_optional/1.0.1:
@@ -4790,6 +4835,32 @@ packages:
     dependencies:
       hash-base: 3.1.0
       inherits: 2.0.4
+    dev: false
+
+  /rollup-plugin-svelte/7.1.0_svelte@3.37.0:
+    resolution: {integrity: sha512-vopCUq3G+25sKjwF5VilIbiY6KCuMNHP1PFvx2Vr3REBNMDllKHFZN2B9jwwC+MqNc3UPKkjXnceLPEjTjXGXg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      rollup: '>=2.0.0'
+      svelte: '>=3.5.0'
+    dependencies:
+      require-relative: 0.8.7
+      rollup-pluginutils: 2.8.2
+      svelte: 3.37.0
+    dev: false
+
+  /rollup-pluginutils/2.8.2:
+    resolution: {integrity: sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==}
+    dependencies:
+      estree-walker: 0.6.1
+    dev: false
+
+  /rollup/2.45.2:
+    resolution: {integrity: sha512-kRRU7wXzFHUzBIv0GfoFFIN3m9oteY4uAsKllIpQDId5cfnkWF2J130l+27dzDju0E6MScKiV0ZM5Bw8m4blYQ==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: 2.3.2
     dev: false
 
   /run-parallel/1.2.0:
@@ -5170,6 +5241,11 @@ packages:
       has-flag: 4.0.0
       supports-color: 7.2.0
     dev: true
+
+  /svelte/3.37.0:
+    resolution: {integrity: sha512-TRF30F4W4+d+Jr2KzUUL1j8Mrpns/WM/WacxYlo5MMb2E5Qy2Pk1Guj6GylxsW9OnKQl1tnF8q3hG/hQ3h6VUA==}
+    engines: {node: '>= 8'}
+    dev: false
 
   /tar-stream/2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
@@ -5602,6 +5678,11 @@ packages:
     engines: {node: '>= 0.10'}
     dev: false
 
+  /vary/1.1.2:
+    resolution: {integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=}
+    engines: {node: '>= 0.8'}
+    dev: false
+
   /verror/1.10.0:
     resolution: {integrity: sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=}
     engines: {'0': node >=0.6.0}
@@ -5611,6 +5692,19 @@ packages:
       extsprintf: 1.3.0
     dev: false
     optional: true
+
+  /vite/2.1.5:
+    resolution: {integrity: sha512-tYU5iaYeUgQYvK/CNNz3tiJ8vYqPWfCE9IQ7K0iuzYovWw7lzty7KRYGWwV3CQPh0NKxWjOczAqiJsCL0Xb+Og==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    dependencies:
+      esbuild: 0.9.7
+      postcss: 8.2.10
+      resolve: 1.20.0
+      rollup: 2.45.2
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: false
 
   /vm-browserify/1.1.2:
     resolution: {integrity: sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==}
