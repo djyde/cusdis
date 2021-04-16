@@ -17,6 +17,7 @@ export class CommentService extends RequestScopeService {
         createdAt: "desc",
       },
       where: {
+        approved: true,
         parentId,
         page: {
           slug: pageSlug,
@@ -75,5 +76,16 @@ export class CommentService extends RequestScopeService {
     });
 
     return created;
+  }
+
+  async approve(commentId: string) {
+    await prisma.comment.update({
+      where: {
+        id: commentId
+      },
+      data: {
+        approved: true
+      }
+    })
   }
 }

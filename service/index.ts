@@ -11,7 +11,7 @@ export type UserSession = {
 export abstract class RequestScopeService {
   constructor(protected req) {}
 
-  async getSession() {
+  protected async getSession() {
     return await getSession({ req: this.req }) as UserSession;
   }
 }

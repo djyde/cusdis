@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/core': ^7.12.10
   '@babel/plugin-proposal-decorators': ^7.12.12
+  '@chakra-ui/icons': ^1.0.10
   '@chakra-ui/react': ^1.1.4
   '@emotion/react': ^11.1.4
   '@emotion/styled': ^11.0.0
@@ -38,6 +39,7 @@ specifiers:
   vite: ^2.1.5
 
 dependencies:
+  '@chakra-ui/icons': 1.0.10_react@17.0.2
   '@chakra-ui/react': 1.5.1_4e43a38a0d3ced6e3a93acbcb053422e
   '@emotion/react': 11.1.5_2d9ac56f3fd967be88bf3cd4b121b34c
   '@emotion/styled': 11.3.0_976aa7bda1e3a36010ec9b2397640cfd
@@ -550,6 +552,27 @@ packages:
     dependencies:
       '@chakra-ui/system': 1.6.2_63dc16d5d26290218f8d1c8d4770c971
       '@chakra-ui/utils': 1.5.2
+      react: 17.0.2
+    dev: false
+
+  /@chakra-ui/icon/1.1.6_react@17.0.2:
+    resolution: {integrity: sha512-BK1tQC9tmZw/YQQJX9KUOqJJUazj7UdHXwa+jPfa6fgwexhsVIMKqucc6FQhbUNG+HvVzcHy7lINEJcct+VqgQ==}
+    peerDependencies:
+      '@chakra-ui/system': '>=1.0.0'
+      react: '>=16.8.6'
+    dependencies:
+      '@chakra-ui/utils': 1.5.2
+      react: 17.0.2
+    dev: false
+
+  /@chakra-ui/icons/1.0.10_react@17.0.2:
+    resolution: {integrity: sha512-D93O7uQ07VjINd51gIRpd7kcMme/jTRtsefbuawYxmIbe6uDaNAIaYfDHM/lJPomdk/iaSXC68ESK6vyyfif+A==}
+    peerDependencies:
+      '@chakra-ui/system': '>=1.0.0'
+      react: '>=16.8.6'
+    dependencies:
+      '@chakra-ui/icon': 1.1.6_react@17.0.2
+      '@types/react': 17.0.3
       react: 17.0.2
     dev: false
 
@@ -1570,7 +1593,6 @@ packages:
 
   /@types/prop-types/15.7.3:
     resolution: {integrity: sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw==}
-    dev: true
 
   /@types/pug/2.0.4:
     resolution: {integrity: sha1-h3L80EGOPNLMFxVV1zAHQVBR9LI=}
@@ -1588,7 +1610,6 @@ packages:
       '@types/prop-types': 15.7.3
       '@types/scheduler': 0.16.1
       csstype: 3.0.7
-    dev: true
 
   /@types/retry/0.12.0:
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
@@ -1602,7 +1623,6 @@ packages:
 
   /@types/scheduler/0.16.1:
     resolution: {integrity: sha512-EaCxbanVeyxDRTQBkdLb3Bvl/HK7PBK6UJjsSixB0iHKoWxE5uu2Q/DgtpOhPIojN0Zl1whvOd7PoHs2P0s5eA==}
-    dev: true
 
   /@types/tinycolor2/1.4.2:
     resolution: {integrity: sha512-PeHg/AtdW6aaIO2a+98Xj7rWY4KC1E6yOy7AFknJQ7VXUGNrMlyxDFxJo7HqLtjQms/ZhhQX52mLVW/EX3JGOw==}

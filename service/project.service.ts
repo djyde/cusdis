@@ -19,4 +19,42 @@ export class ProjectService extends RequestScopeService {
 
     return created
   }
+
+  async get(projectId: string) {
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId
+      }
+    })
+
+    return project
+  }
+
+  // list all projects
+  async list() {
+    const session = await this.getSession();
+    const projects = await prisma.project.findMany({
+      where: {
+        ownerId: session.uid,
+      }
+    })
+
+    return projects
+  }
+
+  // list all comments
+  async listComments(projectId: string) {
+    const comments = await prisma.comment.findMany({
+      where: {
+        page: {
+          projectId
+        }
+      },
+      include: {
+        page: true
+      }
+    })
+
+    return comments
+  }
 }

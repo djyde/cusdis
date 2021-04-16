@@ -15,5 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: created.id
       }
     })
+  } else if (req.method === 'GET') {
+    const projects = await projectService.list()
+    res.json({
+      data: projects
+    })
   }
 }
