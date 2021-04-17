@@ -45,9 +45,15 @@ export class ProjectService extends RequestScopeService {
   // list all comments
   async listComments(projectId: string) {
     const comments = await prisma.comment.findMany({
+      orderBy: {
+        'createdAt': 'desc'
+      },
       where: {
         page: {
           projectId
+        },
+        deletedAt: {
+          equals: null
         }
       },
       include: {

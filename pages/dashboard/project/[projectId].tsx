@@ -1,4 +1,4 @@
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Flex, Link, Spacer, StackDivider, Tag, Text, useToast, VStack } from '@chakra-ui/react'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Flex, FormControl, Link, Spacer, StackDivider, Tag, Text, Textarea, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { signIn, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -7,6 +7,8 @@ import { useMutation, useQuery } from 'react-query'
 import { Navbar } from '..'
 import { ProjectService } from '../../../service/project.service'
 import { apiClient } from '../../../utils.client'
+import dayjs from 'dayjs'
+import { useForm } from 'react-hook-form'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId }] = queryKey
@@ -23,6 +25,18 @@ const approveComment = async ({ commentId }) => {
   return res.data
 }
 
+const deleteComment = async ({ commentId }) => {
+  const res = await apiClient.delete(`/comment/${commentId}`)
+  return res.data
+}
+
+const replyAsModerator = async ({ parentId, content }) => {
+  const res = await apiClient.post(`/comment/${parentId}/replyAsModerator`, {
+    content
+  })
+  return res.data.data
+}
+
 function ProjectPage(props: {
   project: Project
 }) {
@@ -37,11 +51,54 @@ function ProjectPage(props: {
     onSuccess() {
       toast({
         status: 'success',
-        title: 'Approved'
+        title: 'Approved',
+        position: 'top'
       })
       getCommentsQuery.refetch()
     }
   })
+
+  const deleteCommentMutation = useMutation(deleteComment, {
+    onSuccess() {
+      toast({
+        status: 'success',
+        title: 'Deleted',
+        position: 'top'
+      })
+      getCommentsQuery.refetch()
+    }
+  })
+
+  function ReplyForm(props: {
+    parentId: string
+  }) {
+    const form = useForm()
+    function onSubmit({ content }) {
+      replyMutation.mutate({ content, parentId: props.parentId })
+    }
+    const replyMutation = useMutation(replyAsModerator, {
+      onSuccess() {
+        toast({
+          status: 'success',
+          title: 'Sent',
+          position: 'top'
+        })
+        getCommentsQuery.refetch()
+      }
+    })
+    return (
+      <>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <FormControl>
+            <Textarea {...form.register('content')} placeholder="Reply as moderator" />
+          </FormControl>
+          <FormControl>
+            <Button type="submit">Send</Button>
+          </FormControl>
+        </form>
+      </>
+    )
+  }
 
   return (
     <>
@@ -62,11 +119,12 @@ function ProjectPage(props: {
           {getCommentsQuery.data.map(comment => {
             return (
               <Box key={comment.id}>
-                <Flex>
+                <Flex gridGap={2}>
                   <Link color="gray.500" href={comment.page.url}>{comment.page.slug}</Link>
                   <Spacer />
 
-                  {comment.approved ? <Tag colorScheme="green" size="sm">Approved</Tag> : <Tag colorScheme="orange" size="sm">Pending</Tag>}
+                  {comment.moderatorId && <Tag colorScheme="cyan">MOD</Tag>}
+                  {!comment.moderatorId && (comment.approved ? <Tag colorScheme="green" size="sm">Approved</Tag> : <Tag colorScheme="orange" size="sm">Pending</Tag>)}
 
                 </Flex>
                 <Flex gridGap={2}>
@@ -75,7 +133,7 @@ function ProjectPage(props: {
                   </Text>
 
                   <Text color="gray.500">
-                    {comment.createdAt}
+                    {dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm')}
                   </Text>
                   <Spacer />
                   <Text mt={2} color="gray.500" fontSize="sm">
@@ -90,10 +148,14 @@ function ProjectPage(props: {
                 </Box>
 
                 <Flex mt={2} gridGap={4}>
-                  {comment.approved ? <Button type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Un Approve</Button> : <Button type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>}
-                  
+                  <Button disabled={comment.approved} type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
                   <Button type="button" variant="link" size="sm">Reply</Button>
+                  <Button type="button" variant="link" size="sm" onClick={_ => deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
                 </Flex>
+
+                <Box mt={4}>
+                  <ReplyForm parentId={comment.id} />
+                </Box>
               </Box>
             )
           })}

@@ -1,4 +1,4 @@
-import { Comment } from "@prisma/client";
+import { Comment, Prisma } from "@prisma/client";
 import { RequestScopeService } from ".";
 import { prisma } from "../utils.server";
 import { PageService } from "./page.service";
@@ -10,15 +10,22 @@ export class CommentService extends RequestScopeService {
   async getComments(
     projectId: string,
     pageSlug: string,
-    parentId: string | null = null
+    options?: {
+      include?: Prisma.CommentInclude,
+      parentId?: string
+    }
   ) {
     const comments = await prisma.comment.findMany({
       orderBy: {
         createdAt: "desc",
       },
+      include: options?.include,
       where: {
         approved: true,
-        parentId,
+        parentId: options?.parentId,
+        deletedAt: {
+          equals: null,
+        },
         page: {
           slug: pageSlug,
           projectId,
@@ -29,7 +36,9 @@ export class CommentService extends RequestScopeService {
     const allComments = await Promise.all(
       comments.map(async (comment) => {
         // get replies
-        const replies = await this.getComments(projectId, pageSlug, comment.id);
+        const replies = await this.getComments(projectId, pageSlug, {
+          parentId: comment.id
+        });
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           "YYYY-MM-DD HH:mm"
         );
@@ -43,7 +52,7 @@ export class CommentService extends RequestScopeService {
           return {
             ...comment,
             replies: [],
-            parsedCreatedAt
+            parsedCreatedAt,
           };
         }
       })
@@ -78,14 +87,51 @@ export class CommentService extends RequestScopeService {
     return created;
   }
 
+  async addCommentAsModerator(
+    parentId: string,
+    content: string
+  ) {
+    const session = await this.getSession()
+    const parent = await prisma.comment.findUnique({
+      where: {
+        id: parentId
+      }
+    })
+
+    const created = await prisma.comment.create({
+      data: {
+        content: content,
+        by_email: session.user.email,
+        by_nickname: session.user.name,
+        moderatorId: session.uid,
+        pageId: parent.pageId,
+        approved: true,
+        parentId,
+      },
+    });
+
+    return created;
+  }
+
   async approve(commentId: string) {
     await prisma.comment.update({
       where: {
-        id: commentId
+        id: commentId,
       },
       data: {
-        approved: true
-      }
-    })
+        approved: true,
+      },
+    });
+  }
+
+  async delete(commentId: string) {
+    await prisma.comment.update({
+      where: {
+        id: commentId,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
   }
 }

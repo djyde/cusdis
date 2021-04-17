@@ -12,6 +12,9 @@
 <div class:padding={true} class:indicator={showIndicator} style="margin-top: 2rem; margin-bottom: 2rem;">
   <div style="margin-bottom: .5rem;">
     <div class="nickname inline font-bold">{comment.by_nickname}</div>
+    {#if comment.moderatorId}
+      <span class="mod">MOD</span>
+    {/if}
     <div class="date inline">{comment.parsedCreatedAt}</div>
   </div>
 
@@ -70,5 +73,14 @@
     margin: 0;
     background: none;
     padding: 0;
+  }
+
+  .mod {
+    background-color: #ddd;
+    font-size: .1rem;
+    padding: .15rem .15rem;
+    border-radius: 4px;
+    font-weight: bold;
+    color: rgba(0,0, 0, .8);
   }
 </style>
