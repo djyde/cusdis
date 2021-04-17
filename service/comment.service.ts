@@ -14,7 +14,7 @@ export class CommentService extends RequestScopeService {
       parentId?: string;
       page?: number;
       pageSlug?: string | Prisma.StringFilter;
-      approved?: boolean
+      approved?: boolean;
     }
   ): Promise<Comment[]> {
     const pageSize = 10;
@@ -45,7 +45,7 @@ export class CommentService extends RequestScopeService {
           ...options,
           parentId: comment.id,
           pageSlug: options?.pageSlug,
-          include: options?.include
+          include: options?.include,
         });
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           "YYYY-MM-DD HH:mm"
@@ -76,11 +76,16 @@ export class CommentService extends RequestScopeService {
       content: string;
       email: string;
       nickname: string;
+      pageUrl?: string;
+      pageTitle?: string;
     },
     parentId?: string
   ) {
     // touch page
-    const page = await this.pageService.upsertPage(pageSlug, projectId);
+    const page = await this.pageService.upsertPage(pageSlug, projectId, {
+      pageTitle: body.pageTitle,
+      pageUrl: body.pageUrl
+    });
 
     const created = await prisma.comment.create({
       data: {

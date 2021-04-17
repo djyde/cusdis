@@ -10,7 +10,7 @@
   export let onSuccess;
 
   const api = getContext("api");
-  const { appId, pageId } = getContext("attrs");
+  const { appId, pageId, pageUrl, pageTitle } = getContext("attrs");
   const refresh = getContext("refresh");
 
   async function addComment() {
@@ -21,6 +21,8 @@
       nickname,
       email,
       parentId,
+      pageUrl,
+      pageTitle
     });
     await refresh();
     teardown();

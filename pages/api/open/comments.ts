@@ -21,13 +21,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await cors(req, res);
     // add comment
     const body = req.body as {
-      parentId?: string
-      appId: string,
-      pageId: string,
-      content: string,
-      email: string,
-      nickname: string
-    }
+      parentId?: string;
+      appId: string;
+      pageId: string;
+      content: string;
+      email: string;
+      nickname: string;
+      pageUrl?: string;
+      pageTitle?: string;
+    };
 
     const comment = await commentService.addComment(body.appId, body.pageId, {
       content: body.content,

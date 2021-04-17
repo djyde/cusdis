@@ -7,10 +7,8 @@
   export let attrs
   export let comments = [];
 
-  const endpoint = "http://localhost:3000";
-
   const api = axios.create({
-    baseURL: endpoint,
+    baseURL: attrs.host,
   });
 
   setContext('api', api)

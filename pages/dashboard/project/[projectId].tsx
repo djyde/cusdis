@@ -265,8 +265,11 @@ function Settings(props: {
           {typeof window !== 'undefined' && <Box as="pre" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
             <code>
               {`<div id="cusdis"
+  data-host="${location.origin}"
   data-app-id="${props.project.id}"
   data-page-id="{{ PAGE_ID }}"
+  data-page-url="{{ PAGE_URL }}"
+  data-page-title="{{ PAGE_TITLE }}"
 >
 <script async src="${location.origin}/embed.js"></script>
 `}
@@ -280,7 +283,7 @@ function Settings(props: {
           <Input mb={2} type="file" onChange={onChangeFile} />
           <Button onClick={_ => uploadMutation.mutate()} isLoading={uploadMutation.isLoading}>Import</Button>
 
-          <Heading as="h2" size="sm" my={4}>Export</Heading>
+          {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
 
         </Box>
       </VStack>
