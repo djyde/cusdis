@@ -1,28 +1,42 @@
 <script>
   import { onMount, setContext } from "svelte";
   import axios from "redaxios";
-  import Comment from './components/Comment.svelte'
-  import Reply from './components/Reply.svelte'
+  import Comment from "./components/Comment.svelte";
+  import Reply from "./components/Reply.svelte";
 
-  export let attrs
+  export let attrs;
   export let comments = [];
+
+  let loadingComments = true;
+
+  let message = "";
 
   const api = axios.create({
     baseURL: attrs.host,
   });
 
-  setContext('api', api)
-  setContext('attrs', attrs)
-  setContext('refresh', getComments)
+  function setMessage(msg) {
+    message = msg;
+  }
+
+  setContext("api", api);
+  setContext("attrs", attrs);
+  setContext("refresh", getComments);
+  setContext("setMessage", setMessage);
 
   async function getComments() {
-    const res = await api.get(`/api/open/comments`, {
-      params: {
-        appId: attrs.appId,
-        pageId: attrs.pageId,
-      },
-    });
-    comments = res.data.data;
+    loadingComments = true;
+    try {
+      const res = await api.get(`/api/open/comments`, {
+        params: {
+          appId: attrs.appId,
+          pageId: attrs.pageId,
+        },
+      });
+      comments = res.data.data;
+    } finally {
+      loadingComments = false;
+    }
   }
 
   onMount(() => {
@@ -31,21 +45,34 @@
 </script>
 
 <div class="comment-main">
-  {#if comments.length === 0}
-    No comment
+  {#if message}
+    <div class="cusdis-message">
+      {message}
+    </div>
   {/if}
 
   <Reply />
 
   <div>
-    {#each comments as comment (comment.id)}
-      <Comment comment={comment} firstFloor={true} />
-    {/each}
+    {#if loadingComments}
+      <div style="text-align: center; font-size: .8rem;">Loading...</div>
+    {:else}
+      {#each comments as comment (comment.id)}
+        <Comment {comment} firstFloor={true} />
+      {/each}
+    {/if}
   </div>
 </div>
 
 <style>
   .comment-main {
     font-size: 16px;
+  }
+
+  .cusdis-message {
+    background-color: #046582;
+    color: #fff;
+    padding: 0.5rem;
+    font-size: 0.5rem;
   }
 </style>

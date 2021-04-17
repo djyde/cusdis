@@ -99,7 +99,7 @@ export function Navbar(props: {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button type="submit">Create</Button>
+              <Button isLoading={createProjectMutation.isLoading} type="submit">Create</Button>
             </ModalFooter>
           </ModalContent>
         </form>
