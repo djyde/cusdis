@@ -108,7 +108,7 @@ export function Navbar(props: {
       <Container maxWidth={'5xl'}>
         <Flex >
           <Box>
-            <Heading size="md">Cusdis</Heading>
+            <Link fontWeight="bold" fontSize="xl" href="/dashboard">Cusdis</Link>
           </Box>
           <Spacer />
           <Box>
@@ -148,7 +148,7 @@ function Dashboard() {
   const [session, loading] = useSession()
 
   if (loading) {
-    return 'Loading...'
+    return ''
   }
 
   if (!session) {
