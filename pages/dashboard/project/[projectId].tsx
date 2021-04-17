@@ -1,4 +1,4 @@
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Flex, FormControl, Heading, Link, Spacer, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, useToast, VStack } from '@chakra-ui/react'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Divider, Flex, FormControl, Heading, Input, Link, Spacer, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { signIn, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -156,7 +156,11 @@ function ProjectPage(props: {
   return (
     <>
       <Navbar session={session} />
+
       <Container maxWidth="5xl">
+        <Box py={4}>
+          <Heading size="md">{props.project.title}</Heading>
+        </Box>
         {/* <Box mb={4}>
           <Breadcrumb color="gray.500">
             <BreadcrumbItem>
@@ -195,25 +199,73 @@ function Settings(props: {
   project: Project
 }) {
 
+  const importFile = React.useRef(null)
+  const toast = useToast()
+
+  const uploadMutation = useMutation(upload, {
+    onSuccess(data) {
+      toast({
+        title: 'Import finished',
+        description: `${data.data.pageCount} pages, ${data.data.commentCount} comments`,
+        status: 'success',
+        position: 'top'
+      })
+    }
+  })
+
+  function onChangeFile(e) {
+    const file = e.target.files[0]
+    importFile.current = file
+  }
+
+  async function upload() {
+    const formData = new FormData()
+    formData.append('file', importFile.current)
+    const res = await apiClient.post(`/project/${props.project.id}/data/import`, formData, {
+      headers: {
+        'content-type': 'multipart/form-data'
+      }
+    })
+    return res.data
+  }
+
   return (
     <>
-      <Heading as="h1" size="md" mb={4}>Embed Code</Heading>
-      {typeof window !== 'undefined' && <Box as="pre" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
-        <code>
-          {`<div id="cusdis"
+      <VStack
+        spacing={8}
+        alignItems="stretch"
+      >
+        <Box>
+          <Heading as="h1" size="md" mb={4} >Embed Code</Heading>
+          {typeof window !== 'undefined' && <Box as="pre" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
+            <code>
+              {`<div id="cusdis"
   data-app-id="${props.project.id}"
   data-page-id="{{ PAGE_ID }}"
 >
 <script async src="${location.origin}/embed.js"></script>
 `}
-        </code>
-      </Box>}
+            </code>
+          </Box>}
+        </Box>
+
+        <Box>
+          <Heading as="h1" size="md" my={4}>Data</Heading>
+          <Heading as="h2" size="sm" my={4}>Import from Disqus</Heading>
+          <Input mb={2} type="file" onChange={onChangeFile} />
+          <Button onClick={_ => uploadMutation.mutate()} isLoading={uploadMutation.isLoading}>Import</Button>
+
+          <Heading as="h2" size="sm" my={4}>Export</Heading>
+
+        </Box>
+      </VStack>
+      
+
     </>
   )
 }
 
 export async function getServerSideProps(ctx) {
-  console.log(ctx.req)
   const projectService = new ProjectService(ctx.req)
   const project = await projectService.get(ctx.query.projectId)
   return {

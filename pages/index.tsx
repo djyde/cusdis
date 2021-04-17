@@ -4,7 +4,6 @@ import { getSession } from 'next-auth/client'
 function IndexPage(props: {
   session
 }) {
-  console.log(props.session)
   return (
     <>
       Hello, index page

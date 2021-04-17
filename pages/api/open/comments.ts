@@ -45,7 +45,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       pageId: string
     }
 
-    const comments = await commentService.getComments(query.appId, query.pageId)
+    const comments = await commentService.getComments(query.appId, query.pageId, {
+      parentId: null
+    })
 
     res.json({
       data: comments
