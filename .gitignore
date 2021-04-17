@@ -160,7 +160,6 @@ dist
 
 yarn.lock
 
-prisma/migrations
 generated/*
 db.sqlite
 public/js
