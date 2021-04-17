@@ -124,7 +124,7 @@ export function Navbar(props: {
                         </Box>
                         <Spacer />
                         <Box>
-                          <Tag colorScheme="green">12</Tag>
+                          {/* <Tag colorScheme="green">12</Tag> */}
                         </Box>
                       </MenuItem>
                     )
