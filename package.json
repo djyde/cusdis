@@ -1,5 +1,5 @@
 {
-  "name": "comment",
+  "name": "cusdis",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

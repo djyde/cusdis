@@ -8,7 +8,7 @@ module.exports = {
   build: {
     lib: {
       entry: path.resolve(__dirname, 'widget', 'index.js'),
-      name: 'comment'
+      name: 'cusdis'
     },
     outDir: "public",
   },

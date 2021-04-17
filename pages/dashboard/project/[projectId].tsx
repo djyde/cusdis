@@ -1,4 +1,4 @@
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Flex, FormControl, Link, Spacer, StackDivider, Tag, Text, Textarea, useToast, VStack } from '@chakra-ui/react'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Flex, FormControl, Heading, Link, Spacer, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { signIn, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -107,7 +107,7 @@ function CommentComponent({ comment, refetch }: {
         <Link color="gray.500" href={comment.page.url}>{comment.page.slug}</Link>
         <Spacer />
 
-        {comment.moderatorId && <Tag colorScheme="cyan">MOD</Tag>}
+        {comment.moderatorId && <Tag colorScheme="cyan" size="sm">MOD</Tag>}
         {!comment.moderatorId && (comment.approved ? <Tag colorScheme="green" size="sm">Approved</Tag> : <Tag colorScheme="orange" size="sm">Pending</Tag>)}
 
       </Flex>
@@ -156,8 +156,8 @@ function ProjectPage(props: {
   return (
     <>
       <Navbar session={session} />
-      <Container maxWidth="6xl">
-        <Box mb={4}>
+      <Container maxWidth="5xl">
+        {/* <Box mb={4}>
           <Breadcrumb color="gray.500">
             <BreadcrumbItem>
               <Text>project</Text>
@@ -166,18 +166,54 @@ function ProjectPage(props: {
               <Text>{props.project.title}</Text>
             </BreadcrumbItem>
           </Breadcrumb>
-        </Box>
-        <Text mb={8} fontWeight="bold">Comments</Text>
-        <VStack align="stretch" spacing={8} divider={<StackDivider borderColor="gray.200" />}>
-          {getCommentsQuery.data.map(comment => <CommentComponent key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
-        </VStack>
+        </Box> */}
+        <Tabs size="md">
+          <TabList>
+            <Tab>Comments</Tab>
+            <Tab>Settings</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <VStack align="stretch" spacing={4} divider={<StackDivider borderColor="gray.200" />}>
+                {getCommentsQuery.data.length === 0 && !getCommentsQuery.isLoading ? <Text textAlign="center" color="gray.500">No Comments</Text> : null}
+                {getCommentsQuery.data.map(comment => <CommentComponent key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
+              </VStack>
+            </TabPanel>
+            <TabPanel>
+              <Settings project={props.project} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
 
       </Container>
     </>
   )
 }
 
+function Settings(props: {
+  project: Project
+}) {
+
+  return (
+    <>
+      <Heading as="h1" size="md" mb={4}>Embed Code</Heading>
+      {typeof window !== 'undefined' && <Box as="pre" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
+        <code>
+          {`<div id="cusdis"
+  data-app-id="${props.project.id}"
+  data-page-id="{{ PAGE_ID }}"
+>
+<script async src="${location.origin}/embed.js"></script>
+`}
+        </code>
+      </Box>}
+    </>
+  )
+}
+
 export async function getServerSideProps(ctx) {
+  console.log(ctx.req)
   const projectService = new ProjectService(ctx.req)
   const project = await projectService.get(ctx.query.projectId)
   return {
