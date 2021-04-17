@@ -37,15 +37,15 @@ const replyAsModerator = async ({ parentId, content }) => {
   return res.data.data
 }
 
-function ProjectPage(props: {
-  project: Project
+function CommentComponent({ comment, refetch }: {
+  refetch: any,
+  comment: Comment & {
+    page: Page
+  }
 }) {
-  const [session, loading] = useSession()
   const toast = useToast()
-  const router = useRouter()
-  const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string }], getComments, {
-    initialData: []
-  })
+
+  const [showReplyForm, setShowReplyForm] = React.useState(false)
 
   const approveCommentMutation = useMutation(approveComment, {
     onSuccess() {
@@ -54,7 +54,7 @@ function ProjectPage(props: {
         title: 'Approved',
         position: 'top'
       })
-      getCommentsQuery.refetch()
+      refetch()
     }
   })
 
@@ -65,7 +65,7 @@ function ProjectPage(props: {
         title: 'Deleted',
         position: 'top'
       })
-      getCommentsQuery.refetch()
+      refetch()
     }
   })
 
@@ -83,9 +83,10 @@ function ProjectPage(props: {
           title: 'Sent',
           position: 'top'
         })
-        getCommentsQuery.refetch()
+        refetch()
       }
     })
+
     return (
       <>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -99,6 +100,58 @@ function ProjectPage(props: {
       </>
     )
   }
+
+  return (
+    <Box key={comment.id}>
+      <Flex gridGap={2}>
+        <Link color="gray.500" href={comment.page.url}>{comment.page.slug}</Link>
+        <Spacer />
+
+        {comment.moderatorId && <Tag colorScheme="cyan">MOD</Tag>}
+        {!comment.moderatorId && (comment.approved ? <Tag colorScheme="green" size="sm">Approved</Tag> : <Tag colorScheme="orange" size="sm">Pending</Tag>)}
+
+      </Flex>
+      <Flex gridGap={2}>
+        <Text fontWeight="medium">
+          {comment.by_nickname}
+        </Text>
+
+        <Text color="gray.500">
+          {dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm')}
+        </Text>
+        <Spacer />
+        <Text mt={2} color="gray.500" fontSize="sm">
+          {comment.by_email}
+        </Text>
+
+      </Flex>
+
+      <Box>
+        {comment.content}
+      </Box>
+
+      <Flex mt={2} gridGap={4}>
+        <Button disabled={comment.approved} type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
+        <Button type="button" variant="link" size="sm" onClick={_ => setShowReplyForm(true)} >Reply</Button>
+        <Button type="button" variant="link" size="sm" onClick={_ => deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
+      </Flex>
+
+      <Box mt={4}>
+        {showReplyForm && <ReplyForm parentId={comment.id} />}
+      </Box>
+    </Box>
+  )
+}
+
+function ProjectPage(props: {
+  project: Project
+}) {
+  const [session, loading] = useSession()
+  const router = useRouter()
+  const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string }], getComments, {
+    initialData: []
+  })
+
 
   return (
     <>
@@ -116,49 +169,7 @@ function ProjectPage(props: {
         </Box>
         <Text mb={8} fontWeight="bold">Comments</Text>
         <VStack align="stretch" spacing={8} divider={<StackDivider borderColor="gray.200" />}>
-          {getCommentsQuery.data.map(comment => {
-            return (
-              <Box key={comment.id}>
-                <Flex gridGap={2}>
-                  <Link color="gray.500" href={comment.page.url}>{comment.page.slug}</Link>
-                  <Spacer />
-
-                  {comment.moderatorId && <Tag colorScheme="cyan">MOD</Tag>}
-                  {!comment.moderatorId && (comment.approved ? <Tag colorScheme="green" size="sm">Approved</Tag> : <Tag colorScheme="orange" size="sm">Pending</Tag>)}
-
-                </Flex>
-                <Flex gridGap={2}>
-                  <Text fontWeight="medium">
-                    {comment.by_nickname}
-                  </Text>
-
-                  <Text color="gray.500">
-                    {dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm')}
-                  </Text>
-                  <Spacer />
-                  <Text mt={2} color="gray.500" fontSize="sm">
-                    {comment.by_email}
-                  </Text>
-
-                </Flex>
-
-
-                <Box>
-                  {comment.content}
-                </Box>
-
-                <Flex mt={2} gridGap={4}>
-                  <Button disabled={comment.approved} type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
-                  <Button type="button" variant="link" size="sm">Reply</Button>
-                  <Button type="button" variant="link" size="sm" onClick={_ => deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
-                </Flex>
-
-                <Box mt={4}>
-                  <ReplyForm parentId={comment.id} />
-                </Box>
-              </Box>
-            )
-          })}
+          {getCommentsQuery.data.map(comment => <CommentComponent key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
         </VStack>
 
       </Container>
