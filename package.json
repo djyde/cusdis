@@ -2,9 +2,8 @@
   "name": "cusdis",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run db:generate && next build && prisma migrate deploy && npm run build:widget",
     "db:push": "prisma db push --preview-feature",
-    "db:migrate": "prisma migrate dev --preview-feature",
     "db:generate": "prisma generate",
     "admin": "prisma studio",
     "widget": "vite",
