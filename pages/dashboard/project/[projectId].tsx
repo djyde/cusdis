@@ -14,6 +14,9 @@ const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
   const res = await apiClient.get<{
     data: Array<Comment & {
+      replies: Array<Comment & {
+        page: Page
+      }>
       page: Page
     }>
   }>(`/project/${projectId}/comments`, {
@@ -41,13 +44,20 @@ const replyAsModerator = async ({ parentId, content }) => {
   return res.data.data
 }
 
-function CommentComponent({ comment, refetch }: {
+function CommentComponent(props: {
+  isRoot: boolean,
   refetch: any,
   comment: Comment & {
+    replies: Array<Comment & {
+      page: Page
+    }>
     page: Page
   }
 }) {
   const toast = useToast()
+
+  const refetch = props.refetch
+  const comment = props.comment
 
   const [showReplyForm, setShowReplyForm] = React.useState(false)
 
@@ -88,6 +98,7 @@ function CommentComponent({ comment, refetch }: {
           position: 'top'
         })
         refetch()
+        setShowReplyForm(false)
       }
     })
 
@@ -106,7 +117,7 @@ function CommentComponent({ comment, refetch }: {
   }
 
   return (
-    <Box key={comment.id}>
+    <Box key={comment.id} pl={!props.isRoot ? 4 : 0}>
       <Flex gridGap={2}>
         <Link color="gray.500" href={comment.page.url}>{comment.page.slug}</Link>
         <Spacer />
@@ -143,6 +154,8 @@ function CommentComponent({ comment, refetch }: {
       <Box mt={4}>
         {showReplyForm && <ReplyForm parentId={comment.id} />}
       </Box>
+
+      { comment.replies.length > 0 && comment.replies.map(reply => <CommentComponent {...props} comment={reply} isRoot={false}  />) }
     </Box>
   )
 }
@@ -186,7 +199,7 @@ function ProjectPage(props: {
             <TabPanel>
               <VStack align="stretch" spacing={4} divider={<StackDivider borderColor="gray.200" />}>
                 {getCommentsQuery.data.length === 0 && !getCommentsQuery.isLoading ? <Text textAlign="center" color="gray.500">No Comments</Text> : null}
-                {getCommentsQuery.data.map(comment => <CommentComponent key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
+                {getCommentsQuery.data.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
               </VStack>
               <HStack spacing={2}>
                 {new Array(10).fill(0).map((_, index) => {
