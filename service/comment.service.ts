@@ -9,25 +9,30 @@ export class CommentService extends RequestScopeService {
 
   async getComments(
     projectId: string,
-    pageSlug: string,
     options?: {
-      include?: Prisma.CommentInclude,
-      parentId?: string
+      include?: Prisma.CommentInclude;
+      parentId?: string;
+      page?: number;
+      pageSlug?: string | Prisma.StringFilter;
+      approved?: boolean
     }
-  ) {
+  ): Promise<Comment[]> {
+    const pageSize = 10;
     const comments = await prisma.comment.findMany({
+      skip: options?.page ? (options.page - 1) * pageSize : 0,
+      take: options?.page ? pageSize : 100,
       orderBy: {
         createdAt: "desc",
       },
       include: options?.include,
       where: {
-        approved: true,
+        approved: options?.approved === true ? true : options?.approved,
         parentId: options?.parentId,
         deletedAt: {
           equals: null,
         },
         page: {
-          slug: pageSlug,
+          slug: options?.pageSlug,
           projectId,
         },
       },
@@ -36,8 +41,11 @@ export class CommentService extends RequestScopeService {
     const allComments = await Promise.all(
       comments.map(async (comment) => {
         // get replies
-        const replies = await this.getComments(projectId, pageSlug, {
-          parentId: comment.id
+        const replies = await this.getComments(projectId, {
+          ...options,
+          parentId: comment.id,
+          pageSlug: options?.pageSlug,
+          include: options?.include
         });
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           "YYYY-MM-DD HH:mm"
@@ -87,16 +95,13 @@ export class CommentService extends RequestScopeService {
     return created;
   }
 
-  async addCommentAsModerator(
-    parentId: string,
-    content: string
-  ) {
-    const session = await this.getSession()
+  async addCommentAsModerator(parentId: string, content: string) {
+    const session = await this.getSession();
     const parent = await prisma.comment.findUnique({
       where: {
-        id: parentId
-      }
-    })
+        id: parentId,
+      },
+    });
 
     const created = await prisma.comment.create({
       data: {

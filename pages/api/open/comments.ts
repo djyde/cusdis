@@ -45,12 +45,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       pageId: string
     }
 
-    const comments = await commentService.getComments(query.appId, query.pageId, {
-      parentId: null
-    })
+    const comments = await commentService.getComments(query.appId, {
+      approved: true,
+      parentId: null,
+      pageSlug: query.pageId,
+    });
 
     res.json({
-      data: comments
+      data: comments,
     })
   }
 }

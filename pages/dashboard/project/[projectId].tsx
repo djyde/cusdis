@@ -1,4 +1,4 @@
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Divider, Flex, FormControl, Heading, Input, Link, Spacer, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { signIn, useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -11,12 +11,16 @@ import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 
 const getComments = async ({ queryKey }) => {
-  const [_key, { projectId }] = queryKey
+  const [_key, { projectId, page }] = queryKey
   const res = await apiClient.get<{
     data: Array<Comment & {
       page: Page
     }>
-  }>(`/project/${projectId}/comments`)
+  }>(`/project/${projectId}/comments`, {
+    params: {
+      page
+    }
+  })
   return res.data.data
 }
 
@@ -147,11 +151,12 @@ function ProjectPage(props: {
   project: Project
 }) {
   const [session, loading] = useSession()
+  const [page, setPage] = React.useState(1)
   const router = useRouter()
-  const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string }], getComments, {
+
+  const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string, page }], getComments, {
     initialData: []
   })
-
 
   return (
     <>
@@ -183,6 +188,13 @@ function ProjectPage(props: {
                 {getCommentsQuery.data.length === 0 && !getCommentsQuery.isLoading ? <Text textAlign="center" color="gray.500">No Comments</Text> : null}
                 {getCommentsQuery.data.map(comment => <CommentComponent key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
               </VStack>
+              <HStack spacing={2}>
+                {new Array(10).fill(0).map((_, index) => {
+                  return (
+                    <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
+                  )
+                })}
+              </HStack>
             </TabPanel>
             <TabPanel>
               <Settings project={props.project} />
