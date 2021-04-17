@@ -271,7 +271,7 @@ function Settings(props: {
   data-page-url="{{ PAGE_URL }}"
   data-page-title="{{ PAGE_TITLE }}"
 >
-<script async src="${location.origin}/embed.js"></script>
+<script async src="${location.origin}/js/cusdis.es.js"></script>
 `}
             </code>
           </Box>}

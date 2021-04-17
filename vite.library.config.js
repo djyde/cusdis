@@ -2,15 +2,14 @@ import path from 'path'
 
 module.exports = {
   root: "widget",
-  server: {
-    port: 3001,
-  },
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'widget', 'index.js'),
-      name: 'cusdis'
+      entry: path.resolve(__dirname, "widget", "index.js"),
+      name: "cusdis",
     },
-    outDir: "public",
+    outDir: path.resolve(__dirname, "public", "js"),
   },
-  plugins: [require("rollup-plugin-svelte")()],
+  plugins: [require("rollup-plugin-svelte")({
+    emitCss: false
+  })],
 };
