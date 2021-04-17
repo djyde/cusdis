@@ -1,4 +1,4 @@
-# Comment
+# Cusdis
 
 Open source, lightweight (4.7kb gzip), privacy-friendly alternative to Disqus.
 
