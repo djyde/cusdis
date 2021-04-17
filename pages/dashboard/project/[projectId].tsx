@@ -155,7 +155,7 @@ function CommentComponent(props: {
         {showReplyForm && <ReplyForm parentId={comment.id} />}
       </Box>
 
-      { comment.replies.length > 0 && comment.replies.map(reply => <CommentComponent {...props} comment={reply} isRoot={false}  />) }
+      { comment.replies.length > 0 && comment.replies.map(reply => <CommentComponent {...props} comment={reply as any} isRoot={false}  />) }
     </Box>
   )
 }
