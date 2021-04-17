@@ -1,6 +1,6 @@
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
-import { signIn, useSession } from 'next-auth/client'
+import { signIn, getSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useMutation, useQuery } from 'react-query'
@@ -9,6 +9,7 @@ import { ProjectService } from '../../../service/project.service'
 import { apiClient } from '../../../utils.client'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
+import { UserSession } from '../../../service'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -161,19 +162,23 @@ function CommentComponent(props: {
 }
 
 function ProjectPage(props: {
-  project: Project
+  project: Project,
+  session: UserSession
 }) {
-  const [session, loading] = useSession()
+
+  if (!props.session) {
+    signIn()
+  }
+
   const [page, setPage] = React.useState(1)
   const router = useRouter()
 
   const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string, page }], getComments, {
-    initialData: []
   })
 
   return (
     <>
-      <Navbar session={session} />
+      <Navbar session={props.session} />
 
       <Container maxWidth="5xl">
         <Box py={4}>
@@ -197,11 +202,12 @@ function ProjectPage(props: {
 
           <TabPanels>
             <TabPanel>
+              {getCommentsQuery.isLoading && <Center p={8}><Spinner /></Center>}
               <VStack align="stretch" spacing={4} divider={<StackDivider borderColor="gray.200" />}>
-                {getCommentsQuery.data.length === 0 && !getCommentsQuery.isLoading ? <Text textAlign="center" color="gray.500">No Comments</Text> : null}
-                {getCommentsQuery.data.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
+                {getCommentsQuery.data?.length === 0 && !getCommentsQuery.isLoading ? <Text textAlign="center" color="gray.500">No Comments</Text> : null}
+                {getCommentsQuery.data?.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
               </VStack>
-              <HStack spacing={2}>
+              <HStack spacing={2} mt={8}>
                 {new Array(10).fill(0).map((_, index) => {
                   return (
                     <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
@@ -298,6 +304,7 @@ export async function getServerSideProps(ctx) {
   const project = await projectService.get(ctx.query.projectId)
   return {
     props: {
+      session: await getSession({ ctx }),
       project: {
         id: project.id,
         title: project.title

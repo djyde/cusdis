@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { signIn, useSession } from 'next-auth/client'
+import { signIn, useSession, getSession } from 'next-auth/client'
 import { apiClient } from '../../utils.client'
 import { useMutation, useQuery } from 'react-query'
 import { Box, Button, Container, Flex, FormControl, FormLabel, Heading, Input, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Stack, Tag, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
@@ -144,20 +144,17 @@ export function Navbar(props: {
   )
 }
 
-function Dashboard() {
-  const [session, loading] = useSession()
+function Dashboard(props: {
+  session: UserSession
+}) {
 
-  if (loading) {
-    return ''
-  }
-
-  if (!session) {
+  if (!props.session) {
     signIn()
   }
 
   return (
     <>
-      <Navbar session={session} />
+      <Navbar session={props.session} />
     </>
   )
 }
@@ -165,7 +162,7 @@ function Dashboard() {
 export async function getServerSideProps(ctx) {
   return {
     props: {
-
+      session: await getSession({ ctx })
     }
   }
 }
