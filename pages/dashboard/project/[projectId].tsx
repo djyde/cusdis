@@ -4,12 +4,13 @@ import { signIn, getSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useMutation, useQuery } from 'react-query'
-import { Navbar } from '..'
 import { ProjectService } from '../../../service/project.service'
 import { apiClient } from '../../../utils.client'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { UserSession } from '../../../service'
+import { Head } from '../../../components/Head'
+import { Navbar } from '../../../components/Navbar'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -178,6 +179,7 @@ function ProjectPage(props: {
 
   return (
     <>
+      <Head title={props.project.title}/>
       <Navbar session={props.session} />
 
       <Container maxWidth="5xl">

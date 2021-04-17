@@ -3,6 +3,7 @@ import { getSession } from 'next-auth/client'
 import { Box, Button, Container, Flex, Heading, Img, Link, Spacer, Text, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { Footer } from '../components/Footer'
+import { Head } from '../components/Head'
 
 function IndexPage(props: {
   session
@@ -11,6 +12,7 @@ function IndexPage(props: {
 
   return (
     <>
+      <Head title="Cusdis" />
       <Box as="nav" py={4}>
         <Container maxWidth="6xl">
           <Flex>

@@ -2,12 +2,15 @@ import * as React from 'react'
 import { signIn, useSession, getSession } from 'next-auth/client'
 import { apiClient } from '../../utils.client'
 import { useMutation, useQuery } from 'react-query'
-import { Box, Button, Container, Flex, FormControl, FormLabel, Heading, Input, Link, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Stack, Tag, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, FormControl, FormLabel, Heading, HStack, Input, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Skeleton, Spacer, Stack, Tag, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { Project } from '@prisma/client'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import type { UserSession } from '../../service'
 import { useRouter } from 'next/router'
+import { Head } from '../../components/Head'
+import { Footer } from '../../components/Footer'
+import { Navbar } from '../../components/Navbar'
 
 export const createProject = async (body: {
   title: string
@@ -23,38 +26,20 @@ export const getAllProjects = async () => {
   return res.data.data
 }
 
-function CreateProjectForm() {
-  const mutation = useMutation(createProject)
-  const form = useForm()
-  async function onSubmit(data) {
-    await mutation.mutate({
-      title: data.title
-    })
-  }
-  return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <FormControl id="title">
-        <Input type="text" {...form.register('title')}></Input>
-      </FormControl>
-      <FormControl>
-        <Button type="submit">Create Project</Button>
-      </FormControl>
-    </form>
-  )
-}
-
-export function Navbar(props: {
-  session: UserSession,
-  projectId?: string
+function Dashboard(props: {
+  session: UserSession
 }) {
 
-  const router = useRouter()
-  const toast = useToast()
+  if (!props.session) {
+    signIn()
+  }
 
   const getProjects = useQuery<Project[]>('getProjects', getAllProjects, {
     enabled: !!props.session,
-    initialData: []
   })
+
+  const toast = useToast()
+  const router = useRouter()
 
   const createProjectModal = useDisclosure()
 
@@ -71,14 +56,17 @@ export function Navbar(props: {
           status: 'success',
           title: 'Project created'
         })
-        router.push(`/dashboard/project/${data.data.id}`)
+        router.push(`/dashboard/project/${data.data.id}`, null, { shallow: true })
         createProjectModal.onClose()
       }
     })
   }
 
+
   return (
-    <Box py={4}>
+    <>
+      <Head title="Cusdis" />
+      <Navbar session={props.session} />
       <Modal
         isOpen={createProjectModal.isOpen}
         onClose={createProjectModal.onClose}
@@ -89,7 +77,7 @@ export function Navbar(props: {
         <form onSubmit={form.handleSubmit(onSubmit)}>
 
           <ModalContent>
-            <ModalHeader>New project</ModalHeader>
+            <ModalHeader>New Website</ModalHeader>
             <ModalCloseButton />
 
             <ModalBody>
@@ -105,56 +93,29 @@ export function Navbar(props: {
         </form>
 
       </Modal>
-      <Container maxWidth={'5xl'}>
-        <Flex >
-          <Box>
-            <Link fontWeight="bold" fontSize="xl" href="/dashboard">Cusdis</Link>
-          </Box>
-          <Spacer />
-          <Box>
-            <Menu>
-              <MenuButton rightIcon={<ChevronDownIcon />} as={Button}>Project</MenuButton>
-              <MenuList>
-                <MenuGroup title="Projects">
-                  {getProjects.data.map(project => {
-                    return (
-                      <MenuItem onClick={_ => router.push(`/dashboard/project/${project.id}`)} key={project.id}>
-                        <Box>
-                          {project.title}
-                        </Box>
-                        <Spacer />
-                        <Box>
-                          {/* <Tag colorScheme="green">12</Tag> */}
-                        </Box>
-                      </MenuItem>
-                    )
-                  })}
-
-                </MenuGroup>
-                <MenuDivider />
-                <MenuItem onClick={_ => createProjectModal.onOpen()}>New project</MenuItem>
-              </MenuList>
-            </Menu>
-          </Box>
+      <Container maxW="5xl" pt={12}>
+        <Flex mb={4}>
+          <Button onClick={_ => createProjectModal.onOpen()} colorScheme="telegram" size="sm">
+            Add Website
+          </Button>
         </Flex>
-
+        <VStack alignItems="stretch" spacing={4}>
+          {getProjects.isLoading && <>
+            <Skeleton height={4} />
+            <Skeleton height={4} />
+            <Skeleton height={4} />
+          </>}
+          {getProjects.data?.map(project => {
+            return (
+              <Link href={`/dashboard/project/${project.id}`} py={4} px={4} shadow="sm" rounded="lg" key={project.id}>
+                {project.title}
+              </Link>
+            )
+          })}
+        </VStack>
       </Container>
 
-    </Box>
-  )
-}
-
-function Dashboard(props: {
-  session: UserSession
-}) {
-
-  if (!props.session) {
-    signIn()
-  }
-
-  return (
-    <>
-      <Navbar session={props.session} />
+      <Footer />
     </>
   )
 }
