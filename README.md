@@ -2,9 +2,13 @@
 
 Privacy friendly embed comment system.
 
-## Usage
+## Deploy
 
-```js
-<div id="comment" data-app-id="foo" data-page-id="foo"></div>
-<script src="foo.com/embed.js"></script>
+Create `.env` file with:
+
+```bash
+GITHUB_ID=
+GITHUB_SECRET=
+DB_URL=
 ```
+
