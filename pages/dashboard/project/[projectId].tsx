@@ -94,7 +94,7 @@ function CommentComponent({ comment, refetch }: {
             <Textarea {...form.register('content')} placeholder="Reply as moderator" />
           </FormControl>
           <FormControl>
-            <Button type="submit">Send</Button>
+            <Button isLoading={replyMutation.isLoading} type="submit">Send</Button>
           </FormControl>
         </form>
       </>
@@ -131,9 +131,9 @@ function CommentComponent({ comment, refetch }: {
       </Box>
 
       <Flex mt={2} gridGap={4}>
-        <Button disabled={comment.approved} type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
+        <Button isLoading={approveCommentMutation.isLoading} disabled={comment.approved} type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
         <Button type="button" variant="link" size="sm" onClick={_ => setShowReplyForm(true)} >Reply</Button>
-        <Button type="button" variant="link" size="sm" onClick={_ => deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
+        <Button isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="sm" onClick={_ => deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
       </Flex>
 
       <Box mt={4}>
