@@ -37,7 +37,7 @@ function IndexPage(props: {
         <HStack spacing={4} mt={8}>
           <Button onClick={_ => router.push('/dashboard')} fontWeight="bold" color="gray.700">Start for free</Button>
 
-          <Button variant="link" fontWeight="bold" color="gray.700">Self host guide</Button>
+          <Link href="/doc" fontWeight="bold" color="gray.700">Self host guide</Link>
         </HStack>
 
             {/* <Img src="/discussion.png" /> */}
