@@ -9,19 +9,19 @@
   const { showIndicator } = getContext('attrs')
 </script>
 
-<div class:padding={true} class:indicator={showIndicator} style="margin-top: 2rem; margin-bottom: 2rem;">
+<div class:cusdis-padding={true} class:cusdis-indicator={showIndicator} style="margin-top: 2rem; margin-bottom: 2rem;">
   <div style="margin-bottom: .5rem;">
-    <div class="nickname inline font-bold">{comment.by_nickname}</div>
+    <div class="cusdis-comment-nickname cusdis-inline cusdis-font-bold">{comment.by_nickname}</div>
     {#if comment.moderatorId}
       <span class="mod">MOD</span>
     {/if}
-    <div class="date inline">{comment.parsedCreatedAt}</div>
+    <div class="cusdis-comment-date cusdis-inline">{comment.parsedCreatedAt}</div>
   </div>
 
-  <div class="content" style="margin-bottom: .5rem;">{comment.content}</div>
+  <div class="cusdis-comment-content" style="margin-bottom: .5rem;">{comment.content}</div>
 
   <div style="font-size: .5rem; margin-top: .25rem; margin-bottom: .25rem;">
-    <button type="button" on:click={_ => { showReplyForm = true }} class="link-btn">Reply</button>
+    <button type="button" on:click={_ => { showReplyForm = true }} class="cusdis-link-btn">Reply</button>
   </div>
 
   {#if showReplyForm}
@@ -36,36 +36,36 @@
 </div>
 
 <style>
-  .padding {
+  .cusdis-padding {
     padding-left: 1rem;
   }
 
-  .indicator {
+  .cusdis-indicator {
     border-left: 2px solid #ddd;
   }
-  .font-bold {
+  .cusdis-font-bold {
     font-weight: bold;
   }
 
-  .inline {
+  .cusdis-inline {
     display: inline-block;
   }
 
-  .nickname {
+  .cudis-comment-nickname {
     font-size: 1rem;
   }
 
-  .content {
+  .cusdis-comment-content {
     color: rgba(0, 0, 0, 0.8);
     font-size: 1rem;
   }
 
-  .date {
+  .cusdis-comment-date {
     color: rgba(0, 0, 0, 0.8);
     font-size: 0.8rem;
   }
 
-  .link-btn {
+  .cusdis-link-btn {
     font-size: 0.8rem;
     text-decoration: underline;
     cursor: pointer;

@@ -1,0 +1,4 @@
+- **Introduction**
+  - [About](/)
+  - [Features](/features.md)
+- [Self-host Guide](/self-host.md)

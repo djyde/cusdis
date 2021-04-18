@@ -56,7 +56,7 @@
 </script>
 
 <div style="margin-top: 1rem;">
-  <div class="reply-info field">
+  <div class="cusdis-reply-info cusdis-field">
     <div>
       <input type="text" placeholder="nickname" bind:value={nickname} />
     </div>
@@ -65,12 +65,12 @@
     </div>
   </div>
 
-  <div class="field">
+  <div class="cusdis-field">
     <textarea bind:value={content} placeholder="Reply..." />
   </div>
 
-  <div class="field">
-    <button disabled={loading} class="submit-btn" class:disabled={loading} on:click={addComment}>{ loading ? 'Sending...' : 'Post Comment' }</button>
+  <div class="cusdis-field">
+    <button cusdis-disabled={loading} class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? 'Sending...' : 'Post Comment' }</button>
   </div>
 </div>
 
@@ -90,12 +90,12 @@
   input {
   }
 
-  .disabled {
+  .cusdis-disabled {
     background-color: rgba(0, 0, 0, .5);
     cursor: not-allowed;
   }
 
-  .reply-info div {
+  .cusdis-reply-info div {
     display: inline-block;
   }
 
@@ -110,7 +110,7 @@
     font-weight: bold;
   }
 
-  .field {
+  .cusdis-field {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
