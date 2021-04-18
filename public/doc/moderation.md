@@ -1,14 +1,4 @@
-# Features
-
-## Universal embed code
-
-You can embed Cusdis on every website. 
-
-## Light-weight sdk
-
-The SDK that embed to your website is only 5kb (gzipped). Compared to Disuqs (which is 24kb gzipped), it's very light-weight.
-
-## Moderation
+# Moderation
 
 Since we don't require user sign in to comment, all comments are NOT displayed by default, until the moderator approve it.
 
