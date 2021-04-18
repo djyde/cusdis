@@ -40,7 +40,9 @@ function IndexPage(props: {
           <Link href="/doc" fontWeight="bold" color="gray.700">Self host guide</Link>
         </HStack>
 
-            {/* <Img src="/discussion.png" /> */}
+        <Box mt={8}>
+          <Img src="/landing.png" />
+        </Box>
       </Container>
 
       <Footer />
