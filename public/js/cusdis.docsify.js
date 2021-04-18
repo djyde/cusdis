@@ -10,24 +10,11 @@ function CusdisPlugin(hook, vm) {
   hook.init(_ => {
     const script = dom.create("script");
     script.async = true;
-    script.src = `http://localhost:3000/js/cusdis.es.js`;
+    // script.src = `http://localhost:3000/js/cusdis.es.js`;
+    script.src = `${host}/js/cusdis.es.js`;
     script.setAttribute("data-timestamp", Number(new Date()));
     dom.appendTo(dom.body, script);
   })
-
-  hook.afterEach((html, next) => {
-    // const cusdisFooter = `
-    // <div id="cusdis"
-    //   data-host="${host}"
-    //   data-app-id="${appId}"
-    //   data-page-id="${vm.route.path}"
-    //   data-page-title="${vm.route.path}"
-    // ></div>
-    // `;
-
-    // next(html + cusdisFooter);
-    next(html)
-  });
 
   function createCusdis() {
     const div = document.createElement('div')
@@ -42,7 +29,6 @@ function CusdisPlugin(hook, vm) {
   hook.doneEach(() => {
     const cusdis = createCusdis()
     dom.find('#main').append(cusdis)
-    console.log(cusdis)
     window.renderCusdis(cusdis);
   })
 }
