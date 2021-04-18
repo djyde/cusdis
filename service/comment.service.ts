@@ -34,6 +34,9 @@ export class CommentService extends RequestScopeService {
         page: {
           slug: options?.pageSlug,
           projectId,
+          project: {
+            ownerId: await (await this.getSession()).uid
+          }
         },
       },
     });
