@@ -14,6 +14,7 @@ export class CommentService extends RequestScopeService {
       parentId?: string;
       page?: number;
       pageSlug?: string | Prisma.StringFilter;
+      onlyOwn?: boolean
       approved?: boolean;
     }
   ): Promise<Comment[]> {
@@ -35,7 +36,7 @@ export class CommentService extends RequestScopeService {
           slug: options?.pageSlug,
           projectId,
           project: {
-            ownerId: await (await this.getSession()).uid
+            ownerId: options?.onlyOwn ? await (await this.getSession()).uid : undefined
           }
         },
       },

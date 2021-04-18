@@ -13,6 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const comments = await commentService.getComments(projectId, {
       parentId: null,
       page: Number(page),
+      onlyOwn: true,
       include: {
         page: true
       }
