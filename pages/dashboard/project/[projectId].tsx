@@ -120,15 +120,15 @@ function CommentComponent(props: {
 
   return (
     <Box key={comment.id} pl={!props.isRoot ? 4 : 0}>
-      <Flex gridGap={2}>
+      <HStack spacing={2}>
         <Link color="gray.500" href={comment.page.url}>{comment.page.slug}</Link>
         <Spacer />
 
         {comment.moderatorId && <Tag colorScheme="cyan" size="sm">MOD</Tag>}
         {!comment.moderatorId && (comment.approved ? <Tag colorScheme="green" size="sm">Approved</Tag> : <Tag colorScheme="orange" size="sm">Pending</Tag>)}
 
-      </Flex>
-      <Flex gridGap={2}>
+      </HStack>
+      <HStack spacing={2}>
         <Text fontWeight="medium">
           {comment.by_nickname}
         </Text>
@@ -141,17 +141,17 @@ function CommentComponent(props: {
           {comment.by_email}
         </Text>
 
-      </Flex>
+      </HStack>
 
       <Box>
         {comment.content}
       </Box>
 
-      <Flex mt={2} gridGap={4}>
+      <HStack mt={2} spacing={4}>
         <Button isLoading={approveCommentMutation.isLoading} disabled={comment.approved} type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
         <Button type="button" variant="link" size="sm" onClick={_ => setShowReplyForm(true)} >Reply</Button>
         <Button isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="sm" onClick={_ => deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
-      </Flex>
+      </HStack>
 
       <Box mt={4}>
         {showReplyForm && <ReplyForm parentId={comment.id} />}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { getSession } from 'next-auth/client'
-import { Box, Button, Container, Flex, Heading, Img, Link, Spacer, Text, VStack } from '@chakra-ui/react'
+import { Box, Button, Container, Flex, Heading, HStack, Img, Link, Spacer, Text, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { Footer } from '../components/Footer'
 import { Head } from '../components/Head'
@@ -34,11 +34,11 @@ function IndexPage(props: {
           <p>Open source, lightweight (4.7kb gzip), privacy-friendly alternative to Disqus.</p>
         </Text>
 
-        <Flex gridGap={4} mt={8}>
+        <HStack spacing={4} mt={8}>
           <Button onClick={_ => router.push('/dashboard')} fontWeight="bold" color="gray.700">Start for free</Button>
 
           <Button variant="link" fontWeight="bold" color="gray.700">Self host guide</Button>
-        </Flex>
+        </HStack>
 
             {/* <Img src="/discussion.png" /> */}
       </Container>

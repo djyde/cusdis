@@ -62,9 +62,16 @@
       {/each}
     {/if}
   </div>
+
+  <div class="cusdis-footer">Powered by <a href="https://cusdis.com">Cusdis</a></div>
 </div>
 
 <style>
+
+  .cusdis-footer {
+    font-size: .8rem;
+    text-align: center;
+  }
   .comment-main {
     font-size: 16px;
   }
