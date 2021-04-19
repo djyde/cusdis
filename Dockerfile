@@ -8,7 +8,7 @@ RUN apk add --no-cache python3 py3-pip make gcc g++
 
 RUN npm i -g pnpm
 RUN pnpm i
-RUN npm run build
+RUN npm run build:without-migrate
 
 EXPOSE 3000/tcp
 
