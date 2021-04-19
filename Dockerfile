@@ -1,11 +1,13 @@
 FROM node:15.14.0-alpine3.10
 
+VOLUME [ "/data" ]
+
 ARG DB_TYPE=sqlite
 
 RUN apk add --no-cache python3 py3-pip make gcc g++
 RUN npm i -g pnpm
 
-COPY package.json /app
+COPY package.json pnpm-lock.yaml /app/
 
 WORKDIR /app
 
