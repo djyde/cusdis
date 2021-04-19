@@ -12,4 +12,4 @@ RUN npm run build:without-migrate
 
 EXPOSE 3000/tcp
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:with-migrate"]
