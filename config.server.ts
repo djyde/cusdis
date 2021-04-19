@@ -1,13 +1,63 @@
 import Providers from "next-auth/providers";
+import { prisma, resolvedConfig } from "./utils.server";
 
 /**
  * Auth Providers
  * https://next-auth.js.org/configuration/providers
  */
-export const authProviders = [
-  Providers.GitHub({
-    clientId: process.env.GITHUB_ID,
-    clientSecret: process.env.GITHUB_SECRET,
-    scope: "read:user,user:email",
-  }),
-];
+
+const providers = [];
+
+if (resolvedConfig.useLocalAuth) {
+  providers.push(
+    Providers.Credentials({
+      name: "Userename",
+      credentials: {
+        username: {
+          label: "Username",
+          type: "text",
+          placeholder: "env: USERNAME",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "env: PASSWORD",
+        },
+      },
+      async authorize(credentials: {
+        username: string,
+        password: string
+      }) {
+        if (credentials.username === process.env.USERNAME && credentials.password === process.env.PASSWORD) {
+          const user = await prisma.user.upsert({
+            where: {
+              id: credentials.username,
+            },
+            create: {
+              id: credentials.username,
+              name: credentials.username,
+            },
+            update: {
+              id: credentials.username,
+              name: credentials.username,
+            },
+          });
+          return user
+        } else {
+          return null
+        }
+      },
+    })
+  );
+}
+
+if (resolvedConfig.useGithub) {
+  providers.push(
+    Providers.GitHub({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+      scope: "read:user,user:email",
+    })
+  );
+}
+export const authProviders = providers;

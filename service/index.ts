@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/client";
+import { getSession } from "../utils.server"
 
 export type UserSession = {
   user: {
@@ -12,6 +12,6 @@ export abstract class RequestScopeService {
   constructor(protected req) {}
 
   protected async getSession() {
-    return await getSession({ req: this.req }) as UserSession;
+    return await getSession(this.req)
   }
 }

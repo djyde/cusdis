@@ -5,6 +5,8 @@
     "build": "npm run db:generate && next build && prisma migrate deploy && npm run build:widget",
     "build:without-migrate": "npm run db:generate && next build && npm run build:widget",
     "db:deploy": "prisma migrate deploy",
+    "db:deploy-sqlite": "prisma migrate deploy --schema ./prisma/sqlite/schema.prisma",
+    "db:generate-sqlite": "prisma generate --schema ./prisma/sqlite/schema.prisma",
     "db:push": "prisma db push --preview-feature",
     "db:generate": "prisma generate",
     "admin": "prisma studio",

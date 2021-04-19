@@ -1,9 +1,9 @@
 import React from 'react'
-import { getSession } from 'next-auth/client'
 import { Box, Button, Container, Flex, Heading, HStack, Img, Link, Spacer, Text, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { Footer } from '../components/Footer'
 import { Head } from '../components/Head'
+import { getSession } from '../utils.server'
 
 function IndexPage(props: {
   session
@@ -55,7 +55,7 @@ function IndexPage(props: {
 }
 
 export async function getServerSideProps(ctx) {
-  const session = await getSession(ctx)
+  const session = await getSession(ctx.req)
   return {
     props: {
       session

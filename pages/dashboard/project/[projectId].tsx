@@ -1,6 +1,6 @@
 import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
-import { signIn, getSession } from 'next-auth/client'
+import { signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useMutation, useQuery } from 'react-query'
@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import { UserSession } from '../../../service'
 import { Head } from '../../../components/Head'
 import { Navbar } from '../../../components/Navbar'
+import { getSession } from '../../../utils.server'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -306,7 +307,7 @@ export async function getServerSideProps(ctx) {
   const project = await projectService.get(ctx.query.projectId)
   return {
     props: {
-      session: await getSession({ ctx }),
+      session: await getSession(ctx.req),
       project: {
         id: project.id,
         title: project.title

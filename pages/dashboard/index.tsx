@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { signIn, useSession, getSession } from 'next-auth/client'
+import { signIn, useSession } from 'next-auth/client'
 import { apiClient } from '../../utils.client'
 import { useMutation, useQuery } from 'react-query'
 import { Box, Button, Container, Flex, FormControl, FormLabel, Heading, HStack, Input, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuDivider, MenuGroup, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Skeleton, Spacer, Stack, Tag, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { Head } from '../../components/Head'
 import { Footer } from '../../components/Footer'
 import { Navbar } from '../../components/Navbar'
+import { getSession } from '../../utils.server'
 
 export const createProject = async (body: {
   title: string
@@ -32,6 +33,7 @@ function Dashboard(props: {
 
   if (!props.session) {
     signIn()
+    return ''
   }
 
   const getProjects = useQuery<Project[]>('getProjects', getAllProjects, {
@@ -61,7 +63,6 @@ function Dashboard(props: {
       }
     })
   }
-
 
   return (
     <>
@@ -123,7 +124,7 @@ function Dashboard(props: {
 export async function getServerSideProps(ctx) {
   return {
     props: {
-      session: await getSession({ ctx })
+      session: await getSession(ctx.req)
     }
   }
 }

@@ -1,11 +1,14 @@
+import jwt from 'next-auth/jwt'
 import { PrismaClient } from "@prisma/client";
+import { UserSession } from './service';
+import { getSession as nextAuthGetSession } from 'next-auth/client'
 
 export const singleton = async <T>(id: string, fn: () => Promise<T>) => {
   if (process.env.NODE_ENV === "production") {
-    return await fn()
+    return await fn();
   } else {
     if (!global[id]) {
-      global[id] = await fn()
+      global[id] = await fn();
     }
     return global[id] as T;
   }
@@ -37,3 +40,13 @@ export function initMiddleware(middleware) {
       });
     });
 }
+
+export const resolvedConfig = {
+  useLocalAuth: process.env.USERNAME && process.env.PASSWORD,
+  useGithub: process.env.GITHUB_ID && process.env.GITHUB_SECRET,
+  jwtSecret: process.env.JWT_SECRET,
+};
+
+export const getSession = async (req) => {
+  return (await nextAuthGetSession({ req })) as UserSession;
+};
