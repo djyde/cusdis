@@ -9,8 +9,8 @@
   const { showIndicator } = getContext('attrs')
 </script>
 
-<div class:cusdis-padding={true} class:cusdis-indicator={showIndicator} style="margin-top: 2rem; margin-bottom: 2rem;">
-  <div style="margin-bottom: .5rem;">
+<div class:cusdis-padding={true} class:cusdis-indicator={showIndicator} style="margin-top: 2em; margin-bottom: 2em;">
+  <div style="margin-bottom: .5em;">
     <div class="cusdis-comment-nickname cusdis-inline cusdis-font-bold">{comment.by_nickname}</div>
     {#if comment.moderatorId}
       <span class="mod">MOD</span>
@@ -18,10 +18,10 @@
     <div class="cusdis-comment-date cusdis-inline">{comment.parsedCreatedAt}</div>
   </div>
 
-  <div class="cusdis-comment-content" style="margin-bottom: .5rem;">{comment.content}</div>
+  <div class="cusdis-comment-content" style="margin-bottom: .5em;">{comment.content}</div>
 
-  <div style="font-size: .5rem; margin-top: .25rem; margin-bottom: .25rem;">
-    <button type="button" on:click={_ => { showReplyForm = true }} class="cusdis-link-btn">Reply</button>
+  <div style="margin-top: .25em; margin-bottom: .25em;">
+    <button style="" type="button" on:click={_ => { showReplyForm = true }} class="cusdis-link-btn">Reply</button>
   </div>
 
   {#if showReplyForm}
@@ -37,7 +37,7 @@
 
 <style>
   .cusdis-padding {
-    padding-left: 1rem;
+    padding-left: 1em;
   }
 
   .cusdis-indicator {
@@ -51,22 +51,22 @@
     display: inline-block;
   }
 
-  .cudis-comment-nickname {
-    font-size: 1rem;
+  .cusdis-comment-nickname {
+    font-size: 1em;
   }
 
   .cusdis-comment-content {
     color: rgba(0, 0, 0, 0.8);
-    font-size: 1rem;
+    font-size: 1em;
   }
 
   .cusdis-comment-date {
     color: rgba(0, 0, 0, 0.8);
-    font-size: 0.8rem;
+    font-size: 0.8em;
   }
 
   .cusdis-link-btn {
-    font-size: 0.8rem;
+    font-size: 0.8em;
     text-decoration: underline;
     cursor: pointer;
     border: 0;
@@ -77,8 +77,9 @@
 
   .mod {
     background-color: #ddd;
-    font-size: .1rem;
-    padding: .15rem .15rem;
+    font-size: .8em;
+    box-sizing: border-box;
+    padding: .15em .4em;
     border-radius: 4px;
     font-weight: bold;
     color: rgba(0,0, 0, .8);

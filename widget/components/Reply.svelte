@@ -55,7 +55,7 @@
   }
 </script>
 
-<div style="margin-top: 1rem;">
+<div style="margin-top: 1em;">
   <div class="cusdis-reply-info cusdis-field">
     <div>
       <input type="text" placeholder="nickname" bind:value={nickname} />
@@ -79,15 +79,14 @@
   input {
     width: 100%;
     border: 2px solid #ddd;
-    padding: 0.5rem;
+    padding: 0.5em;
     border-radius: 4px;
+    outline: none;
   }
 
   textarea {
-    height: 4rem;
-  }
-
-  input {
+    height: 5em;
+    outline: none;
   }
 
   .cusdis-disabled {
@@ -104,50 +103,14 @@
     border: 0px;
     color: rgba(0, 0, 0, 0.8);
     border-radius: 0;
-    padding: 0.5rem 1rem;
+    padding: 0.5em 1em;
     cursor: pointer;
     border-radius: 2px;
     font-weight: bold;
   }
 
   .cusdis-field {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .lds-ring {
-    display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 80px;
-  }
-  .lds-ring div {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border: 8px solid #fff;
-    border-radius: 50%;
-    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #fff transparent transparent transparent;
-  }
-  .lds-ring div:nth-child(1) {
-    animation-delay: -0.45s;
-  }
-  .lds-ring div:nth-child(2) {
-    animation-delay: -0.3s;
-  }
-  .lds-ring div:nth-child(3) {
-    animation-delay: -0.15s;
-  }
-  @keyframes lds-ring {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
   }
 </style>

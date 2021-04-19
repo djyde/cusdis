@@ -55,7 +55,7 @@
 
   <div>
     {#if loadingComments}
-      <div style="text-align: center; font-size: .8rem;">Loading...</div>
+      <div style="text-align: center; font-size: .8em;">Loading...</div>
     {:else}
       {#each comments as comment (comment.id)}
         <Comment {comment} firstFloor={true} />
@@ -69,7 +69,8 @@
 <style>
 
   .cusdis-footer {
-    font-size: .8rem;
+    margin-top: 1em;
+    font-size: .8em;
     text-align: center;
   }
   .comment-main {
@@ -79,7 +80,7 @@
   .cusdis-message {
     background-color: #046582;
     color: #fff;
-    padding: 0.5rem;
-    font-size: 0.5rem;
+    padding: 0.5em;
+    font-size: 0.5em;
   }
 </style>
