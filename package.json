@@ -7,6 +7,7 @@
     "db:generate": "prisma generate",
     "admin": "prisma studio",
     "widget": "vite",
+    "start": "next start -p 3000",
     "build:widget": "vite build --config vite.library.config.js"
   },
   "dependencies": {
