@@ -1,7 +1,7 @@
 {
   "name": "cusdis",
   "scripts": {
-    "dev": "next dev",
+    "dev": "DB_TYPE=sqlite npm run db:generate && next dev",
     "build": "DB_TYPE=pgsql npm run db:generate && next build && npm run db:generate && npm run build:widget",
     "build:without-migrate": "npm run db:generate && next build && npm run build:widget",
     "db:deploy": "prisma migrate deploy --schema ./prisma/$DB_TYPE/schema.prisma",
@@ -25,6 +25,7 @@
     "dayjs": "^1.10.4",
     "formidable": "^1.2.2",
     "framer-motion": "^3.2.1",
+    "markdown-it": "^12.0.6",
     "milligram": "^1.4.1",
     "next": "^10.0.5",
     "next-auth": "^3.1.0",

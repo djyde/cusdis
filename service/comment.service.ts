@@ -3,6 +3,13 @@ import { RequestScopeService } from ".";
 import { prisma } from "../utils.server";
 import { PageService } from "./page.service";
 import dayjs from "dayjs";
+import MarkdownIt from 'markdown-it'
+
+const markdown = MarkdownIt()
+
+markdown.disable([
+  'image'
+])
 
 export class CommentService extends RequestScopeService {
   pageService = new PageService(this.req);
@@ -54,16 +61,19 @@ export class CommentService extends RequestScopeService {
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           "YYYY-MM-DD HH:mm"
         );
+        const parsedContent = markdown.render(comment.content)
         if (replies.length) {
           return {
             ...comment,
             replies,
+            parsedContent,
             parsedCreatedAt,
           };
         } else {
           return {
             ...comment,
             replies: [],
+            parsedContent,
             parsedCreatedAt,
           };
         }

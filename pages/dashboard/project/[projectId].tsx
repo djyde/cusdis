@@ -53,7 +53,8 @@ function CommentComponent(props: {
   comment: Comment & {
     replies: Array<Comment & {
       page: Page
-    }>
+    }>,
+    parsedContent: string,
     page: Page
   }
 }) {
@@ -145,7 +146,7 @@ function CommentComponent(props: {
       </HStack>
 
       <Box>
-        {comment.content}
+        <div dangerouslySetInnerHTML={{__html: comment.parsedContent }}></div>
       </Box>
 
       <HStack mt={2} spacing={4}>
