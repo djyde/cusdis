@@ -19,8 +19,9 @@ const getComments = async ({ queryKey }) => {
     data: Array<Comment & {
       replies: Array<Comment & {
         page: Page
-      }>
-      page: Page
+      }>,
+      page: Page,
+      parsedContent: string
     }>
   }>(`/project/${projectId}/comments`, {
     params: {

@@ -5,7 +5,9 @@ import { PageService } from "./page.service";
 import dayjs from "dayjs";
 import MarkdownIt from 'markdown-it'
 
-const markdown = MarkdownIt()
+const markdown = MarkdownIt({
+  linkify: true
+})
 
 markdown.disable([
   'image',
