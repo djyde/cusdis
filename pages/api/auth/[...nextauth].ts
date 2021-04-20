@@ -11,7 +11,7 @@ const options = {
   adapter: Adapters.Prisma.Adapter({ prisma: prisma }),
 
   session: {
-    jwt: resolvedConfig.useLocalAuth,
+    jwt: !!resolvedConfig.useLocalAuth,
   },
 
   jwt: {
