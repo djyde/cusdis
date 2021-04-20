@@ -8,7 +8,8 @@ import MarkdownIt from 'markdown-it'
 const markdown = MarkdownIt()
 
 markdown.disable([
-  'image'
+  'image',
+  'link'
 ])
 
 export class CommentService extends RequestScopeService {
