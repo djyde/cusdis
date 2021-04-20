@@ -37,7 +37,7 @@ function IndexPage(props: {
         <HStack spacing={4} mt={8}>
           <Button onClick={_ => router.push('/dashboard')} fontWeight="bold" color="gray.700">Start for free</Button>
 
-          <Link href="/doc" fontWeight="bold" color="gray.700">Self host guide</Link>
+          <Link href="/doc" fontWeight="bold" color="gray.700">Documentation</Link>
 
           <Link isExternal href="https://github.com/djyde/cusdis" fontWeight="bold" color="gray.700">GitHub</Link>
 

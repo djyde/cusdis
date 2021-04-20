@@ -1,11 +1,16 @@
 {
   "name": "cusdis",
   "scripts": {
-    "dev": "DB_TYPE=sqlite npm run db:generate && next dev",
-    "build": "DB_TYPE=pgsql npm run db:generate && next build && npm run db:generate && npm run build:widget",
+    "dev": "DB_TYPE=sqlite npm run dev:general",
+    "dev:pg": "DB_TYPE=pgsql npm run dev:general",
+    "dev:general": "npm run db:deploy && npm run db:generate && next dev",
+    "build": "DB_TYPE=pgsql npm run db:generate && next build && npm run build:widget",
     "build:without-migrate": "npm run db:generate && next build && npm run build:widget",
     "db:deploy": "prisma migrate deploy --schema ./prisma/$DB_TYPE/schema.prisma",
     "db:generate": "prisma generate --schema ./prisma/$DB_TYPE/schema.prisma",
+    "db:push": "DB_TYPE=sqlite npm run db:push:general",
+    "db:push:pg": "DB_TYPE=pgsql npm run db:push:general",
+    "db:push:general": "prisma db push --schema ./prisma/$DB_TYPE/schema.prisma --preview-feature",
     "admin": "prisma studio",
     "widget": "vite",
     "start": "next start -p 3000",
