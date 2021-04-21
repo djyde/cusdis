@@ -1,6 +1,4 @@
-# Installation
-
-## Docker
+# Docker
 
 ```bash
 docker run \
@@ -19,7 +17,7 @@ docker run \
 
 Then visit `http://IP_ADDRESS_OR_DOMAIN`
 
-### Env
+## Env
 
 - `USERNAME` (required) username to login
 - `PASSWORD` (required) password to login
@@ -81,6 +79,3 @@ services:
 
 Then run `docker-compose up`
 
-## Vercel
-
-WIP...

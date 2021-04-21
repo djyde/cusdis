@@ -1,5 +1,6 @@
 - **Introduction**
   - [About](/)
 - **Self-host Guide**
-  - [Installation](/self-host/installation.md)
+  - [Docker](/self-host/docker.md)
+  - [Vercel](/self-host/vercel.md)
 - [**Contributing**](/contributing.md)
