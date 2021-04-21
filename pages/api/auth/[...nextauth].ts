@@ -1,10 +1,27 @@
 import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
 import Adapters from "next-auth/adapters";
 import { prisma, resolvedConfig, singletonSync } from "../../../utils.server";
 import { authProviders } from "../../../config.server";
 
-const options = {
+// Using Module Augmentation
+// https://next-auth.js.org/getting-started/typescript
+
+declare module "next-auth" {
+  interface Session {
+    uid: string
+  }
+  interface User {
+    id: string
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string
+  }
+}
+
+export default NextAuth({
   // Configure one or more authentication providers
   providers: authProviders,
 
@@ -19,17 +36,15 @@ const options = {
   },
 
   callbacks: {
-    session: async (session, user) => {
+    session(session, user) {
       session.uid = user.id;
-      return Promise.resolve(session);
+      return session;
     },
-    jwt: async (token, user, account, profile) => {
+    jwt(token, user) {
       if (user) {
         token.id = user.id;
       }
       return token;
     },
   },
-};
-
-export default (req, res) => NextAuth(req, res, options);
+});
