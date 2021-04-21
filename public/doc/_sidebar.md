@@ -1,5 +1,6 @@
 - **Introduction**
   - [About](/)
+  - [Awesome Cusdis](awesome.md)
 - **Self-host Guide**
   - [Docker](/self-host/docker.md)
   - [Vercel](/self-host/vercel.md)
