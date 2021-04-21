@@ -2,6 +2,17 @@
 
 Open-source, lightweight (~5kb gzipped), privacy-friendly alternative to Disqus.
 
+
+## Features
+
+- Universal embed code
+  - You can embed Cusdis on every website.
+- Light-weight sdk
+  - The SDK that embed to your website is only 5kb (gzipped). Compared to Disqus (which is 24kb gzipped), it's very light-weight.
+- One-click import data from Disqus
+- Moderation dashboard
+  - Since we don't require user sign in to comment, all comments are NOT displayed by default, until the moderator approve it. We provide a moderation dashboard for it.
+
 There are two ways to use Cusdis:
 
 ## Self host
@@ -15,8 +26,6 @@ You can install Cusids on your own server, just follow this [installation guide]
 _Props: Easy to use_
 
 You can also use our [hosted service](https://cusdis.com/dashboard). We host our service on [Vercel](https://vercel.com), the data is stored on a PostgreSQL database.
-
-The hosted service is in beta now, so keep in mind that it's not very stable yet.
 
 ## Compared to Disqus
 
