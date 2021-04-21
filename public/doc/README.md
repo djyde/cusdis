@@ -2,6 +2,36 @@
 
 Open-source, lightweight (~5kb gzipped), privacy-friendly alternative to Disqus.
 
-You can [self-host](/self-host/installation.md) it or use our [hosted service](https://cusdis.com).
+There are two ways to use Cusdis:
 
-<!-- <img src="https://assets.djyde.com/uPic/截屏2021-04-18%2013.28.43.png?x-oss-process=style/high-optimize" width="50%" /> -->
+## Self host
+
+_Props: You own your data_
+
+You can install Cusids on your own server, just follow this [installation guide](/self-host/installation.md)
+
+## Hosted service
+
+_Props: Easy to use_
+
+You can also use our [hosted service](https://cusdis.com/dashboard). We host our service on [Vercel](https://vercel.com), the data is stored on a PostgreSQL database.
+
+The hosted service is in beta now, so keep in mind that it's not very stable yet.
+
+## Compared to Disqus
+
+Cusdis is not designed for a FULLY alternative to Disqus, it's aim to implement a minimist embed comment tool for small sites (like your static blog). 
+
+Below are the props and cons of Cusdis:
+
+### Props
+
+- Cusdis is open-source and self-hostable, you own your data.
+- The SDK is lightweight (~5kb gzipped)
+- Cusdis doesn't required commenter to sign in. We don't use cookies at all.
+
+### Cons
+
+- Cusdis is on early development stage
+- You have to manually moderate comments which are not display by default until you approve it, since we dont't have a spam filter.
+- Disqus is a company, we aren't.
