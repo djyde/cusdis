@@ -1,8 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { CommentService } from "../../../../service/comment.service";
-import { ProjectService } from "../../../../service/project.service";
+import { NextApiRequest, NextApiResponse } from 'next'
+import { CommentService } from '../../../../service/comment.service'
+import { ProjectService } from '../../../../service/project.service'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const projectService = new ProjectService(req)
   const commentService = new CommentService(req)
   if (req.method === 'GET') {
@@ -16,11 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       onlyOwn: true,
       select: {
         by_nickname: true,
-        by_email: true
-      }
+        by_email: true,
+      },
     })
     res.json({
-      data: comments
+      data: comments,
     })
   }
 }
