@@ -4,8 +4,6 @@
 - **Self-host Guide**
   - [Docker](/self-host/docker.md)
   - [Vercel](/self-host/vercel.md)
-<!-- - **Integration**
-  - [Docsify](/integration/docsify.md) -->
 - **Advanced**
   - [JS SDK Reference](/advanced/sdk.md)
 - [**Contributing**](/contributing.md)
