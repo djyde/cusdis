@@ -1,7 +1,6 @@
-import * as React from "react"
-import { signIn, useSession } from "next-auth/client"
-import { apiClient } from "../../utils.client"
-import { useMutation, useQuery } from "react-query"
+import * as React from 'react'
+import { apiClient } from '../../utils.client'
+import { useMutation, useQuery } from 'react-query'
 import {
   Box,
   Button,
@@ -36,33 +35,31 @@ import {
   useDisclosure,
   useToast,
   VStack,
-} from "@chakra-ui/react"
-import { useForm } from "react-hook-form"
-import { Project } from "@prisma/client"
-import { ChevronDownIcon } from "@chakra-ui/icons"
-import type { UserSession } from "../../service"
-import { useRouter } from "next/router"
-import { Head } from "../../components/Head"
-import { Footer } from "../../components/Footer"
-import { Navbar } from "../../components/Navbar"
-import { getSession } from "../../utils.server"
+} from '@chakra-ui/react'
+import { useForm } from 'react-hook-form'
+import { Project } from '@prisma/client'
+import { ChevronDownIcon } from '@chakra-ui/icons'
+import type { UserSession } from '../../service'
+import { useRouter } from 'next/router'
+import { Head } from '../../components/Head'
+import { Footer } from '../../components/Footer'
+import { Navbar } from '../../components/Navbar'
+import { getSession } from '../../utils.server'
 
 export const createProject = async (body: { title: string }) => {
-  const res = await apiClient.post("/projects", {
+  const res = await apiClient.post('/projects', {
     title: body.title,
   })
   return res.data
 }
 
 export const getAllProjects = async () => {
-  const res = await apiClient.get("/projects")
+  const res = await apiClient.get('/projects')
   return res.data.data
 }
 
 function Dashboard(props: { session: UserSession }) {
-  const getProjects = useQuery<Project[]>("getProjects", getAllProjects, {
-    enabled: !!props.session,
-  })
+  const getProjects = useQuery<Project[]>('getProjects', getAllProjects)
 
   const toast = useToast()
   const router = useRouter()
@@ -81,26 +78,16 @@ function Dashboard(props: { session: UserSession }) {
       {
         onSuccess(data) {
           toast({
-            status: "success",
-            title: "Project created",
+            status: 'success',
+            title: 'Project created',
           })
           router.push(`/dashboard/project/${data.data.id}`, null, {
             shallow: true,
           })
           createProjectModal.onClose()
         },
-      }
+      },
     )
-  }
-
-  React.useEffect(() => {
-    if (!props.session) {
-      signIn()
-    }
-  }, [!props.session])
-
-  if (!props.session) {
-    return <div>Redirecting to signin..</div>
   }
 
   return (
@@ -120,7 +107,7 @@ function Dashboard(props: { session: UserSession }) {
             <ModalBody>
               <FormControl isRequired id="title">
                 <FormLabel>Title</FormLabel>
-                <Input type="text" {...form.register("title")}></Input>
+                <Input type="text" {...form.register('title')}></Input>
               </FormControl>
             </ModalBody>
             <ModalFooter>
@@ -172,9 +159,19 @@ function Dashboard(props: { session: UserSession }) {
 }
 
 export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx.req)
+  if (session) {
+    return {
+      props: {
+        session,
+      },
+    }
+  }
+  const nextAuthUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000'
   return {
-    props: {
-      session: await getSession(ctx.req),
+    redirect: {
+      permanent: false,
+      destination: `/api/auth/signin?callbackUrl=${nextAuthUrl}/dashboard`,
     },
   }
 }
