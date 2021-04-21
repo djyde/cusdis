@@ -28,7 +28,7 @@ Then visit `http://IP_ADDRESS_OR_DOMAIN`
   - If you use pgsql, set it to your pgsql connection url
 - `NEXTAUTH_URL` (required) your machine host (IP address or domain like `https://foo.com`)
 - `JWT_SECRET` jwt secret
-- `PG_TYPE`
+- `DB_TYPE`
   - `sqlite` (default)
   - `pgsql`
 
