@@ -17,6 +17,7 @@
     "start:with-migrate": "npm run db:generate && npm run db:deploy && next start -p 3000",
     "build:widget": "vite build --config vite.library.config.js"
   },
+  "prettier": "@egoist/prettier-config",
   "dependencies": {
     "@chakra-ui/icons": "^1.0.10",
     "@chakra-ui/react": "^1.1.4",
@@ -53,11 +54,14 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-proposal-decorators": "^7.12.12",
+    "@egoist/prettier-config": "^0.1.0",
     "@types/next-auth": "^3.13.0",
     "@types/node": "^14.14.21",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "babel-plugin-transform-typescript-metadata": "^0.3.1",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "prisma": "^2.19.0",
     "typegraphql-prisma": "^0.9.4",
     "typescript": "^4.1.3"

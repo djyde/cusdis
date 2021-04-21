@@ -1,34 +1,31 @@
-import { Comment, Prisma } from "@prisma/client";
-import { RequestScopeService } from ".";
-import { prisma } from "../utils.server";
-import { PageService } from "./page.service";
-import dayjs from "dayjs";
+import { Comment, Prisma } from '@prisma/client'
+import { RequestScopeService } from '.'
+import { prisma } from '../utils.server'
+import { PageService } from './page.service'
+import dayjs from 'dayjs'
 import MarkdownIt from 'markdown-it'
 
 const markdown = MarkdownIt({
-  linkify: true
+  linkify: true,
 })
 
-markdown.disable([
-  'image',
-  'link'
-])
+markdown.disable(['image', 'link'])
 
 export class CommentService extends RequestScopeService {
-  pageService = new PageService(this.req);
+  pageService = new PageService(this.req)
 
   async getComments(
     projectId: string,
     options?: {
-      parentId?: string;
-      page?: number;
-      select?: Prisma.CommentSelect,
-      pageSlug?: string | Prisma.StringFilter;
+      parentId?: string
+      page?: number
+      select?: Prisma.CommentSelect
+      pageSlug?: string | Prisma.StringFilter
       onlyOwn?: boolean
-      approved?: boolean;
-    }
+      approved?: boolean
+    },
   ): Promise<Comment[]> {
-    const pageSize = 10;
+    const pageSize = 10
 
     const select = {
       id: true,
@@ -36,13 +33,13 @@ export class CommentService extends RequestScopeService {
       content: true,
       ...options?.select,
       page: true,
-    };
+    }
 
     const comments = await prisma.comment.findMany({
       skip: options?.page ? (options.page - 1) * pageSize : 0,
       take: options?.page ? pageSize : 100,
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
       select,
       where: {
@@ -55,11 +52,13 @@ export class CommentService extends RequestScopeService {
           slug: options?.pageSlug,
           projectId,
           project: {
-            ownerId: options?.onlyOwn ? await (await this.getSession()).uid : undefined
-          }
+            ownerId: options?.onlyOwn
+              ? await (await this.getSession()).uid
+              : undefined,
+          },
         },
       },
-    });
+    })
 
     const allComments = await Promise.all(
       comments.map(async (comment) => {
@@ -69,10 +68,10 @@ export class CommentService extends RequestScopeService {
           parentId: comment.id,
           pageSlug: options?.pageSlug,
           select,
-        });
+        })
         const parsedCreatedAt = dayjs(comment.createdAt).format(
-          "YYYY-MM-DD HH:mm"
-        );
+          'YYYY-MM-DD HH:mm',
+        )
         const parsedContent = markdown.render(comment.content)
         if (replies.length) {
           return {
@@ -80,38 +79,38 @@ export class CommentService extends RequestScopeService {
             replies,
             parsedContent,
             parsedCreatedAt,
-          };
+          }
         } else {
           return {
             ...comment,
             replies: [],
             parsedContent,
             parsedCreatedAt,
-          };
+          }
         }
-      })
-    );
+      }),
+    )
 
-    return allComments as any[];
+    return allComments as any[]
   }
 
   async addComment(
     projectId: string,
     pageSlug: string,
     body: {
-      content: string;
-      email: string;
-      nickname: string;
-      pageUrl?: string;
-      pageTitle?: string;
+      content: string
+      email: string
+      nickname: string
+      pageUrl?: string
+      pageTitle?: string
     },
-    parentId?: string
+    parentId?: string,
   ) {
     // touch page
     const page = await this.pageService.upsertPage(pageSlug, projectId, {
       pageTitle: body.pageTitle,
-      pageUrl: body.pageUrl
-    });
+      pageUrl: body.pageUrl,
+    })
 
     const created = await prisma.comment.create({
       data: {
@@ -121,18 +120,18 @@ export class CommentService extends RequestScopeService {
         pageId: page.id,
         parentId,
       },
-    });
+    })
 
-    return created;
+    return created
   }
 
   async addCommentAsModerator(parentId: string, content: string) {
-    const session = await this.getSession();
+    const session = await this.getSession()
     const parent = await prisma.comment.findUnique({
       where: {
         id: parentId,
       },
-    });
+    })
 
     const created = await prisma.comment.create({
       data: {
@@ -144,9 +143,9 @@ export class CommentService extends RequestScopeService {
         approved: true,
         parentId,
       },
-    });
+    })
 
-    return created;
+    return created
   }
 
   async approve(commentId: string) {
@@ -157,7 +156,7 @@ export class CommentService extends RequestScopeService {
       data: {
         approved: true,
       },
-    });
+    })
   }
 
   async delete(commentId: string) {
@@ -168,6 +167,6 @@ export class CommentService extends RequestScopeService {
       data: {
         deletedAt: new Date(),
       },
-    });
+    })
   }
 }
