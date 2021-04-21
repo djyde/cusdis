@@ -50,6 +50,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       approved: true,
       parentId: null,
       pageSlug: query.pageId,
+      select: {
+        by_nickname: true,
+      }
     });
 
     res.json({
