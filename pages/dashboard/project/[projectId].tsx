@@ -275,7 +275,7 @@ function Settings(props: {
           <Heading as="h1" size="md" mb={4} >Embed Code</Heading>
           {typeof window !== 'undefined' && <Box as="pre" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
             <code>
-              {`<div id="cusdis"
+              {`<div id="cusdis_thread"
   data-host="${location.origin}"
   data-app-id="${props.project.id}"
   data-page-id="{{ PAGE_ID }}"

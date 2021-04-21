@@ -14,7 +14,7 @@ https://cusdis.com/doc
 
 ## Compared to Disqus
 
-Cusdis is not designed to be a complete alternative to Disqus. It's aim is to implement a minimalist and embeddable comment system for small websites (such as your static blog). 
+Cusdis is not designed to be a complete alternative to Disqus. It's aim is to implement a minimalist and embeddable comment system for small websites (such as your static blog).
 
 Given below are the pros and cons of Cusdis:
 
@@ -33,12 +33,10 @@ Given below are the pros and cons of Cusdis:
 
 ## Sponsor this project
 
-
 [![Contributors](https://opencollective.com/cusdis/tiers/sponsors.svg)](https://opencollective.com/cusdis)
 [![Contributors](https://opencollective.com/cusdis/tiers/backers.svg)](https://opencollective.com/cusdis)
 
-
-## Contributing 
+## Contributing
 
 [Contributing Guide](https://cusdis.com/doc#/contributing)
 
