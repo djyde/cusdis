@@ -32,9 +32,9 @@ Then visit `http://IP_ADDRESS_OR_DOMAIN`
   - `sqlite` (default)
   - `pgsql`
 
-### Postgres
+### PostgreSQL (optional)
 
-You can connect Cusdis to an exist pgsql:
+You can connect Cusdis to an exist pgsql instead of SQLite:
 
 ```bash
 docker run \

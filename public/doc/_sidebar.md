@@ -1,6 +1,5 @@
 - **Introduction**
   - [About](/)
-  - [Features](/features.md)
 - **Self-host Guide**
   - [Installation](/self-host/installation.md)
 - [**Contributing**](/contributing.md)
