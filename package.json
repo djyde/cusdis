@@ -53,6 +53,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-proposal-decorators": "^7.12.12",
+    "@types/next-auth": "^3.13.0",
     "@types/node": "^14.14.21",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
