@@ -18,7 +18,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const commentService = new CommentService(req)
 
   if (req.method === 'POST') {
-    await cors(req, res);
     // add comment
     const body = req.body as {
       parentId?: string;
