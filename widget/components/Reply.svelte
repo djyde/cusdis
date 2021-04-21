@@ -58,10 +58,10 @@
 <div style="margin-top: 1em;">
   <div class="cusdis-reply-info cusdis-field">
     <div>
-      <input type="text" placeholder="nickname" bind:value={nickname} />
+      <input type="text" placeholder="Nickname" bind:value={nickname} />
     </div>
     <div>
-      <input type="text" placeholder="email" bind:value={email} />
+      <input type="text" placeholder="Email" bind:value={email} />
     </div>
   </div>
 
