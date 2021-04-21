@@ -60,13 +60,6 @@ export const getAllProjects = async () => {
 }
 
 function Dashboard(props: { session: UserSession }) {
-  if (!props.session) {
-    React.useEffect(() => {
-      signIn()
-    }, [])
-    return <div>Redirecting to signin..</div>
-  }
-
   const getProjects = useQuery<Project[]>("getProjects", getAllProjects, {
     enabled: !!props.session,
   })
@@ -98,6 +91,16 @@ function Dashboard(props: { session: UserSession }) {
         },
       }
     )
+  }
+
+  React.useEffect(() => {
+    if (!props.session) {
+      signIn()
+    }
+  }, [!props.session])
+
+  if (!props.session) {
+    return <div>Redirecting to signin..</div>
   }
 
   return (
