@@ -60,4 +60,13 @@ if (resolvedConfig.useGithub) {
     })
   );
 }
+
+if (resolvedConfig.google.id) {
+  providers.push(
+    Providers.Google({
+      clientId: resolvedConfig.google.id,
+      clientSecret: resolvedConfig.google.secret
+    })
+  )
+}
 export const authProviders = providers;

@@ -49,6 +49,10 @@ export const resolvedConfig = {
     id: process.env.UMAMI_ID as string | undefined,
     src: process.env.UMAMI_SRC as string | undefined,
   },
+  google: {
+    id: process.env.GOOGLE_ID as string | undefined,
+    secret: process.env.GOOGLE_SECRET as string | undefined
+  }
 };
 
 export const getSession = async (req) => {
