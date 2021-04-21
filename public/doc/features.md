@@ -6,7 +6,7 @@ You can embed Cusdis on every website.
 
 ## Light-weight sdk
 
-The SDK that embed to your website is only 5kb (gzipped). Compared to Disuqs (which is 24kb gzipped), it's very light-weight.
+The SDK that embed to your website is only 5kb (gzipped). Compared to Disqus (which is 24kb gzipped), it's very light-weight.
 
 ## Moderation
 
