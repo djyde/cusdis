@@ -45,6 +45,10 @@ export const resolvedConfig = {
   useLocalAuth: process.env.USERNAME && process.env.PASSWORD,
   useGithub: process.env.GITHUB_ID && process.env.GITHUB_SECRET,
   jwtSecret: process.env.JWT_SECRET,
+  umami: {
+    id: process.env.UMAMI_ID as string | undefined,
+    src: process.env.UMAMI_SRC as string | undefined,
+  },
 };
 
 export const getSession = async (req) => {
