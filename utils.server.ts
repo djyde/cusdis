@@ -1,4 +1,3 @@
-import jwt from 'next-auth/jwt'
 import { PrismaClient } from '@prisma/client'
 import { UserSession } from './service'
 import { getSession as nextAuthGetSession } from 'next-auth/client'
@@ -56,6 +55,5 @@ export const resolvedConfig = {
 }
 
 export const getSession = async (req) => {
-  // @ts-expect-error
   return (await nextAuthGetSession({ req })) as UserSession
 }
