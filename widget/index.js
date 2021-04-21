@@ -25,6 +25,10 @@ if (window.cusdisElementId) {
   target = document.querySelector("#cusdis");
 }
 
-if (target) {
-  render(target);
+if (window.CUSDIS_PREVENT_INITIAL_RENDER === true) {
+
+} else {
+  if (target) {
+    render(target)
+  }
 }
