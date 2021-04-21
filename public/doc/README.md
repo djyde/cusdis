@@ -17,13 +17,13 @@ There are two ways to use Cusdis:
 
 ## Self host
 
-_Props: You own your data_
+_Pros: You own your data_
 
-You can install Cusids on your own server, just follow this [installation guide](/self-host/installation.md)
+You can install Cusdis on your own server, just follow this [installation guide](/self-host/installation.md)
 
 ## Hosted service
 
-_Props: Easy to use_
+_Pros: Easy to use_
 
 You can also use our [hosted service](https://cusdis.com/dashboard). We host our service on [Vercel](https://vercel.com), the data is stored on a PostgreSQL database.
 
@@ -31,9 +31,9 @@ You can also use our [hosted service](https://cusdis.com/dashboard). We host our
 
 Cusdis is not designed for a FULLY alternative to Disqus, it's aim to implement a minimist embed comment tool for small sites (like your static blog). 
 
-Below are the props and cons of Cusdis:
+Below are the pros and cons of Cusdis:
 
-### Props
+### Pros
 
 - Cusdis is open-source and self-hostable, you own your data.
 - The SDK is lightweight (~5kb gzipped)
