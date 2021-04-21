@@ -14,8 +14,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       parentId: null,
       page: Number(page),
       onlyOwn: true,
-      include: {
-        page: true
+      select: {
+        by_nickname: true,
+        by_email: true
       }
     })
     res.json({

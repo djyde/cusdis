@@ -20,22 +20,31 @@ export class CommentService extends RequestScopeService {
   async getComments(
     projectId: string,
     options?: {
-      include?: Prisma.CommentInclude;
       parentId?: string;
       page?: number;
+      select?: Prisma.CommentSelect,
       pageSlug?: string | Prisma.StringFilter;
       onlyOwn?: boolean
       approved?: boolean;
     }
   ): Promise<Comment[]> {
     const pageSize = 10;
+
+    const select = {
+      id: true,
+      createdAt: true,
+      content: true,
+      ...options?.select,
+      page: true,
+    };
+
     const comments = await prisma.comment.findMany({
       skip: options?.page ? (options.page - 1) * pageSize : 0,
       take: options?.page ? pageSize : 100,
       orderBy: {
         createdAt: "desc",
       },
-      include: options?.include,
+      select,
       where: {
         approved: options?.approved === true ? true : options?.approved,
         parentId: options?.parentId,
@@ -59,7 +68,7 @@ export class CommentService extends RequestScopeService {
           ...options,
           parentId: comment.id,
           pageSlug: options?.pageSlug,
-          include: options?.include,
+          select,
         });
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           "YYYY-MM-DD HH:mm"
@@ -83,7 +92,7 @@ export class CommentService extends RequestScopeService {
       })
     );
 
-    return allComments as Comment[];
+    return allComments as any[];
   }
 
   async addComment(

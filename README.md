@@ -14,7 +14,7 @@ https://cusdis.com/doc
 
 ## Compared to Disqus
 
-Cusdis is not designed to be a complete alternative to Disqus. it's aim is to implement a minimalist and embeddable comment system for small websites (such as your static blog). 
+Cusdis is not designed to be a complete alternative to Disqus. It's aim is to implement a minimalist and embeddable comment system for small websites (such as your static blog). 
 
 Given below are the pros and cons of Cusdis:
 
