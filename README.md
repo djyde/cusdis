@@ -16,9 +16,9 @@ https://cusdis.com/doc
 
 Cusdis is not designed to be a complete alternative to Disqus. it's aim is to implement a minimalist and embeddable comment system for small websites (such as your static blog). 
 
-Given below are the props and cons of Cusdis:
+Given below are the pros and cons of Cusdis:
 
-### Props
+### Pros
 
 - Cusdis is open-source and self-hostable. Hence, you own your data.
 - The SDK is lightweight(~5kb gzipped).
