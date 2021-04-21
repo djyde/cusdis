@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 import {
   Box,
   Button,
@@ -11,13 +11,13 @@ import {
   Spacer,
   Text,
   VStack,
-} from "@chakra-ui/react"
-import { signIn } from "next-auth/client"
-import { useRouter } from "next/router"
-import { Footer } from "../components/Footer"
-import { Head } from "../components/Head"
-import { getSession } from "../utils.server"
-import { GetServerSideProps } from "next"
+} from '@chakra-ui/react'
+import { signIn } from 'next-auth/client'
+import { useRouter } from 'next/router'
+import { Footer } from '../components/Footer'
+import { Head } from '../components/Head'
+import { getSession } from '../utils.server'
+import { GetServerSideProps } from 'next'
 
 type Props = {
   session: any
@@ -57,7 +57,7 @@ function IndexPage({ session }: Props) {
         <HStack spacing={4} mt={8}>
           {session ? (
             <Button
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push('/dashboard')}
               fontWeight="bold"
               color="gray.700"
             >
