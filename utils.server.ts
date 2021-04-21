@@ -48,5 +48,6 @@ export const resolvedConfig = {
 };
 
 export const getSession = async (req) => {
+  // @ts-expect-error
   return (await nextAuthGetSession({ req })) as UserSession;
 };
