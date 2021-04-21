@@ -31,6 +31,13 @@ Given below are the pros and cons of Cusdis:
 - There is no spam filter, hence, you will have to manually moderate your comment section and comments won't be displayed until you approve them.
 - Disqus is a company, we aren't.
 
+## Sponsor this project
+
+
+[![Contributors](https://opencollective.com/cusdis/tiers/sponsors.svg)](https://opencollective.com/cusdis)
+[![Contributors](https://opencollective.com/cusdis/tiers/backers.svg)](https://opencollective.com/cusdis)
+
+
 ## Contributing 
 
 [Contributing Guide](https://cusdis.com/doc#/contributing)
