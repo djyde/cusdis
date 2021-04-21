@@ -30,6 +30,12 @@ Below are the props and cons of Cusdis:
 - You have to manually moderate comments which are not display by default until you approve it, since we dont't have a spam filter.
 - Disqus is a company, we aren't.
 
+## Contributing 
+
+[Contributing Guide](https://cusdis.com/doc#/contributing)
+
+If you are going to make a PR, remember to choose `dev` as the base branch.
+
 # License
 
 MIT
