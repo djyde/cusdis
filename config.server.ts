@@ -1,4 +1,4 @@
-import Providers from 'next-auth/providers'
+import Providers, { AppProviders } from 'next-auth/providers'
 import { prisma, resolvedConfig } from './utils.server'
 
 /**
@@ -6,7 +6,7 @@ import { prisma, resolvedConfig } from './utils.server'
  * https://next-auth.js.org/configuration/providers
  */
 
-const providers = []
+const providers: AppProviders = []
 
 if (resolvedConfig.useLocalAuth) {
   providers.push(
