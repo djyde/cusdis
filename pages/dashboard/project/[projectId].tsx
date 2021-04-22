@@ -391,19 +391,21 @@ function NotificationSettings(props: {
 
   return (
     <VStack alignItems="stretch" spacing={4}>
-      <Heading as="h1" size="md">Latest Comments API</Heading>
 
-      <Text fontSize="sm">
-        This API fetches latest comments of the project. Once you call this API, the returned comments will be marked as read. They won't be returned in the next API call.
-      </Text>
+      <Heading as="h1" size="md">Latest Comments API</Heading>
 
       { !props.project.token && <Box>
         <Text>To enable open API, please first generate a token for this project in <Code>Settings</Code></Text>
       </Box>}
 
-      {props.project.token && <Code p={4} rounded={'md'}>
+      {props.project.token && <><Code p={4} rounded={'md'}>
         {typeof window !== 'undefined' && `GET ${location.origin}/api/open/project/${props.project.id}/comments/latest?token=${props.project.token}`}
-      </Code>}
+      </Code>
+
+        <Text fontSize="sm">
+          <Link isExternal href="http://localhost:3000/doc#/advanced/notification">How to use?</Link>
+        </Text>
+      </>}
     </VStack>
   )
 }
