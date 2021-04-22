@@ -12,6 +12,7 @@ import { UserSession } from '../../../service'
 import { Head } from '../../../components/Head'
 import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
+import { Footer } from '../../../components/Footer'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -244,6 +245,8 @@ function ProjectPage(props: {
         </Tabs>
 
       </Container>
+
+      <Footer maxWidth="5xl" />
     </>
   )
 }
