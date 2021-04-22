@@ -313,7 +313,7 @@ function Settings(props: {
 export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
   const session = await getSession(ctx.req)
-  const project = await projectService.get(ctx.query.projectId)
+  const project = await projectService.get(ctx.query.projectId) as Project
 
   if (session && (project.ownerId !== session.uid)) {
     return {
