@@ -161,3 +161,4 @@ dist
 generated/*
 db.sqlite
 public/js
+widget/index.html

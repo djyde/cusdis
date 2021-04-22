@@ -58,10 +58,10 @@
 <div style="margin-top: 1em;">
   <div class="cusdis-reply-info cusdis-field">
     <div>
-      <input type="text" placeholder="nickname" bind:value={nickname} />
+      <input type="text" placeholder="Nickname" bind:value={nickname} />
     </div>
     <div>
-      <input type="text" placeholder="email" bind:value={email} />
+      <input type="text" placeholder="Email" bind:value={email} />
     </div>
   </div>
 
@@ -82,6 +82,7 @@
     padding: 0.5em;
     border-radius: 4px;
     outline: none;
+    font-family: inherit;
   }
 
   textarea {
@@ -107,6 +108,7 @@
     cursor: pointer;
     border-radius: 2px;
     font-weight: bold;
+    font-family: inherit;
   }
 
   .cusdis-field {

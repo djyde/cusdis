@@ -94,6 +94,28 @@ export class CommentService extends RequestScopeService {
     return allComments as any[]
   }
 
+  async getProject(commentId: string) {
+    const res = await prisma.comment.findUnique({
+      where: {
+        id: commentId
+      },
+      select: {
+        page: {
+          select: {
+            project: {
+              select: {
+                id: true,
+                ownerId: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    return res.page.project
+  }
+
   async addComment(
     projectId: string,
     pageSlug: string,
