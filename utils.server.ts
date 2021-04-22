@@ -63,6 +63,9 @@ export const resolvedConfig = {
       pass: process.env.SMTP_PASSWORD as EnvVariable
     },
     senderAddress: process.env.SMTP_SENDER as EnvVariable
+  },
+  sendgrid: {
+    apiKey: process.env.SENDGRID_API_KEY as EnvVariable
   }
 }
 
