@@ -82,6 +82,7 @@
     padding: 0.5em;
     border-radius: 4px;
     outline: none;
+    font-family: inherit;
   }
 
   textarea {
@@ -107,6 +108,7 @@
     cursor: pointer;
     border-radius: 2px;
     font-weight: bold;
+    font-family: inherit;
   }
 
   .cusdis-field {
