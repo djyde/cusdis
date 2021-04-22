@@ -11,6 +11,7 @@
     "db:push": "DB_TYPE=sqlite npm run db:push:general",
     "db:push:pg": "DB_TYPE=pgsql npm run db:push:general",
     "db:push:general": "prisma db push --schema ./prisma/$DB_TYPE/schema.prisma --preview-feature",
+    "db:migrate": "prisma migrate dev --schema ./prisma/$DB_TYPE/schema.prisma",
     "admin": "prisma studio",
     "widget": "vite",
     "start": "next start -p 3000",

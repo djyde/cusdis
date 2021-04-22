@@ -1,4 +1,4 @@
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -147,7 +147,7 @@ function CommentComponent(props: {
       </HStack>
 
       <Box>
-        <div dangerouslySetInnerHTML={{__html: comment.parsedContent }}></div>
+        <div dangerouslySetInnerHTML={{ __html: comment.parsedContent }}></div>
       </Box>
 
       <HStack mt={2} spacing={4}>
@@ -160,7 +160,7 @@ function CommentComponent(props: {
         {showReplyForm && <ReplyForm parentId={comment.id} />}
       </Box>
 
-      { comment.replies.length > 0 && comment.replies.map(reply => <CommentComponent {...props} comment={reply as any} isRoot={false}  />) }
+      { comment.replies.length > 0 && comment.replies.map(reply => <CommentComponent {...props} comment={reply as any} isRoot={false} />)}
     </Box>
   )
 }
@@ -182,7 +182,7 @@ function ProjectPage(props: {
 
   return (
     <>
-      <Head title={props.project.title}/>
+      <Head title={props.project.title} />
       <Navbar session={props.session} />
 
       <Container maxWidth="5xl">
@@ -202,6 +202,7 @@ function ProjectPage(props: {
         <Tabs size="md">
           <TabList>
             <Tab>Comments</Tab>
+            <Tab>Notification</Tab>
             <Tab>Settings</Tab>
           </TabList>
 
@@ -219,6 +220,9 @@ function ProjectPage(props: {
                   )
                 })}
               </HStack>
+            </TabPanel>
+            <TabPanel>
+              <NotificationSettings project={props.project} />
             </TabPanel>
             <TabPanel>
               <Settings project={props.project} />
@@ -289,6 +293,19 @@ function Settings(props: {
         </Box>
 
         <Box>
+          <Heading as="h1" size="md" my={4}>Token</Heading>
+          <VStack alignItems="stretch">
+            <Text>Token is used for some open API, it has moderator permission. Please keep it secret. If it's exposed, revoke it as soon as possible</Text>
+            {props.project.token ? <Box>
+              <Input value={props.project.token} disabled />
+            </Box> : <Box>
+              <Button size="sm">Generate a token</Button>
+            </Box>}
+          </VStack>
+
+        </Box>
+
+        <Box>
           <Heading as="h1" size="md" my={4}>Data</Heading>
           <Heading as="h2" size="sm" my={4}>Import from Disqus</Heading>
           <Input mb={2} type="file" onChange={onChangeFile} />
@@ -297,10 +314,30 @@ function Settings(props: {
           {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
 
         </Box>
+
       </VStack>
-      
+
 
     </>
+  )
+}
+
+function NotificationSettings(props: {
+  project: Project
+}) {
+
+  return (
+    <VStack alignItems="stretch" spacing={4}>
+      <Heading as="h1" size="md">Comments API</Heading>
+
+      { !props.project.token && <Box>
+        <Text>To enable open API, please first generate a token for this project in <Code>Settings</Code></Text>
+      </Box>}
+
+      {props.project.token && <Code>
+        {typeof window !== 'undefined' && `${location.origin}/api/project/${props.project.id}/open/new_comments?token=${props.project.token}`}
+      </Code>}
+    </VStack>
   )
 }
 
