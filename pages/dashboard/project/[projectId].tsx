@@ -312,7 +312,7 @@ function Settings(props: {
   data-page-id="{{ PAGE_ID }}"
   data-page-url="{{ PAGE_URL }}"
   data-page-title="{{ PAGE_TITLE }}"
->
+></div>
 <script async src="${location.origin}/js/cusdis.es.js"></script>
 `}
             </code>
