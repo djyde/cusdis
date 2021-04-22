@@ -166,7 +166,7 @@ function Dashboard(props: { session: UserSession }) {
         </VStack>
       </Container>
 
-      <Footer />
+      <Footer maxWidth="5xl" />
     </>
   )
 }

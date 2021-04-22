@@ -31,15 +31,46 @@ function IndexPage({ session }: Props) {
       <Head title="Cusdis" />
       <Box as="nav" py={4}>
         <Container maxWidth="6xl">
-          <Flex>
+          <HStack>
             <Text fontWeight="bold" fontSize="2xl">
               Cusdis
             </Text>
             <Spacer />
-            {/* <VStack>
-              <Button fontWeight="bold" color="gray.700">Start for free</Button>
-            </VStack> */}
-          </Flex>
+            <HStack spacing={4} mt={8}>
+              {session ? (
+                <Button
+                  onClick={() => router.push('/dashboard')}
+                  fontWeight="bold"
+                  color="gray.700"
+                >
+                  Dashboard
+                </Button>
+              ) : (
+                <Button
+                  onClick={() =>
+                    signIn(null, { callbackUrl: `${location.origin}/dashboard` })
+                  }
+                  fontWeight="bold"
+                  color="gray.700"
+                >
+                  Try it now
+                </Button>
+              )}
+
+              <Link href="/doc" fontWeight="bold" color="gray.700">
+                Documentation
+          </Link>
+
+              <Link
+                isExternal
+                href="https://github.com/djyde/cusdis"
+                fontWeight="bold"
+                color="gray.700"
+              >
+                GitHub
+          </Link>
+            </HStack>
+          </HStack>
         </Container>
       </Box>
 
@@ -53,41 +84,6 @@ function IndexPage({ session }: Props) {
             to Disqus.
           </p>
         </Text>
-
-        <HStack spacing={4} mt={8}>
-          {session ? (
-            <Button
-              onClick={() => router.push('/dashboard')}
-              fontWeight="bold"
-              color="gray.700"
-            >
-              Dashboard
-            </Button>
-          ) : (
-            <Button
-              onClick={() =>
-                signIn(null, { callbackUrl: `${location.origin}/dashboard` })
-              }
-              fontWeight="bold"
-              color="gray.700"
-            >
-              Try it now
-            </Button>
-          )}
-
-          <Link href="/doc" fontWeight="bold" color="gray.700">
-            Documentation
-          </Link>
-
-          <Link
-            isExternal
-            href="https://github.com/djyde/cusdis"
-            fontWeight="bold"
-            color="gray.700"
-          >
-            GitHub
-          </Link>
-        </HStack>
 
         <Box mt={8}>
           <Img src="/landing.png" />
