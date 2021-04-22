@@ -12,7 +12,7 @@ To embed the comment widget to your web page, you need to put **the element and 
   data-page-url="{{ PAGE_URL }}"
   data-page-title="{{ PAGE_TITLE }}"
 >
-<script async src="https://cusdis.com/js/cusdis.es.js"></script>
+<script async src="https://cusdis.com/js/cusdis.umd.js"></script>
 ```
 
 > If you are using self-hosted Cusdis, remember changaing the `data-host` and the host in `<script>` to your own domain
