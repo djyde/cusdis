@@ -10,8 +10,8 @@ function CusdisPlugin(hook, vm) {
   hook.init((_) => {
     const script = dom.create('script')
     script.async = true
-    // script.src = `http://localhost:3000/js/cusdis.es.js`;
-    script.src = `${host}/js/cusdis.es.js`
+    // script.src = `http://localhost:3000/js/cusdis.umd.js`;
+    script.src = `${host}/js/cusdis.umd.js`
     script.setAttribute('data-timestamp', Number(new Date()))
     dom.appendTo(dom.body, script)
   })
