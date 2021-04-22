@@ -83,6 +83,9 @@ model Project {
 
   pages Page[]
 
+  token String?
+  fetchLatestCommentsAt DateTime? @map(name: "fetch_latest_comments_at")
+
   @@map(name: "projects")
 }
 

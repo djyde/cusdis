@@ -8,4 +8,5 @@
   - [Docsify](/integration/docsify.md)
 - **Advanced**
   - [JS SDK Reference](/advanced/sdk.md)
+  - [Notification](/advanced/notification.md)
 - [**Contributing Guide**](/contributing.md)

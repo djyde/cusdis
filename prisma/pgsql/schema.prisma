@@ -1,11 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// datasource db {
-//   provider = "sqlite"
-//   url      = "file:./db.sqlite"
-// }
-
 datasource db {
   provider = "postgresql"
   url      = env("DB_URL")
@@ -87,6 +82,9 @@ model Project {
   owner   User   @relation(fields: [ownerId], references: [id])
 
   pages Page[]
+
+  token String?
+  fetchLatestCommentsAt DateTime? @map(name: "fetch_latest_comments_at")
 
   @@map(name: "projects")
 }
