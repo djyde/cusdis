@@ -8,4 +8,4 @@
   - [Docsify](/integration/docsify.md)
 - **Advanced**
   - [JS SDK Reference](/advanced/sdk.md)
-- [**Contributing**](/contributing.md)
+- [**Contributing Guide**](/contributing.md)

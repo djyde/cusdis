@@ -19,7 +19,7 @@ There are two ways to use Cusdis:
 
 _Pros: You own your data_
 
-You can install Cusdis on your own server, just follow this [installation guide](/self-host/installation.md)
+You can install Cusdis on your own server, just follow this [installation guide](/self-host/vercel.md)
 
 ## Hosted service
 
