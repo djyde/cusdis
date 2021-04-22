@@ -1,4 +1,4 @@
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -45,6 +45,13 @@ const replyAsModerator = async ({ parentId, content }) => {
   const res = await apiClient.post(`/comment/${parentId}/replyAsModerator`, {
     content
   })
+  return res.data.data
+}
+
+const generateToken = async ({ projectId }) => {
+  const res = await apiClient.post<{
+    data: string
+  }>(`/project/${projectId}/generateToken`)
   return res.data.data
 }
 
@@ -166,7 +173,7 @@ function CommentComponent(props: {
 }
 
 function ProjectPage(props: {
-  project: Project,
+  project: ProjectServerSideProps,
   session: UserSession
 }) {
 
@@ -242,11 +249,22 @@ function ProjectPage(props: {
 }
 
 function Settings(props: {
-  project: Project
+  project: ProjectServerSideProps
 }) {
 
   const importFile = React.useRef(null)
   const toast = useToast()
+  const generateTokenMutation = useMutation(generateToken)
+  const [token, setToken] = React.useState(props.project.token)
+
+  React.useEffect(() => {
+    if (generateTokenMutation.data) {
+      setToken(generateTokenMutation.data)
+    }
+  }, [generateTokenMutation.data])
+
+  const confirmRevokeDialog = useDisclosure()
+  const confirmRevokeDialogCancelRef = React.useRef()
 
   const uploadMutation = useMutation(upload, {
     onSuccess(data) {
@@ -298,14 +316,53 @@ function Settings(props: {
           </Box>}
         </Box>
 
+        <AlertDialog
+          isOpen={confirmRevokeDialog.isOpen}
+          leastDestructiveRef={confirmRevokeDialogCancelRef}
+          onClose={confirmRevokeDialog.onClose}
+          motionPreset="slideInBottom"
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                Revoke Token
+            </AlertDialogHeader>
+
+              <AlertDialogBody>
+                Are you sure? Current token will no loger be available.
+            </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button ref={confirmRevokeDialogCancelRef} onClick={confirmRevokeDialog.onClose}>
+                  Cancel
+              </Button>
+                <Button isLoading={generateTokenMutation.isLoading} colorScheme="red" onClick={_ => {
+                  generateTokenMutation.mutate({ projectId: props.project.id }, {
+                    onSuccess() {
+                      confirmRevokeDialog.onClose()
+                    }
+                  })
+                }} ml={3}>
+                  Yes
+              </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+
         <Box>
           <Heading as="h1" size="md" my={4}>Token</Heading>
           <VStack alignItems="stretch">
             <Text>Token is used for some open API, it has moderator permission. Please keep it secret. If it's exposed, revoke it as soon as possible</Text>
-            {props.project.token ? <Box>
-              <Input value={props.project.token} disabled />
+            {token ? <Box>
+              <HStack>
+                <Input value={token} disabled />
+                <Button onClick={_ => {
+                  confirmRevokeDialog.onOpen()
+                }}>Revoke</Button>
+              </HStack>
             </Box> : <Box>
-              <Button size="sm">Generate a token</Button>
+              <Button isLoading={generateTokenMutation.isLoading} onClick={_ => generateTokenMutation.mutate({ projectId: props.project.id })} size="sm">Generate a token</Button>
             </Box>}
           </VStack>
 
@@ -329,23 +386,29 @@ function Settings(props: {
 }
 
 function NotificationSettings(props: {
-  project: Project
+  project: ProjectServerSideProps
 }) {
 
   return (
     <VStack alignItems="stretch" spacing={4}>
-      <Heading as="h1" size="md">Comments API</Heading>
+      <Heading as="h1" size="md">Latest Comments API</Heading>
+
+      <Text fontSize="sm">
+        This API fetches latest comments of the project. Once you call this API, the returned comments will be marked as read. They won't be returned in the next API call.
+      </Text>
 
       { !props.project.token && <Box>
         <Text>To enable open API, please first generate a token for this project in <Code>Settings</Code></Text>
       </Box>}
 
-      {props.project.token && <Code>
-        {typeof window !== 'undefined' && `${location.origin}/api/project/${props.project.id}/open/new_comments?token=${props.project.token}`}
+      {props.project.token && <Code p={4} rounded={'md'}>
+        {typeof window !== 'undefined' && `GET ${location.origin}/api/open/project/${props.project.id}/comments/latest?token=${props.project.token}`}
       </Code>}
     </VStack>
   )
 }
+
+type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token'>
 
 export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
@@ -367,9 +430,11 @@ export async function getServerSideProps(ctx) {
       project: {
         id: project.id,
         title: project.title,
-        ownerId: project.ownerId
-      }
+        ownerId: project.ownerId,
+        token: project.token,
+      } as ProjectServerSideProps
     }
+
   }
 }
 

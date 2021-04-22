@@ -35,7 +35,7 @@ export default async function handler(
       select: {
         by_nickname: true,
         by_email: true,
-        approved: true
+        approved: true,
       },
     })
     res.json({
