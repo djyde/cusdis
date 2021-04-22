@@ -33,8 +33,6 @@
     "dayjs": "^1.10.4",
     "formidable": "^1.2.2",
     "framer-motion": "^3.2.1",
-    "mailgun-js": "^0.22.0",
-    "mailgun.js": "^3.3.0",
     "markdown-it": "^12.0.6",
     "milligram": "^1.4.1",
     "nanoid": "^3.1.22",
