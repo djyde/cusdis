@@ -1,6 +1,6 @@
 import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
-import { signIn } from 'next-auth/client'
+import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useMutation, useQuery } from 'react-query'
@@ -170,8 +170,14 @@ function ProjectPage(props: {
   session: UserSession
 }) {
 
+  React.useEffect(() => {
+    if (!props.session) {
+      signIn()
+    }
+  }, [!props.session])
+
   if (!props.session) {
-    signIn()
+    return <div>Redirecting to signin..</div>
   }
 
   const [page, setPage] = React.useState(1)
@@ -306,13 +312,25 @@ function Settings(props: {
 
 export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
-  const project = await projectService.get(ctx.query.projectId)
+  const session = await getSession(ctx.req)
+  const project = await projectService.get(ctx.query.projectId) as Project
+
+  if (session && (project.ownerId !== session.uid)) {
+    return {
+      redirect: {
+        destination: '/forbidden',
+        permanent: false
+      }
+    }
+  }
+
   return {
     props: {
       session: await getSession(ctx.req),
       project: {
         id: project.id,
-        title: project.title
+        title: project.title,
+        ownerId: project.ownerId
       }
     }
   }

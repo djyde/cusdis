@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import { RequestScopeService } from ".";
 import { prisma } from "../utils.server";
 
@@ -20,11 +20,14 @@ export class ProjectService extends RequestScopeService {
     return created
   }
 
-  async get(projectId: string) {
+  async get(projectId: string, options?: {
+    select?: Prisma.ProjectSelect
+  }) {
     const project = await prisma.project.findUnique({
       where: {
         id: projectId
-      }
+      },
+      select: options?.select
     })
 
     return project
