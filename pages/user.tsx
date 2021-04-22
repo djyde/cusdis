@@ -1,4 +1,4 @@
-import { User } from ".prisma/client"
+import { User } from "@prisma/client"
 import { Box, Button, Checkbox, Container, FormControl, FormLabel, Heading, HStack, Input, InputGroup, InputRightAddon, Switch, useToast, VStack } from "@chakra-ui/react"
 import React from "react"
 import { useMutation } from "react-query"

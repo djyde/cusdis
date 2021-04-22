@@ -40,18 +40,30 @@ export function initMiddleware(middleware) {
     })
 }
 
+type EnvVariable = string | undefined
+
 export const resolvedConfig = {
   useLocalAuth: process.env.USERNAME && process.env.PASSWORD,
   useGithub: process.env.GITHUB_ID && process.env.GITHUB_SECRET,
   jwtSecret: process.env.JWT_SECRET,
   umami: {
-    id: process.env.UMAMI_ID as string | undefined,
-    src: process.env.UMAMI_SRC as string | undefined,
+    id: process.env.UMAMI_ID as EnvVariable,
+    src: process.env.UMAMI_SRC as EnvVariable,
   },
   google: {
-    id: process.env.GOOGLE_ID as string | undefined,
-    secret: process.env.GOOGLE_SECRET as string | undefined,
+    id: process.env.GOOGLE_ID as EnvVariable,
+    secret: process.env.GOOGLE_SECRET as EnvVariable,
   },
+  smtp: {
+    host: process.env.SMTP_HOST as EnvVariable,
+    port: Number(process.env.SMTP_PORT as EnvVariable || '587'),
+    secure: Boolean(process.env.SMTP_SECURE as EnvVariable || 'true'),
+    auth: {
+      user: process.env.SMTP_USER as EnvVariable,
+      pass: process.env.SMTP_PASSWORD as EnvVariable
+    },
+    senderAddress: process.env.SMTP_SENDER as EnvVariable
+  }
 }
 
 export const getSession = async (req) => {

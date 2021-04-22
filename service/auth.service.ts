@@ -1,4 +1,4 @@
-import { Project } from '.prisma/client'
+import { Project } from '@prisma/client'
 import { RequestScopeService } from '.'
 
 export class AuthService extends RequestScopeService {

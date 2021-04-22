@@ -1,4 +1,4 @@
-import { Project } from '.prisma/client'
+import { Project } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { AuthService } from '../../../../service/auth.service'
 import { CommentService } from '../../../../service/comment.service'

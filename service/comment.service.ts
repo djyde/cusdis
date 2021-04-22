@@ -4,6 +4,7 @@ import { prisma } from '../utils.server'
 import { PageService } from './page.service'
 import dayjs from 'dayjs'
 import MarkdownIt from 'markdown-it'
+import { HookService } from './hook.service'
 
 const markdown = MarkdownIt({
   linkify: true,
@@ -13,6 +14,7 @@ markdown.disable(['image', 'link'])
 
 export class CommentService extends RequestScopeService {
   pageService = new PageService(this.req)
+  hookService = new HookService(this.req)
 
   async getComments(
     projectId: string,
@@ -97,7 +99,7 @@ export class CommentService extends RequestScopeService {
   async getProject(commentId: string) {
     const res = await prisma.comment.findUnique({
       where: {
-        id: commentId
+        id: commentId,
       },
       select: {
         page: {
@@ -105,12 +107,12 @@ export class CommentService extends RequestScopeService {
             project: {
               select: {
                 id: true,
-                ownerId: true
-              }
-            }
-          }
-        }
-      }
+                ownerId: true,
+              },
+            },
+          },
+        },
+      },
     })
 
     return res.page.project
@@ -143,6 +145,8 @@ export class CommentService extends RequestScopeService {
         parentId,
       },
     })
+
+    this.hookService.addComment(created, projectId)
 
     return created
   }
