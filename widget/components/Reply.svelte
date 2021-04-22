@@ -83,6 +83,7 @@
     border-radius: 4px;
     outline: none;
     font-family: inherit;
+    box-sizing: border-box;
   }
 
   textarea {
@@ -112,7 +113,6 @@
   }
 
   .cusdis-field {
-    display: flex;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
