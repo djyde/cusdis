@@ -60,6 +60,8 @@ model User {
   enableNewCommentNotification Boolean? @default(true) @map(name: "enable_new_comment_notification")
   notificationEmail            String? @map(name: "notification_email")
 
+  unsubscribeNewCommentToken String? @map(name: "unsubscribe_new_comment_token")
+
   @@map(name: "users")
 }
 

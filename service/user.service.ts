@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { RequestScopeService } from ".";
 import { prisma } from "../utils.server";
 
@@ -15,5 +16,19 @@ export class UserService extends RequestScopeService {
         enableNewCommentNotification: options.enableNewCommentNotification
       }
     })
+  }
+
+  // return unsubscribeNewCommentToken, if doesn't exist, generate one
+  async generateUnsubscribeNewCommentToken(userId: string) {
+    const token = nanoid(24)
+    await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        unsubscribeNewCommentToken: token
+      }
+    })
+    return token
   }
 }
