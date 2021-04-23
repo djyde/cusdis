@@ -6,7 +6,9 @@
   - [Vercel](/self-host/vercel.md)
 - **Integration**
   - [Docsify](/integration/docsify.md)
+
+- **Features**
+  - [Notification](/features/notification.md)
 - **Advanced**
   - [JS SDK Reference](/advanced/sdk.md)
-  - [Notification](/advanced/notification.md)
 - [**Contributing Guide**](/contributing.md)
