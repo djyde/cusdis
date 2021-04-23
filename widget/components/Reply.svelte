@@ -18,12 +18,12 @@
 
   async function addComment() {
     if (!content) {
-      alert("Content is required");
+      alert("İçerik bölümü doldurulmalıdır");
       return;
     }
 
     if (!nickname) {
-      alert("Nickname is required");
+      alert("İsim bölümü doldurulmalıdır");
       return;
     }
 
@@ -41,7 +41,7 @@
       });
       await refresh();
       teardown();
-      setMessage('Your comment has been sent. Please wait for approval.')
+      setMessage('Yorumunuz gönderildi. Lütfen onaylanmasını bekleyiniz.')
     } finally {
       loading = false;
     }
@@ -58,19 +58,19 @@
 <div style="margin-top: 1em;">
   <div class="cusdis-reply-info cusdis-field">
     <div>
-      <input type="text" placeholder="Nickname" bind:value={nickname} />
+      <input type="text" placeholder="İsim" bind:value={nickname} />
     </div>
     <div>
-      <input type="text" placeholder="Email" bind:value={email} />
+      <input type="text" placeholder="E-posta" bind:value={email} />
     </div>
   </div>
 
   <div class="cusdis-field">
-    <textarea bind:value={content} placeholder="Reply..." />
+    <textarea bind:value={content} placeholder="Yorumunuz..." />
   </div>
 
   <div class="cusdis-field">
-    <button cusdis-disabled={loading} class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? 'Sending...' : 'Post Comment' }</button>
+    <button cusdis-disabled={loading} class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? 'Gönderiliyor...' : 'Yorumu Gönder' }</button>
   </div>
 </div>
 
