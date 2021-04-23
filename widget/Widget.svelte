@@ -63,7 +63,7 @@
     {/if}
   </div>
 
-  <div class="cusdis-footer">Powered by <a href="https://cusdis.com">Cusdis</a></div>
+  <div class="cusdis-footer"><a href="https://cusdis.com">Cusdis</a> ile çalışmaktadır.</div>
 </div>
 
 <style>
