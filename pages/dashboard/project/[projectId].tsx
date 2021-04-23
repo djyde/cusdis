@@ -206,9 +206,14 @@ function ProjectPage(props: {
 
       <Container maxWidth="5xl" mt={24}>
         <VStack alignItems="stretch" spacing={4}>
-          <Heading>
-            {props.project.title}
-          </Heading>
+          <VStack spacing={2} alignItems="start">
+            <Heading>
+              {props.project.title}
+            </Heading>
+            <Text color="gray.500" fontSize="sm">
+              {props.project.id}
+            </Text>
+          </VStack>
 
           <Box>
             <Tabs size="md" >

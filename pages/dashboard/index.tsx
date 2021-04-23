@@ -3,6 +3,10 @@ import { signIn, useSession } from "next-auth/client"
 import { apiClient } from "../../utils.client"
 import { useMutation, useQuery } from "react-query"
 import {
+  AddIcon,
+  BellIcon
+} from '@chakra-ui/icons'
+import {
   Box,
   Button,
   Container,
@@ -28,18 +32,20 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  SimpleGrid,
   Skeleton,
   Spacer,
   Stack,
   Tag,
+  Text,
   toast,
+  Tooltip,
   useDisclosure,
   useToast,
   VStack,
 } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { Project } from "@prisma/client"
-import { ChevronDownIcon } from "@chakra-ui/icons"
 import type { UserSession } from "../../service"
 import { useRouter } from "next/router"
 import { Head } from "../../components/Head"
@@ -55,12 +61,14 @@ export const createProject = async (body: { title: string }) => {
 }
 
 export const getAllProjects = async () => {
-  const res = await apiClient.get("/projects")
+  const res = await apiClient.get<{
+    data: Project[]
+  }>("/projects")
   return res.data.data
 }
 
 function Dashboard(props: { session: UserSession }) {
-  const getProjects = useQuery<Project[]>("getProjects", getAllProjects, {
+  const getProjects = useQuery("getProjects", getAllProjects, {
     enabled: !!props.session,
   })
 
@@ -138,17 +146,7 @@ function Dashboard(props: { session: UserSession }) {
           </Heading>
 
           <Box>
-            <Button
-              onClick={(_) => createProjectModal.onOpen()}
-              colorScheme="telegram"
-              size="sm"
-            >
-              Add Website
-          </Button>
-          </Box>
-
-          <Box>
-            <VStack alignItems="stretch" spacing={4}>
+            <SimpleGrid columns={4} spacing={4}>
               {getProjects.isLoading && (
                 <>
                   <Skeleton height={4} />
@@ -158,19 +156,43 @@ function Dashboard(props: { session: UserSession }) {
               )}
               {getProjects.data?.map((project) => {
                 return (
-                  <Link
-                    href={`/dashboard/project/${project.id}`}
-                    py={4}
+                  <Box py={4}
                     px={4}
                     shadow="sm"
                     rounded="lg"
-                    key={project.id}
-                  >
-                    {project.title}
-                  </Link>
+                    border="1px"
+                    borderColor="gray.100"
+                    key={project.id}>
+                    <HStack alignItems="start">
+                      <Link href={`/dashboard/project/${project.id}`}>
+                        {project.title}
+                      </Link>
+                      <Spacer />
+                      <Box>
+                        {project.enableNotification && <Tooltip label="Notification enabled">
+                          <BellIcon />
+                        </Tooltip>}
+                      </Box>
+                    </HStack>
+                  </Box>
                 )
               })}
-            </VStack>
+              <LinkBox
+                py={4}
+                px={4}
+                cursor="pointer"
+                shadow="sm"
+                rounded="lg">
+                <LinkOverlay
+                  onClick={(_) => createProjectModal.onOpen()}
+                  fontWeight="medium">
+                  <VStack>
+                    <AddIcon />
+                    <Text>Add Website</Text>
+                  </VStack>
+                </LinkOverlay>
+              </LinkBox>
+            </SimpleGrid>
           </Box>
         </VStack>
 
