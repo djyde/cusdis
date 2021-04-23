@@ -204,46 +204,45 @@ function ProjectPage(props: {
       <Head title={props.project.title} />
       <Navbar session={props.session} />
 
-      <Container maxWidth="5xl">
-        <Box py={4}>
-          <Heading size="md">{props.project.title}</Heading>
-        </Box>
-        {/* <Box mb={4}>
-          <Breadcrumb color="gray.500">
-            <BreadcrumbItem>
-              <Text>project</Text>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <Text>{props.project.title}</Text>
-            </BreadcrumbItem>
-          </Breadcrumb>
-        </Box> */}
-        <Tabs size="md">
-          <TabList>
-            <Tab>Comments</Tab>
-            <Tab>Settings</Tab>
-          </TabList>
+      <Container maxWidth="5xl" mt={24}>
+        <VStack alignItems="stretch" spacing={4}>
+          <Heading>
+            {props.project.title}
+          </Heading>
 
-          <TabPanels>
-            <TabPanel>
-              {getCommentsQuery.isLoading && <Center p={8}><Spinner /></Center>}
-              <VStack align="stretch" spacing={4} divider={<StackDivider borderColor="gray.200" />}>
-                {getCommentsQuery.data?.length === 0 && !getCommentsQuery.isLoading ? <Text textAlign="center" color="gray.500">No Comments</Text> : null}
-                {getCommentsQuery.data?.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
-              </VStack>
-              <HStack spacing={2} mt={8}>
-                {new Array(10).fill(0).map((_, index) => {
-                  return (
-                    <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
-                  )
-                })}
-              </HStack>
-            </TabPanel>
-            <TabPanel>
-              <Settings project={props.project} />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+          <Box>
+            <Tabs size="md" >
+              <TabList>
+                <Tab>Comments</Tab>
+                <Tab>Settings</Tab>
+              </TabList>
+
+              <TabPanels>
+                <TabPanel px={0} py={8}>
+                  {getCommentsQuery.isLoading && <Center p={8}><Spinner /></Center>}
+                  <VStack alignItems="stretch" spacing={4}>
+                    <VStack align="stretch" spacing={4} divider={<StackDivider borderColor="gray.200" />}>
+                      {getCommentsQuery.data?.length === 0 && !getCommentsQuery.isLoading ? <Text py={12} textAlign="center" color="gray.500">No Comments</Text> : null}
+                      {getCommentsQuery.data?.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
+                    </VStack>
+                    <HStack spacing={2} mt={8}>
+                      {new Array(10).fill(0).map((_, index) => {
+                        return (
+                          <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
+                        )
+                      })}
+                    </HStack>
+                  </VStack>
+                </TabPanel>
+                <TabPanel px={0} py={8}>
+                  <Settings project={props.project} />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+
+          </Box>
+        </VStack>
+
 
       </Container>
 
@@ -337,7 +336,7 @@ function Settings(props: {
                 onError() {
                   toast({
                     title: 'Something went wrong',
-                    status:'error',
+                    status: 'error',
                     position: 'top'
                   })
                 }

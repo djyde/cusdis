@@ -131,39 +131,50 @@ function Dashboard(props: { session: UserSession }) {
           </ModalContent>
         </form>
       </Modal>
-      <Container maxW="5xl" pt={12}>
-        <Flex mb={4}>
-          <Button
-            onClick={(_) => createProjectModal.onOpen()}
-            colorScheme="telegram"
-            size="sm"
-          >
-            Add Website
-          </Button>
-        </Flex>
+      <Container maxW="5xl" pt={24}>
         <VStack alignItems="stretch" spacing={4}>
-          {getProjects.isLoading && (
-            <>
-              <Skeleton height={4} />
-              <Skeleton height={4} />
-              <Skeleton height={4} />
-            </>
-          )}
-          {getProjects.data?.map((project) => {
-            return (
-              <Link
-                href={`/dashboard/project/${project.id}`}
-                py={4}
-                px={4}
-                shadow="sm"
-                rounded="lg"
-                key={project.id}
-              >
-                {project.title}
-              </Link>
-            )
-          })}
+          <Heading>
+            Websites
+          </Heading>
+
+          <Box>
+            <Button
+              onClick={(_) => createProjectModal.onOpen()}
+              colorScheme="telegram"
+              size="sm"
+            >
+              Add Website
+          </Button>
+          </Box>
+
+          <Box>
+            <VStack alignItems="stretch" spacing={4}>
+              {getProjects.isLoading && (
+                <>
+                  <Skeleton height={4} />
+                  <Skeleton height={4} />
+                  <Skeleton height={4} />
+                </>
+              )}
+              {getProjects.data?.map((project) => {
+                return (
+                  <Link
+                    href={`/dashboard/project/${project.id}`}
+                    py={4}
+                    px={4}
+                    shadow="sm"
+                    rounded="lg"
+                    key={project.id}
+                  >
+                    {project.title}
+                  </Link>
+                )
+              })}
+            </VStack>
+          </Box>
         </VStack>
+
+
       </Container>
 
       <Footer maxWidth="5xl" />

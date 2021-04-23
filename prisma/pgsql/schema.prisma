@@ -55,8 +55,12 @@ model User {
 
   projects Project[]
 
-  @@map(name: "users")
   Comment Comment[]
+
+  enableNewCommentNotification Boolean? @default(true) @map(name: "enable_new_comment_notification")
+  notificationEmail            String? @map(name: "notification_email")
+
+  @@map(name: "users")
 }
 
 model VerificationRequest {
@@ -83,8 +87,10 @@ model Project {
 
   pages Page[]
 
-  token String?
+  token                 String?
   fetchLatestCommentsAt DateTime? @map(name: "fetch_latest_comments_at")
+
+  enableNotification Boolean? @default(true) @map(name: "enable_notification")
 
   @@map(name: "projects")
 }
@@ -92,8 +98,8 @@ model Project {
 model Page {
   id String @id @default(uuid())
 
-  slug String
-  url  String?
+  slug  String
+  url   String?
   title String?
 
   createdAt DateTime @default(now()) @map(name: "created_at")
