@@ -26,7 +26,7 @@ export function Navbar(props: { session: UserSession }) {
           <Spacer />
           <Box>
             <Menu>
-              <MenuButton as={Link}>{props.session.user.name}</MenuButton>
+              <MenuButton>{props.session.user.name}</MenuButton>
               <MenuList>
                 <MenuItem><Link width="100%" href="/user">Settings</Link></MenuItem>
                 <MenuItem onClick={() => signOut()}>Logout</MenuItem>
