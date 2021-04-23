@@ -39,6 +39,9 @@ export function Footer(props: {
                 <ListItem>
                   <Link isExternal href="https://cusdis.com/doc">Documentation</Link>
                 </ListItem>
+                <ListItem>
+                  <Link isExternal href="https://opencollective.com/cusdis">Sponsor</Link>
+                </ListItem>
               </List>
             </Box>
           </HStack>

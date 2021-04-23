@@ -83,6 +83,7 @@
     border-radius: 4px;
     outline: none;
     font-family: inherit;
+    box-sizing: border-box;
   }
 
   textarea {
