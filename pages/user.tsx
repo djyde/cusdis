@@ -7,6 +7,7 @@ import { Navbar } from "../components/Navbar"
 import { UserSession } from "../service"
 import { apiClient } from "../utils.client"
 import { getSession, prisma } from "../utils.server"
+import { Head } from "../components/Head"
 
 
 // From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
@@ -95,6 +96,7 @@ function UserPage(props: {
 
   return (
     <>
+  <Head title="User Settings" />
       <Navbar session={props.session} />
       <Container maxWidth="5xl" mt={24}>
 

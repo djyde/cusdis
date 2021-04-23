@@ -46,6 +46,7 @@ export const resolvedConfig = {
   useLocalAuth: process.env.USERNAME && process.env.PASSWORD,
   useGithub: process.env.GITHUB_ID && process.env.GITHUB_SECRET,
   jwtSecret: process.env.JWT_SECRET,
+  host: process.env.HOST || 'https://cusdis.com',
   umami: {
     id: process.env.UMAMI_ID as EnvVariable,
     src: process.env.UMAMI_SRC as EnvVariable,

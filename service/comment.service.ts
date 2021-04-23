@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import MarkdownIt from 'markdown-it'
 import { HookService } from './hook.service'
 
-const markdown = MarkdownIt({
+export const markdown = MarkdownIt({
   linkify: true,
 })
 

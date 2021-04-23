@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -54,6 +54,11 @@ const generateToken = async ({ projectId }) => {
     data: string
   }>(`/project/${projectId}/generateToken`)
   return res.data.data
+}
+
+const updateProjectSettings = async ({ projectId, body }) => {
+  const res = await apiClient.put(`/project/${projectId}`, body)
+  return res.data
 }
 
 function CommentComponent(props: {
@@ -216,7 +221,6 @@ function ProjectPage(props: {
         <Tabs size="md">
           <TabList>
             <Tab>Comments</Tab>
-            <Tab>Notification</Tab>
             <Tab>Settings</Tab>
           </TabList>
 
@@ -234,9 +238,6 @@ function ProjectPage(props: {
                   )
                 })}
               </HStack>
-            </TabPanel>
-            <TabPanel>
-              <NotificationSettings project={props.project} />
             </TabPanel>
             <TabPanel>
               <Settings project={props.project} />
@@ -257,24 +258,21 @@ function Settings(props: {
 
   const importFile = React.useRef(null)
   const toast = useToast()
-  const generateTokenMutation = useMutation(generateToken)
-  const [token, setToken] = React.useState(props.project.token)
 
-  React.useEffect(() => {
-    if (generateTokenMutation.data) {
-      setToken(generateTokenMutation.data)
-    }
-  }, [generateTokenMutation.data])
-
-  const confirmRevokeDialog = useDisclosure()
-  const confirmRevokeDialogCancelRef = React.useRef()
+  const enableNotificationMutation = useMutation(updateProjectSettings)
 
   const uploadMutation = useMutation(upload, {
-    onSuccess(data) {
+    onSuccess() {
       toast({
-        title: 'Import finished',
-        description: `${data.data.pageCount} pages, ${data.data.commentCount} comments`,
+        title: 'Saved',
         status: 'success',
+        position: 'top'
+      })
+    },
+    onError() {
+      toast({
+        title: 'Something went wrong',
+        status: 'error',
         position: 'top'
       })
     }
@@ -319,57 +317,39 @@ function Settings(props: {
           </Box>}
         </Box>
 
-        <AlertDialog
-          isOpen={confirmRevokeDialog.isOpen}
-          leastDestructiveRef={confirmRevokeDialogCancelRef}
-          onClose={confirmRevokeDialog.onClose}
-          motionPreset="slideInBottom"
-        >
-          <AlertDialogOverlay>
-            <AlertDialogContent>
-              <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Revoke Token
-            </AlertDialogHeader>
-
-              <AlertDialogBody>
-                Are you sure? Current token will no loger be available.
-            </AlertDialogBody>
-
-              <AlertDialogFooter>
-                <Button ref={confirmRevokeDialogCancelRef} onClick={confirmRevokeDialog.onClose}>
-                  Cancel
-              </Button>
-                <Button isLoading={generateTokenMutation.isLoading} colorScheme="red" onClick={_ => {
-                  generateTokenMutation.mutate({ projectId: props.project.id }, {
-                    onSuccess() {
-                      confirmRevokeDialog.onClose()
-                    }
+        <VStack alignItems="start">
+          <Box>
+            <Heading as="h1" size="md" my={4}>Notification</Heading>
+            <Checkbox onChange={e => {
+              enableNotificationMutation.mutate({
+                projectId: props.project.id,
+                body: {
+                  enableNotification: e.target.checked
+                }
+              }, {
+                onSuccess() {
+                  toast({
+                    title: 'Saved',
+                    status: 'success',
+                    position: 'top'
                   })
-                }} ml={3}>
-                  Yes
-              </Button>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
-
-        <Box>
-          <Heading as="h1" size="md" my={4}>Token</Heading>
-          <VStack alignItems="stretch">
-            <Text>Token is used for some open API, it has moderator permission. Please keep it secret. If it's exposed, revoke it as soon as possible</Text>
-            {token ? <Box>
-              <HStack>
-                <Input value={token} disabled />
-                <Button onClick={_ => {
-                  confirmRevokeDialog.onOpen()
-                }}>Revoke</Button>
-              </HStack>
-            </Box> : <Box>
-              <Button isLoading={generateTokenMutation.isLoading} onClick={_ => generateTokenMutation.mutate({ projectId: props.project.id })} size="sm">Generate a token</Button>
-            </Box>}
-          </VStack>
-
-        </Box>
+                },
+                onError() {
+                  toast({
+                    title: 'Something went wrong',
+                    status:'error',
+                    position: 'top'
+                  })
+                }
+              })
+            }} defaultChecked={props.project.enableNotification}>Enable Notification for this project</Checkbox>
+          </Box>
+          <Box>
+            <Link href="/user" fontSize="sm">
+              Advanced Notification Settings
+            </Link>
+          </Box>
+        </VStack>
 
         <Box>
           <Heading as="h1" size="md" my={4}>Data</Heading>
@@ -388,32 +368,7 @@ function Settings(props: {
   )
 }
 
-function NotificationSettings(props: {
-  project: ProjectServerSideProps
-}) {
-
-  return (
-    <VStack alignItems="stretch" spacing={4}>
-
-      <Heading as="h1" size="md">Latest Comments API</Heading>
-
-      { !props.project.token && <Box>
-        <Text>To enable open API, please first generate a token for this project in <Code>Settings</Code></Text>
-      </Box>}
-
-      {props.project.token && <><Code p={4} rounded={'md'}>
-        {typeof window !== 'undefined' && `GET ${location.origin}/api/open/project/${props.project.id}/comments/latest?token=${props.project.token}`}
-      </Code>
-
-        <Text fontSize="sm">
-          <Link isExternal href="http://localhost:3000/doc#/advanced/notification">How to use?</Link>
-        </Text>
-      </>}
-    </VStack>
-  )
-}
-
-type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token'>
+type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token' | 'enableNotification'>
 
 export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
@@ -437,6 +392,7 @@ export async function getServerSideProps(ctx) {
         title: project.title,
         ownerId: project.ownerId,
         token: project.token,
+        enableNotification: project.enableNotification
       } as ProjectServerSideProps
     }
 

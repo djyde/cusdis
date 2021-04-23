@@ -17,18 +17,4 @@ export class UserService extends RequestScopeService {
       }
     })
   }
-
-  // return unsubscribeNewCommentToken, if doesn't exist, generate one
-  async generateUnsubscribeNewCommentToken(userId: string) {
-    const token = nanoid(24)
-    await prisma.user.update({
-      where: {
-        id: userId
-      },
-      data: {
-        unsubscribeNewCommentToken: token
-      }
-    })
-    return token
-  }
 }

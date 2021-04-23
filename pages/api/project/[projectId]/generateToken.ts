@@ -1,3 +1,7 @@
+/**
+ * Deprecated
+ */
+
 import { NextApiRequest, NextApiResponse } from "next";
 import { ProjectService } from "../../../../service/project.service";
 
