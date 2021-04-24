@@ -44,4 +44,4 @@ If you are going to make a PR, remember to choose `dev` as the base branch.
 
 # License
 
-MIT
+GNU GPLv3
