@@ -92,7 +92,7 @@ function IndexPage({ session }: Props) {
           </Box>
 
           <Box>
-            <Img src="/landing.png" />
+            <Img src="/images/landing.png" />
           </Box>
 
         </VStack>
@@ -101,6 +101,7 @@ function IndexPage({ session }: Props) {
 
       <Box my={12} py={24} bgColor="gray.50" width="full">
         <Container maxWidth="6xl">
+          <Text color="gray.500" mb={12}>Embed in any websites</Text>
           <HStack spacing={36}>
             <LinkBox>
               <LinkOverlay href="/doc#/advanced/sdk">
