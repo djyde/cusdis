@@ -52,7 +52,13 @@ export class NotificationService extends RequestScopeService {
       select: {
         page: {
           select: {
+            title: true,
             slug: true,
+            project: {
+              select: {
+                title: true
+              }
+            }
           },
         },
       },
@@ -111,9 +117,9 @@ export class NotificationService extends RequestScopeService {
           const msg = {
             to: notificationEmail, // Change to your recipient
             from: 'Cusdis Notification<notification@cusdis.com>', // Change to your verified sender
-            subject: 'New comment in your website',
+            subject: `New comment on ${fullComment.page.project.title}`,
             html: makeNewCommentEmailTemplate({
-              page_slug: fullComment.page.slug,
+              page_slug: fullComment.page.title || fullComment.page.slug,
               by_nickname: comment.by_nickname,
               approve_link: `${resolvedConfig.host}/api/open/approve?token=${approveToken}`,
               unsubscribe_link: `${resolvedConfig.host}/api/open/unsubscribe?token=${unsubscribeToken}`,
