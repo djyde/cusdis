@@ -201,8 +201,6 @@ function Dashboard(props: { session: UserSession }) {
             </SimpleGrid>
           </Box>
         </VStack>
-
-
       </Container>
 
       <Footer maxWidth="5xl" />

@@ -2,12 +2,15 @@ import React from 'react'
 import {
   Box,
   Button,
+  Center,
   Container,
   Flex,
   Heading,
   HStack,
   Img,
   Link,
+  LinkBox,
+  LinkOverlay,
   Spacer,
   Text,
   VStack,
@@ -75,20 +78,56 @@ function IndexPage({ session }: Props) {
       </Box>
 
       <Container maxWidth="6xl">
-        <Box width="md" mt={16} boxSizing="border-box">
-          <Heading size="2xl">Next comment tool for your website</Heading>
-        </Box>
-        <Text fontSize="lg" mt={4}>
-          <p>
-            Open source, lightweight (4.7kb gzip), privacy-friendly alternative
-            to Disqus.
+        <VStack alignItems="start" spacing={16}>
+          <Box>
+            <Box width="md" mt={16} boxSizing="border-box">
+              <Heading size="2xl">Next comment tool for your website</Heading>
+            </Box>
+            <Text fontSize="lg" mt={4}>
+              <p>
+                Open source, lightweight (4.7kb gzip), privacy-friendly alternative
+                to Disqus.
           </p>
-        </Text>
+            </Text>
+          </Box>
 
-        <Box mt={8}>
-          <Img src="/landing.png" />
-        </Box>
+          <Box>
+            <Img src="/landing.png" />
+          </Box>
+
+        </VStack>
+
       </Container>
+
+      <Box my={12} py={24} bgColor="gray.50" width="full">
+        <Container maxWidth="6xl">
+          <HStack spacing={36}>
+            <LinkBox>
+              <LinkOverlay href="/doc#/advanced/sdk">
+                <Img src="/images/vanilla.png" p={5} w={24} />
+              </LinkOverlay>
+            </LinkBox>
+            <LinkBox>
+              <LinkOverlay href="https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis">
+                <Img src="/images/react.png" w={24} />
+
+              </LinkOverlay>
+            </LinkBox>
+            <LinkBox>
+              <LinkOverlay href="#">
+                <Img src="/images/svelte.svg" w={24} />
+              </LinkOverlay>
+            </LinkBox>
+            <LinkBox>
+              <LinkOverlay href="/doc#/integration/docsify">
+                <Img src="/images/docsify.svg" w={24} p={4} />
+
+              </LinkOverlay>
+            </LinkBox>
+          </HStack>
+        </Container>
+      </Box>
+
 
       <Footer />
     </>
