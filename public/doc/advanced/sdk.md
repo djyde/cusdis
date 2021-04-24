@@ -15,7 +15,7 @@ To embed the comment widget to your web page, you need to put **the element and 
 <script async src="https://cusdis.com/js/cusdis.es.js"></script>
 ```
 
-> If you are using self-hosted Cusdis, remember changaing the `data-host` and the host in `<script>` to your own domain
+> If you are using self-hosted Cusdis, remember changing the `data-host` and the host in `<script>` to your own domain
 
 ## How it Works
 
