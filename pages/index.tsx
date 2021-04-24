@@ -104,24 +104,31 @@ function IndexPage({ session }: Props) {
           <Text color="gray.500" mb={12}>Embed in any websites</Text>
           <HStack spacing={36}>
             <LinkBox>
-              <LinkOverlay href="/doc#/advanced/sdk">
+              <LinkOverlay isExternal href="/doc#/advanced/sdk">
                 <Img src="/images/vanilla.png" p={5} w={24} />
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
-              <LinkOverlay href="https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis">
+              <LinkOverlay isExternal href="https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis">
                 <Img src="/images/react.png" w={24} />
 
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
-              <LinkOverlay href="#">
+              <LinkOverlay isExternal href="#">
                 <Img src="/images/svelte.svg" w={24} />
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
-              <LinkOverlay href="/doc#/integration/docsify">
+              <LinkOverlay isExternal href="/doc#/integration/docsify">
                 <Img src="/images/docsify.svg" w={24} p={4} />
+
+              </LinkOverlay>
+            </LinkBox>
+
+            <LinkBox>
+              <LinkOverlay isExternal href="http://blog.cusdis.com/hello-world/integate-cusdis-in-hexo/">
+                <Img src="/images/hexo.svg" w={24} p={4} />
 
               </LinkOverlay>
             </LinkBox>
