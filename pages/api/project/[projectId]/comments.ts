@@ -28,7 +28,7 @@ export default async function handler(
       return
     }
 
-    const comments = await commentService.getComments(projectId, {
+    const comments = await commentService.getCommentsV2(projectId, {
       parentId: null,
       page: Number(page),
       onlyOwn: true,

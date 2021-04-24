@@ -12,6 +12,7 @@ export default async function handler(
   if (req.method === 'POST') {
     const body = req.body as {
       content: string
+      ancestorId: string
     }
     const commentId = req.query.commentId as string
 
@@ -19,9 +20,10 @@ export default async function handler(
     if (!(await authService.projectOwnerGuard(project))) {
       return
     }
-    const created = await commentService.addCommentAsModerator(
+    const created = await commentService.addCommentAsModeratorV2(
       commentId,
       body.content,
+      body.ancestorId,
     )
     res.json({
       data: created,

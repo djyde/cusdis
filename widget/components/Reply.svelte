@@ -1,7 +1,7 @@
 <script>
   import { getContext } from "svelte";
   export let parentId;
-
+  export let ancestorId;
   // form data
   let content = "";
   let nickname = "";
@@ -38,6 +38,7 @@
         parentId,
         pageUrl,
         pageTitle,
+        ancestorId
       });
       await refresh();
       teardown();
@@ -46,6 +47,8 @@
       loading = false;
     }
   }
+
+  
 
   function teardown() {
     content = "";

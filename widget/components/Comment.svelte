@@ -25,7 +25,7 @@
   </div>
 
   {#if showReplyForm}
-    <Reply parentId={comment.id} onSuccess={() => { showReplyForm = false }} />
+    <Reply parentId={comment.id} ancestorId={comment.ancestorId} onSuccess={() => { showReplyForm = false }} />
   {/if}
 
   {#if comment.replies.length > 0}
