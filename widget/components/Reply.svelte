@@ -42,7 +42,7 @@ import { t } from "../i18n";
       });
       await refresh();
       teardown();
-      setMessage('comment_has_been_sent')
+      setMessage(t('comment_has_been_sent'))
     } finally {
       loading = false;
     }
