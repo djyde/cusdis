@@ -30,9 +30,10 @@ export default async function handler(
       nickname: string
       pageUrl?: string
       pageTitle?: string
+      ancestorId?: string
     }
 
-    const comment = await commentService.addComment(
+    const comment = await commentService.addCommentV2(
       body.appId,
       body.pageId,
       {
@@ -41,6 +42,7 @@ export default async function handler(
         nickname: body.nickname,
       },
       body.parentId,
+      body.ancestorId,
     )
 
     res.json({
@@ -53,9 +55,8 @@ export default async function handler(
       pageId: string
     }
 
-    const comments = await commentService.getComments(query.appId, {
+    const comments = await commentService.getCommentsV2(query.appId, {
       approved: true,
-      parentId: null,
       pageSlug: query.pageId,
       select: {
         by_nickname: true,

@@ -42,9 +42,10 @@ const deleteComment = async ({ commentId }) => {
   return res.data
 }
 
-const replyAsModerator = async ({ parentId, content }) => {
+const replyAsModerator = async ({ parentId, content, ancestorId }) => {
   const res = await apiClient.post(`/comment/${parentId}/replyAsModerator`, {
-    content
+    content,
+    ancestorId,
   })
   return res.data.data
 }
@@ -76,7 +77,7 @@ function CommentComponent(props: {
 
   const refetch = props.refetch
   const comment = props.comment
-
+  const isRoot = props.isRoot
   const [showReplyForm, setShowReplyForm] = React.useState(false)
 
   const approveCommentMutation = useMutation(approveComment, {
@@ -106,7 +107,11 @@ function CommentComponent(props: {
   }) {
     const form = useForm()
     function onSubmit({ content }) {
-      replyMutation.mutate({ content, parentId: props.parentId })
+      replyMutation.mutate({
+        content,
+        parentId: props.parentId,
+        ancestorId: comment.ancestorId,
+      })
     }
     const replyMutation = useMutation(replyAsModerator, {
       onSuccess() {

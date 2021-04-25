@@ -2,7 +2,7 @@
   import { getContext } from "svelte";
 import { t } from "../i18n";
   export let parentId;
-
+  export let ancestorId;
   // form data
   let content = "";
   let nickname = "";
@@ -39,6 +39,7 @@ import { t } from "../i18n";
         parentId,
         pageUrl,
         pageTitle,
+        ancestorId
       });
       await refresh();
       teardown();
@@ -47,6 +48,8 @@ import { t } from "../i18n";
       loading = false;
     }
   }
+
+  
 
   function teardown() {
     content = "";
