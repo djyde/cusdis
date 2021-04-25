@@ -1,5 +1,6 @@
 <script>
   import { getContext } from "svelte";
+import { t } from "../i18n";
 
   import Reply from "./Reply.svelte";
   export let comment;
@@ -21,7 +22,7 @@
   <div class="cusdis-comment-content" style="margin-bottom: .5em;">{@html comment.parsedContent}</div>
 
   <div style="margin-top: .25em; margin-bottom: .25em;">
-    <button style="" type="button" on:click={_ => { showReplyForm = true }} class="cusdis-link-btn">Reply</button>
+    <button style="" type="button" on:click={_ => { showReplyForm = true }} class="cusdis-link-btn">{t('reply_btn')}</button>
   </div>
 
   {#if showReplyForm}

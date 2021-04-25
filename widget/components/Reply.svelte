@@ -1,5 +1,6 @@
 <script>
   import { getContext } from "svelte";
+import { t } from "../i18n";
   export let parentId;
 
   // form data
@@ -18,12 +19,12 @@
 
   async function addComment() {
     if (!content) {
-      alert("Content is required");
+      alert(t('content_is_required'));
       return;
     }
 
     if (!nickname) {
-      alert("Nickname is required");
+      alert(t('nickname_is_required'));
       return;
     }
 
@@ -41,7 +42,7 @@
       });
       await refresh();
       teardown();
-      setMessage('Your comment has been sent. Please wait for approval.')
+      setMessage('comment_has_been_sent')
     } finally {
       loading = false;
     }
@@ -58,19 +59,19 @@
 <div style="margin-top: 1em;">
   <div class="cusdis-reply-info cusdis-field">
     <div>
-      <input type="text" placeholder="Nickname" bind:value={nickname} />
+      <input type="text" placeholder={t('nickname')} bind:value={nickname} />
     </div>
     <div>
-      <input type="text" placeholder="Email" bind:value={email} />
+      <input type="text" placeholder={t('email')} bind:value={email} />
     </div>
   </div>
 
   <div class="cusdis-field">
-    <textarea bind:value={content} placeholder="Reply..." />
+    <textarea bind:value={content} placeholder={t('reply_placeholder')} />
   </div>
 
   <div class="cusdis-field">
-    <button cusdis-disabled={loading} class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? 'Sending...' : 'Post Comment' }</button>
+    <button cusdis-disabled={loading} class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? t('sending') : t('post_comment') }</button>
   </div>
 </div>
 
