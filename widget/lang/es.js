@@ -1,4 +1,4 @@
-export default {
+window.CUSIDS_LOCALE = {
     powered_by: 'Desarrollado por Cusdis',
     post_comment: 'Comentar',
     loading: 'Cargando',
