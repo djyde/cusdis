@@ -85,6 +85,7 @@ import { t } from "../i18n";
     outline: none;
     font-family: inherit;
     box-sizing: border-box;
+    font-size: 1em;
   }
 
   textarea {
@@ -97,8 +98,18 @@ import { t } from "../i18n";
     cursor: not-allowed;
   }
 
-  .cusdis-reply-info div {
-    display: inline-block;
+  .cusdis-reply-info {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-column-gap: 0.5em;
+  }
+
+  @media only screen and (max-width: 767px) {
+    .cusdis-reply-info {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-row-gap: 0.5em;
+    }
   }
 
   .submit-btn {
@@ -109,8 +120,15 @@ import { t } from "../i18n";
     padding: 0.5em 1em;
     cursor: pointer;
     border-radius: 2px;
-    font-weight: bold;
     font-family: inherit;
+    font-size: 1em;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0;
+    text-shadow: none;
+    font: inherit;
+    font-weight: bold;
+    align-items: center;
   }
 
   .cusdis-field {
