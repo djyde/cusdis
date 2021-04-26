@@ -11,4 +11,5 @@
   - [Notification](/features/notification.md)
 - **Advanced**
   - [JS SDK Reference](/advanced/sdk.md)
+  - [i18n](/advanced/i18n.md)
 - [**Contributing Guide**](/contributing.md)
