@@ -92,6 +92,9 @@ model Project {
 
   enableNotification Boolean? @default(true) @map(name: "enable_notification")
 
+  webhook String?
+  enableWebhook Boolean?
+
   @@map(name: "projects")
 }
 

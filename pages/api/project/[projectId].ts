@@ -15,6 +15,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     const body = req.body as {
       enableNotification?: boolean,
+      webhookUrl?: string,
+      enableWebhook?: boolean
     }
 
     const project = (await projectService.get(projectId, {
@@ -32,7 +34,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: projectId,
       },
       data: {
-        enableNotification: body.enableNotification
+        enableNotification: body.enableNotification,
+        enableWebhook: body.enableWebhook,
+        webhook: body.webhookUrl
       },
     })
 

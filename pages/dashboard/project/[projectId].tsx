@@ -1,8 +1,8 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useRef } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { ProjectService } from '../../../service/project.service'
 import { CommentItem, CommentWrapper } from '../../../service/comment.service'
@@ -162,7 +162,7 @@ function CommentComponent(props: {
         {showReplyForm && <ReplyForm parentId={comment.id} />}
       </Box>
 
-      { comment.replies.data.length > 0 && comment.replies.data.map(reply => <CommentComponent {...props} comment={reply} isRoot={false} />)}
+      { comment.replies.data.length > 0 && comment.replies.data.map(reply => <CommentComponent key={reply.id} {...props} comment={reply} isRoot={false} />)}
     </Box>
   )
 }
@@ -255,6 +255,10 @@ function Settings(props: {
   const toast = useToast()
 
   const enableNotificationMutation = useMutation(updateProjectSettings)
+  const enableWebhookMutation = useMutation(updateProjectSettings)
+  const updateWebhookUrlMutation = useMutation(updateProjectSettings)
+
+  const webhookInputRef = useRef<HTMLInputElement>(null)
 
   const uploadMutation = useMutation(upload, {
     onSuccess() {
@@ -288,6 +292,68 @@ function Settings(props: {
     })
     return res.data
   }
+  
+  const onSaveWebhookUrl = async _ => {
+    const value = webhookInputRef.current.value
+
+    const validUrlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
+
+    if (!validUrlRegexp.exec(value)) {
+      toast({
+        title: 'Not a valid http/https URL',
+        status: 'error',
+        position: 'top'
+      })
+      return
+    }
+
+    updateWebhookUrlMutation.mutate({
+      projectId: props.project.id,
+      body: {
+        webhookUrl: value
+      }
+    }, {
+      onSuccess() {
+        toast({
+          title: 'Saved',
+          status: 'success',
+          position: 'top'
+        })
+      },
+      onError() {
+        toast({
+          title: 'Something went wrong',
+          status: 'error',
+          position: 'top'
+        })
+      }
+    })
+  }
+
+  const onChangeEnableWebhook = async _ => {
+    const value = _.target.checked
+    enableWebhookMutation.mutate({
+      projectId: props.project.id,
+      body: {
+        enableWebhook: value
+      }
+    }, {
+      onSuccess() {
+        toast({
+          title: 'Saved',
+          status: 'success',
+          position: 'top'
+        })
+      },
+      onError() {
+        toast({
+          title: 'Something went wrong',
+          status: 'error',
+          position: 'top'
+        })
+      }
+    })
+  }
 
   return (
     <>
@@ -313,9 +379,8 @@ function Settings(props: {
         </Box>
 
         <VStack alignItems="start">
-          <Box>
-            <Heading as="h1" size="md" my={4}>Notification</Heading>
-            <Checkbox onChange={e => {
+          <HStack mt={4}>
+            <Switch onChange={e => {
               enableNotificationMutation.mutate({
                 projectId: props.project.id,
                 body: {
@@ -337,13 +402,26 @@ function Settings(props: {
                   })
                 }
               })
-            }} defaultChecked={props.project.enableNotification}>Enable Notification for this project</Checkbox>
-          </Box>
+            }} defaultChecked={props.project.enableNotification}></Switch>
+            <Heading as="h1" size="md">Email Notification</Heading>
+
+          </HStack>
           <Box>
             <Link href="/user" fontSize="sm">
               Advanced Notification Settings
             </Link>
           </Box>
+        </VStack>
+
+        <VStack alignItems="start">
+          <HStack>
+            <Switch onChange={onChangeEnableWebhook} defaultChecked={props.project.enableWebhook} />
+            <Heading size="md">Webhook</Heading>
+          </HStack>
+          <HStack>
+            <Input defaultValue={props.project.webhook} type="text" ref={webhookInputRef}></Input>
+            <Button isLoading={updateWebhookUrlMutation.isLoading} onClick={onSaveWebhookUrl}>Save</Button>
+          </HStack>
         </VStack>
 
         <Box>
@@ -363,7 +441,7 @@ function Settings(props: {
   )
 }
 
-type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token' | 'enableNotification'>
+type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token' | 'enableNotification' | 'webhook' | 'enableWebhook'>
 
 export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
@@ -387,7 +465,9 @@ export async function getServerSideProps(ctx) {
         title: project.title,
         ownerId: project.ownerId,
         token: project.token,
-        enableNotification: project.enableNotification
+        enableNotification: project.enableNotification,
+        enableWebhook: project.enableWebhook,
+        webhook: project.webhook
       } as ProjectServerSideProps
     }
 

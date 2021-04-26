@@ -5,15 +5,12 @@ import * as nodemailer from 'nodemailer'
 import sgMail from '@sendgrid/mail'
 import { UserService } from './user.service'
 
-import jwt from 'jsonwebtoken'
 import { markdown } from './comment.service'
-
-export enum UnSubscribeType {
-  NEW_COMMENT = 'NEW_COMMENT',
-}
+import { TokenService } from './token.service'
 
 export class NotificationService extends RequestScopeService {
   userService = new UserService(this.req)
+  tokenService = new TokenService()
 
   // notify when new comment added
   async addComment(comment: Comment, projectId: string) {
@@ -68,26 +65,8 @@ export class NotificationService extends RequestScopeService {
       project.owner.notificationEmail || project.owner.email
 
     if (project.owner.enableNewCommentNotification) {
-      let unsubscribeToken = jwt.sign(
-        {
-          userId: project.owner.id,
-          type: UnSubscribeType.NEW_COMMENT,
-        },
-        `${resolvedConfig.jwtSecret}-unsubscribe`,
-        {
-          expiresIn: '1y',
-        },
-      )
-
-      const approveToken = jwt.sign(
-        {
-          commentId: comment.id,
-        },
-        `${resolvedConfig.jwtSecret}-approve_comment`,
-        {
-          expiresIn: '31 days',
-        },
-      )
+      let unsubscribeToken = this.tokenService.genUnsubscribeNewCommentToken(project.owner.id)
+      const approveToken = this.tokenService.genApproveToken(comment.id)
 
       const msg = {
         to: notificationEmail, // Change to your recipient
@@ -110,7 +89,6 @@ export class NotificationService extends RequestScopeService {
         resolvedConfig.smtp.senderAddress !== undefined
       ) {
         // send mail using smtp
-        // TODO: test smtp
         const transporter = nodemailer.createTransport({
           host: resolvedConfig.smtp.host,
           port: resolvedConfig.smtp.port,
