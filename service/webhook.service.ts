@@ -42,6 +42,7 @@ export class WebhookService extends RequestScopeService {
           page: {
             select: {
               title: true,
+              slug: true,
               project: {
                 select: {
                   title: true
@@ -62,7 +63,7 @@ export class WebhookService extends RequestScopeService {
             by_nickname: comment.by_nickname,
             by_email: comment.by_email,
             content: comment.content,
-            page_id: comment.pageId,
+            page_id: fullComment.page.slug,
             page_title: fullComment.page.title,
             project_title: fullComment.page.project.title,
             approve_link: approveLink,

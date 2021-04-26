@@ -6,7 +6,7 @@
   - [Vercel](/self-host/vercel.md)
 - **Integration**
   - [Docsify](/integration/docsify.md)
-  - [Hexo](https://blog.cusdis.com/hello-world/integate-cusdis-in-hexo/)
+  - [Hexo](https://blog.cusdis.com/integate-cusdis-in-hexo/)
 - **Features**
   - [Notification](/features/notification.md)
 - **Advanced**
