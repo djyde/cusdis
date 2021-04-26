@@ -146,7 +146,7 @@ function Dashboard(props: { session: UserSession }) {
           </Heading>
 
           <Box>
-            <SimpleGrid columns={4} spacing={4}>
+            <SimpleGrid columns={[1, 1, 4]} spacing={4}>
               {getProjects.isLoading && (
                 <>
                   <Skeleton height={4} />

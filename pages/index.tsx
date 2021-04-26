@@ -11,6 +11,7 @@ import {
   Link,
   LinkBox,
   LinkOverlay,
+  SimpleGrid,
   Spacer,
   Text,
   VStack,
@@ -102,37 +103,44 @@ function IndexPage({ session }: Props) {
       <Box my={12} py={24} bgColor="gray.50" width="full">
         <Container maxWidth="6xl">
           <Text color="gray.500" mb={12}>Embed in any websites</Text>
-          <HStack spacing={36}>
+          <SimpleGrid columns={[1, 2, 4]} spacing={12}>
             <LinkBox>
               <LinkOverlay isExternal href="/doc#/advanced/sdk">
-                <Img src="/images/vanilla.png" p={5} w={24} />
+                <Center>
+                  <Img src="/images/vanilla.png" w={12} mt={6} />
+                </Center>
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
               <LinkOverlay isExternal href="https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis">
-                <Img src="/images/react.png" w={24} />
-
+                <Center>
+                  <Img src="/images/react.png" w={24} mt={4} />
+                </Center>
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
               <LinkOverlay isExternal href="#">
-                <Img src="/images/svelte.svg" w={24} />
+                <Center>
+                  <Img src="/images/svelte.svg" w={24} mt={8} />
+                </Center>
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
               <LinkOverlay isExternal href="/doc#/integration/docsify">
-                <Img src="/images/docsify.svg" w={24} p={4} />
-
+                <Center>
+                  <Img src="/images/docsify.svg" w={12} mt={6} />
+                </Center>
               </LinkOverlay>
             </LinkBox>
 
             <LinkBox>
               <LinkOverlay isExternal href="http://blog.cusdis.com/hello-world/integate-cusdis-in-hexo/">
-                <Img src="/images/hexo.svg" w={24} p={4} />
-
+                <Center>
+                  <Img src="/images/hexo.svg" w={12} />
+                </Center>
               </LinkOverlay>
             </LinkBox>
-          </HStack>
+          </SimpleGrid>
         </Container>
       </Box>
 
