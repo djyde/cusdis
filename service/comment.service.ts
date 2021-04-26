@@ -12,6 +12,13 @@ export const markdown = MarkdownIt({
 
 markdown.disable(['image', 'link'])
 
+export type Comments = {
+  commentCount: number
+  pageSize: number
+  pageCount: number
+  comments: Comment[]
+}
+
 export class CommentService extends RequestScopeService {
   pageService = new PageService(this.req)
   hookService = new HookService(this.req)
@@ -26,7 +33,7 @@ export class CommentService extends RequestScopeService {
       onlyOwn?: boolean
       approved?: boolean
     },
-  ): Promise<Comment[]> {
+  ): Promise<Comments> {
     const pageSize = 10
 
     const select = {
@@ -37,30 +44,44 @@ export class CommentService extends RequestScopeService {
       page: true,
     }
 
-    const comments = await prisma.comment.findMany({
-      skip: options?.page ? (options.page - 1) * pageSize : 0,
-      take: options?.page ? pageSize : 100,
-      orderBy: {
-        createdAt: 'desc',
+    const where = {
+      approved: options?.approved === true ? true : options?.approved,
+      parentId: options?.parentId,
+      deletedAt: {
+        equals: null,
       },
+      page: {
+        slug: options?.pageSlug,
+        projectId,
+        project: {
+          ownerId: options?.onlyOwn
+            ? await (await this.getSession()).uid
+            : undefined,
+        },
+      },
+    }
+
+    const baseQuery = {
       select,
-      where: {
-        approved: options?.approved === true ? true : options?.approved,
-        parentId: options?.parentId,
-        deletedAt: {
-          equals: null,
+      where,
+    }
+
+    const page = options?.page || 1
+
+    const [commentCount, comments] = await prisma.$transaction([
+      prisma.comment.count({where}),
+      prisma.comment.findMany({
+        ...baseQuery,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: {
+          createdAt: 'desc',
         },
-        page: {
-          slug: options?.pageSlug,
-          projectId,
-          project: {
-            ownerId: options?.onlyOwn
-              ? await (await this.getSession()).uid
-              : undefined,
-          },
-        },
-      },
-    })
+      })
+    ])
+
+    // If there are 0 comments, there is still 1 page
+    const pageCount = Math.ceil(commentCount / pageSize) || 1
 
     const allComments = await Promise.all(
       comments.map(async (comment) => {
@@ -75,25 +96,21 @@ export class CommentService extends RequestScopeService {
           'YYYY-MM-DD HH:mm',
         )
         const parsedContent = markdown.render(comment.content)
-        if (replies.length) {
-          return {
-            ...comment,
-            replies,
-            parsedContent,
-            parsedCreatedAt,
-          }
-        } else {
-          return {
-            ...comment,
-            replies: [],
-            parsedContent,
-            parsedCreatedAt,
-          }
+        return {
+          ...comment,
+          replies,
+          parsedContent,
+          parsedCreatedAt,
         }
       }),
     )
 
-    return allComments as any[]
+    return {
+      comments: allComments as any[],
+      commentCount,
+      pageSize,
+      pageCount,
+    }
   }
 
   async getProject(commentId: string) {
