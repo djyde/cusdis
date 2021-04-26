@@ -63,7 +63,7 @@ export const resolvedConfig = {
       user: process.env.SMTP_USER as EnvVariable,
       pass: process.env.SMTP_PASSWORD as EnvVariable
     },
-    senderAddress: process.env.SMTP_SENDER as EnvVariable
+    senderAddress: process.env.SMTP_SENDER as EnvVariable || 'Cusdis Notification<notification@cusdis.com>'
   },
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY as EnvVariable

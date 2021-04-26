@@ -89,6 +89,20 @@ export class NotificationService extends RequestScopeService {
         },
       )
 
+      const msg = {
+        to: notificationEmail, // Change to your recipient
+        from: resolvedConfig.smtp.senderAddress,
+        subject: `New comment on "${fullComment.page.project.title}"`,
+        html: makeNewCommentEmailTemplate({
+          page_slug: fullComment.page.title || fullComment.page.slug,
+          by_nickname: comment.by_nickname,
+          approve_link: `${resolvedConfig.host}/api/open/approve?token=${approveToken}`,
+          unsubscribe_link: `${resolvedConfig.host}/api/open/unsubscribe?token=${unsubscribeToken}`,
+          content: markdown.render(comment.content),
+          notification_preferences_link: `${resolvedConfig.host}/user`,
+        })
+      }
+
       if (
         resolvedConfig.smtp.auth.user !== undefined &&
         resolvedConfig.smtp.auth.pass !== undefined &&
@@ -103,31 +117,11 @@ export class NotificationService extends RequestScopeService {
           secure: resolvedConfig.smtp.secure,
           auth: resolvedConfig.smtp.auth,
         })
-
-        const info = await transporter.sendMail({
-          from: resolvedConfig.smtp.senderAddress,
-          to: notificationEmail,
-          subject: `New comment`,
-          text: `${comment.content}`,
-        })
+        await transporter.sendMail(msg)
       } else if (resolvedConfig.sendgrid.apiKey) {
         // send using sendgrid
         try {
           sgMail.setApiKey(resolvedConfig.sendgrid.apiKey)
-          const msg = {
-            to: notificationEmail, // Change to your recipient
-            from: 'Cusdis Notification<notification@cusdis.com>', // Change to your verified sender
-            subject: `New comment on "${fullComment.page.project.title}"`,
-            html: makeNewCommentEmailTemplate({
-              page_slug: fullComment.page.title || fullComment.page.slug,
-              by_nickname: comment.by_nickname,
-              approve_link: `${resolvedConfig.host}/api/open/approve?token=${approveToken}`,
-              unsubscribe_link: `${resolvedConfig.host}/api/open/unsubscribe?token=${unsubscribeToken}`,
-              content: markdown.render(comment.content),
-              notification_preferences_link: `${resolvedConfig.host}/user`,
-            }),
-          }
-
           await sgMail.send(msg)
         } catch (e) {
           console.log(e)
