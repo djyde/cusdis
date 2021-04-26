@@ -69,9 +69,11 @@
       {#each commentsResult.data as comment (comment.id)}
         <Comment {comment} firstFloor={true} />
       {/each}
-      {#each Array(commentsResult.pageCount) as page, index }
-        <button on:click={_ => onClickPage(index + 1)}>{index + 1}</button>
-      {/each}
+      <div class="cusdis-paginator">
+        {#each Array(commentsResult.pageCount) as _, index }
+          <button class:selected={page === index + 1} class="cusdis-pagination-button" on:click={_ => onClickPage(index + 1)}>{index + 1}</button>
+        {/each}
+      </div>
     {/if}
   </div>
 
@@ -95,5 +97,22 @@
     color: #fff;
     padding: 0.5em;
     font-size: 0.5em;
+  }
+
+  .cusdis-paginator {
+    display: flex;
+  }
+
+  .cusdis-pagination-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: .5em;
+    padding: 0.2em .5em;
+    box-sizing: border-box;
+  }
+
+  .cusdis-pagination-button.selected {
+    background-color: #ddd;
   }
 </style>
