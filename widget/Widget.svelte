@@ -89,14 +89,13 @@
     text-align: center;
   }
   .comment-main {
-    font-size: 16px;
+    font-size: 17px;
   }
-
   .cusdis-message {
     background-color: #046582;
     color: #fff;
     padding: 0.5em;
-    font-size: 0.5em;
+    font-size: 1em;
   }
 
   .cusdis-paginator {
