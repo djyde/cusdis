@@ -55,9 +55,9 @@ function IndexPage({ session }: Props) {
                     signIn(null, { callbackUrl: `${location.origin}/dashboard` })
                   }
                   fontWeight="bold"
-                  color="gray.700"
+                  colorScheme="telegram"
                 >
-                  Try it now
+                  Start for free
                 </Button>
               )}
 
@@ -86,7 +86,7 @@ function IndexPage({ session }: Props) {
             </Box>
             <Text fontSize="lg" mt={4}>
               <p>
-                Open source, lightweight (4.7kb gzip), privacy-friendly alternative
+                Open source, lightweight (5kb gzipped), privacy-friendly alternative
                 to Disqus.
           </p>
             </Text>
@@ -100,50 +100,80 @@ function IndexPage({ session }: Props) {
 
       </Container>
 
-      <Box my={12} py={24} bgColor="gray.50" width="full">
+      <Container maxWidth="6xl">
+        <Heading mt={24}>
+          Easy to integrate
+        </Heading>
+      </Container>
+
+      <Box my={12} py={12} bgColor="gray.50" width="full" boxShadow="inner">
         <Container maxWidth="6xl">
-          <Text color="gray.500" mb={12}>Embed in any websites</Text>
           <SimpleGrid columns={[1, 2, 4]} spacing={12}>
             <LinkBox>
               <LinkOverlay isExternal href="/doc#/advanced/sdk">
-                <Center>
-                  <Img src="/images/vanilla.png" w={12} mt={6} />
-                </Center>
+                <Img src="/images/vanilla.png" w={12} mt={6} />
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
               <LinkOverlay isExternal href="https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis">
-                <Center>
-                  <Img src="/images/react.png" w={24} mt={4} />
-                </Center>
+                <Img src="/images/react.png" w={24} mt={4} />
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
               <LinkOverlay isExternal href="#">
-                <Center>
-                  <Img src="/images/svelte.svg" w={24} mt={8} />
-                </Center>
+                <Img src="/images/svelte.svg" w={24} mt={8} />
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
               <LinkOverlay isExternal href="/doc#/integration/docsify">
-                <Center>
-                  <Img src="/images/docsify.svg" w={12} mt={6} />
-                </Center>
+                <Img src="/images/docsify.svg" w={12} mt={6} />
               </LinkOverlay>
             </LinkBox>
 
             <LinkBox>
               <LinkOverlay isExternal href="http://blog.cusdis.com/hello-world/integate-cusdis-in-hexo/">
-                <Center>
-                  <Img src="/images/hexo.svg" w={12} />
-                </Center>
+                <Img src="/images/hexo.svg" w={12} />
               </LinkOverlay>
             </LinkBox>
           </SimpleGrid>
         </Container>
       </Box>
 
+      <Box mt={24}>
+        <Container maxWidth="6xl">
+          <Heading mb={12}>
+            Features
+          </Heading>
+
+          <SimpleGrid columns={3} textAlign="left" spacing={12}>
+            <VStack alignItems="start">
+              <Heading size="sm">Lightweight</Heading>
+              <Box color="gray.500" fontSize="sm">
+                The JS SDK embedded to your website is only around <strong>5kb</strong> gzipped.
+              </Box>
+            </VStack>
+            <VStack alignItems="start">
+              <Heading size="sm">Email Notification</Heading>
+              <Box color="gray.500" fontSize="sm">
+                You will receive Email notification when a new comment comes in, and approve the new comment without login.
+              </Box>
+            </VStack>
+            <VStack alignItems="start">
+              <Heading size="sm">Import from Disqus</Heading>
+              <Box color="gray.500" fontSize="sm">
+                One-click to import your existed data in Disqus to Cusdis.
+              </Box>
+            </VStack>
+            <VStack alignItems="start">
+              <Heading size="sm">Open source</Heading>
+              <Box color="gray.500" fontSize="sm">
+                Cusdis is an open-source project. Everyone can sure <strong>we don't track you and your user</strong>. Also, you can deploy your own Cusdis service with ease, to make sure you own your data.
+              </Box>
+            </VStack>
+          </SimpleGrid>
+
+        </Container>
+      </Box>
 
       <Footer />
     </>
