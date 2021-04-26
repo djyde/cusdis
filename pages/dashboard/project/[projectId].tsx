@@ -194,7 +194,7 @@ function ProjectPage(props: {
   const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string, page }], getComments, {
   })
 
-const {comments=[], commentCount=0, pageCount=1} = getCommentsQuery.data || {}
+  const {comments=[], commentCount=0, pageCount=1} = getCommentsQuery.data || {}
 
   return (
     <>
