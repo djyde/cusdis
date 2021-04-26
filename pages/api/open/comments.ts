@@ -49,6 +49,7 @@ export default async function handler(
   } else if (req.method === 'GET') {
     // get all comments
     const query = req.query as {
+      page?: string,
       appId: string
       pageId: string
     }
@@ -57,6 +58,7 @@ export default async function handler(
       approved: true,
       parentId: null,
       pageSlug: query.pageId,
+      page: Number(query.page) || 1,
       select: {
         by_nickname: true,
       },

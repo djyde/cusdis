@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { ProjectService } from '../../../service/project.service'
+import { CommentItem, CommentWrapper } from '../../../service/comment.service'
 import { apiClient } from '../../../utils.client'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
@@ -17,13 +18,7 @@ import { Footer } from '../../../components/Footer'
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
   const res = await apiClient.get<{
-    data: Array<Comment & {
-      replies: Array<Comment & {
-        page: Page
-      }>,
-      page: Page,
-      parsedContent: string
-    }>
+    data: CommentWrapper,
   }>(`/project/${projectId}/comments`, {
     params: {
       page
@@ -64,13 +59,7 @@ const updateProjectSettings = async ({ projectId, body }) => {
 function CommentComponent(props: {
   isRoot: boolean,
   refetch: any,
-  comment: Comment & {
-    replies: Array<Comment & {
-      page: Page
-    }>,
-    parsedContent: string,
-    page: Page
-  }
+  comment: CommentItem
 }) {
   const toast = useToast()
 
@@ -173,7 +162,7 @@ function CommentComponent(props: {
         {showReplyForm && <ReplyForm parentId={comment.id} />}
       </Box>
 
-      { comment.replies.length > 0 && comment.replies.map(reply => <CommentComponent {...props} comment={reply as any} isRoot={false} />)}
+      { comment.replies.data.length > 0 && comment.replies.data.map(reply => <CommentComponent {...props} comment={reply} isRoot={false} />)}
     </Box>
   )
 }
@@ -198,6 +187,8 @@ function ProjectPage(props: {
 
   const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string, page }], getComments, {
   })
+
+  const { commentCount = 0, pageCount = 1 } = getCommentsQuery.data || {}
 
   return (
     <>
@@ -227,11 +218,11 @@ function ProjectPage(props: {
                   {getCommentsQuery.isLoading && <Center p={8}><Spinner /></Center>}
                   <VStack alignItems="stretch" spacing={4}>
                     <VStack align="stretch" spacing={4} divider={<StackDivider borderColor="gray.200" />}>
-                      {getCommentsQuery.data?.length === 0 && !getCommentsQuery.isLoading ? <Text py={12} textAlign="center" color="gray.500">No Comments</Text> : null}
-                      {getCommentsQuery.data?.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
+                      {commentCount === 0 && !getCommentsQuery.isLoading ? <Text py={12} textAlign="center" color="gray.500">No Comments</Text> : null}
+                      {getCommentsQuery.data?.data.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
                     </VStack>
                     <HStack spacing={2} mt={8}>
-                      {new Array(10).fill(0).map((_, index) => {
+                      {new Array(pageCount).fill(0).map((_, index) => {
                         return (
                           <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
                         )
