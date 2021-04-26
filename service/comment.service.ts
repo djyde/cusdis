@@ -1,4 +1,4 @@
-import { Comment, Prisma } from '@prisma/client'
+import { Comment, Page, Prisma } from '@prisma/client'
 import { RequestScopeService } from '.'
 import { prisma } from '../utils.server'
 import { PageService } from './page.service'
@@ -11,6 +11,21 @@ export const markdown = MarkdownIt({
 })
 
 markdown.disable(['image', 'link'])
+
+export type CommentWrapper = {
+  commentCount: number
+  pageSize: number
+  pageCount: number
+  data: CommentItem[]
+}
+
+export type CommentItem = Comment & {
+  page: Page
+} & {
+  replies: CommentWrapper
+  parsedContent: string
+  parsedCreatedAt: string
+}
 
 export class CommentService extends RequestScopeService {
   pageService = new PageService(this.req)
@@ -26,7 +41,7 @@ export class CommentService extends RequestScopeService {
       onlyOwn?: boolean
       approved?: boolean
     },
-  ): Promise<Comment[]> {
+  ): Promise<CommentWrapper> {
     const pageSize = 10
 
     const select = {
@@ -35,32 +50,47 @@ export class CommentService extends RequestScopeService {
       content: true,
       ...options?.select,
       page: true,
+      moderatorId: true
+    } as Prisma.CommentSelect
+
+    const where = {
+      approved: options?.approved === true ? true : options?.approved,
+      parentId: options?.parentId,
+      deletedAt: {
+        equals: null,
+      },
+      page: {
+        slug: options?.pageSlug,
+        projectId,
+        project: {
+          ownerId: options?.onlyOwn
+            ? await (await this.getSession()).uid
+            : undefined,
+        },
+      },
     }
 
-    const comments = await prisma.comment.findMany({
-      skip: options?.page ? (options.page - 1) * pageSize : 0,
-      take: options?.page ? pageSize : 100,
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const baseQuery = {
       select,
-      where: {
-        approved: options?.approved === true ? true : options?.approved,
-        parentId: options?.parentId,
-        deletedAt: {
-          equals: null,
+      where,
+    }
+
+    const page = options?.page || 1
+
+    const [commentCount, comments] = await prisma.$transaction([
+      prisma.comment.count({ where }),
+      prisma.comment.findMany({
+        ...baseQuery,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: {
+          createdAt: 'desc',
         },
-        page: {
-          slug: options?.pageSlug,
-          projectId,
-          project: {
-            ownerId: options?.onlyOwn
-              ? await (await this.getSession()).uid
-              : undefined,
-          },
-        },
-      },
-    })
+      }),
+    ])
+
+    // If there are 0 comments, there is still 1 page
+    const pageCount = Math.ceil(commentCount / pageSize) || 1
 
     const allComments = await Promise.all(
       comments.map(async (comment) => {
@@ -74,26 +104,22 @@ export class CommentService extends RequestScopeService {
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           'YYYY-MM-DD HH:mm',
         )
-        const parsedContent = markdown.render(comment.content)
-        if (replies.length) {
-          return {
-            ...comment,
-            replies,
-            parsedContent,
-            parsedCreatedAt,
-          }
-        } else {
-          return {
-            ...comment,
-            replies: [],
-            parsedContent,
-            parsedCreatedAt,
-          }
-        }
+        const parsedContent = markdown.render(comment.content) as string
+        return {
+          ...comment,
+          replies,
+          parsedContent,
+          parsedCreatedAt,
+        } as CommentItem
       }),
     )
 
-    return allComments as any[]
+    return {
+      data: allComments,
+      commentCount,
+      pageSize,
+      pageCount,
+    }
   }
 
   async getProject(commentId: string) {
