@@ -1,4 +1,4 @@
-import { Comment, Prisma } from '@prisma/client'
+import { Comment, Page, Prisma } from '@prisma/client'
 import { RequestScopeService } from '.'
 import { prisma } from '../utils.server'
 import { PageService } from './page.service'
@@ -12,11 +12,19 @@ export const markdown = MarkdownIt({
 
 markdown.disable(['image', 'link'])
 
-export type Comments = {
+export type CommentWrapper = {
   commentCount: number
   pageSize: number
   pageCount: number
-  comments: Comment[]
+  data: CommentItem[]
+}
+
+export type CommentItem = Comment & {
+  page: Page
+} & {
+  replies: CommentWrapper
+  parsedContent: string
+  parsedCreatedAt: string
 }
 
 export class CommentService extends RequestScopeService {
@@ -33,7 +41,7 @@ export class CommentService extends RequestScopeService {
       onlyOwn?: boolean
       approved?: boolean
     },
-  ): Promise<Comments> {
+  ): Promise<CommentWrapper> {
     const pageSize = 10
 
     const select = {
@@ -42,7 +50,8 @@ export class CommentService extends RequestScopeService {
       content: true,
       ...options?.select,
       page: true,
-    }
+      moderatorId: true
+    } as Prisma.CommentSelect
 
     const where = {
       approved: options?.approved === true ? true : options?.approved,
@@ -69,7 +78,7 @@ export class CommentService extends RequestScopeService {
     const page = options?.page || 1
 
     const [commentCount, comments] = await prisma.$transaction([
-      prisma.comment.count({where}),
+      prisma.comment.count({ where }),
       prisma.comment.findMany({
         ...baseQuery,
         skip: (page - 1) * pageSize,
@@ -77,7 +86,7 @@ export class CommentService extends RequestScopeService {
         orderBy: {
           createdAt: 'desc',
         },
-      })
+      }),
     ])
 
     // If there are 0 comments, there is still 1 page
@@ -95,18 +104,18 @@ export class CommentService extends RequestScopeService {
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           'YYYY-MM-DD HH:mm',
         )
-        const parsedContent = markdown.render(comment.content)
+        const parsedContent = markdown.render(comment.content) as string
         return {
           ...comment,
           replies,
           parsedContent,
           parsedCreatedAt,
-        }
+        } as CommentItem
       }),
     )
 
     return {
-      comments: allComments as any[],
+      data: allComments,
       commentCount,
       pageSize,
       pageCount,

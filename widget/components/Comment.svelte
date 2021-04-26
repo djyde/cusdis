@@ -4,7 +4,6 @@ import { t } from "../i18n";
 
   import Reply from "./Reply.svelte";
   export let comment;
-  export let firstFloor = false;
   export let showReplyForm = false;
 
   const { showIndicator } = getContext('attrs')
@@ -29,8 +28,8 @@ import { t } from "../i18n";
     <Reply parentId={comment.id} onSuccess={() => { showReplyForm = false }} />
   {/if}
 
-  {#if comment.replies.length > 0}
-    {#each comment.replies as child (child.id)}
+  {#if comment.replies.data.length > 0}
+    {#each comment.replies.data as child (child.id)}
       <svelte:self comment={child} />
     {/each}
   {/if}
