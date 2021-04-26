@@ -6,7 +6,9 @@
   import { t } from './i18n';
 
   export let attrs
-  export let comments = []
+  export let commentsResult
+  
+  let page = 1
 
   let loadingComments = true
 
@@ -25,19 +27,25 @@
   setContext('refresh', getComments)
   setContext('setMessage', setMessage)
 
-  async function getComments() {
+  async function getComments(p = 1) {
     loadingComments = true
     try {
       const res = await api.get(`/api/open/comments`, {
         params: {
+          page: p,
           appId: attrs.appId,
           pageId: attrs.pageId,
         },
       })
-      comments = res.data.data
+      commentsResult = res.data.data
     } finally {
       loadingComments = false
     }
+  }
+
+  function onClickPage(p) {
+    page = p
+    getComments(p)
   }
 
   onMount(() => {
@@ -58,9 +66,14 @@
     {#if loadingComments}
       <div style="text-align: center; font-size: .8em;">{t('loading')}...</div>
     {:else}
-      {#each comments as comment (comment.id)}
+      {#each commentsResult.data as comment (comment.id)}
         <Comment {comment} firstFloor={true} />
       {/each}
+      <div class="cusdis-paginator">
+        {#each Array(commentsResult.pageCount) as _, index }
+          <button class:selected={page === index + 1} class="cusdis-pagination-button" on:click={_ => onClickPage(index + 1)}>{index + 1}</button>
+        {/each}
+      </div>
     {/if}
   </div>
 
@@ -84,5 +97,22 @@
     color: #fff;
     padding: 0.5em;
     font-size: 0.5em;
+  }
+
+  .cusdis-paginator {
+    display: flex;
+  }
+
+  .cusdis-pagination-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: .5em;
+    padding: 0.2em .5em;
+    box-sizing: border-box;
+  }
+
+  .cusdis-pagination-button.selected {
+    background-color: #ddd;
   }
 </style>

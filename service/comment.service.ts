@@ -50,7 +50,7 @@ export class CommentService extends RequestScopeService {
       content: true,
       ...options?.select,
       page: true,
-      moderatorId: true,
+      moderatorId: true
     } as Prisma.CommentSelect
 
     const where = {
