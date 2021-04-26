@@ -58,7 +58,7 @@ model User {
   Comment Comment[]
 
   enableNewCommentNotification Boolean? @default(true) @map(name: "enable_new_comment_notification")
-  notificationEmail            String? @map(name: "notification_email")
+  notificationEmail            String?  @map(name: "notification_email")
 
   @@map(name: "users")
 }
@@ -91,6 +91,9 @@ model Project {
   fetchLatestCommentsAt DateTime? @map(name: "fetch_latest_comments_at")
 
   enableNotification Boolean? @default(true) @map(name: "enable_notification")
+
+  webhook       String?
+  enableWebhook Boolean?
 
   @@map(name: "projects")
 }

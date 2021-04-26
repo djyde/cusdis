@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -418,10 +418,12 @@ function Settings(props: {
             <Switch onChange={onChangeEnableWebhook} defaultChecked={props.project.enableWebhook} />
             <Heading size="md">Webhook</Heading>
           </HStack>
-          <HStack>
+          <InputGroup>
             <Input defaultValue={props.project.webhook} type="text" ref={webhookInputRef}></Input>
-            <Button isLoading={updateWebhookUrlMutation.isLoading} onClick={onSaveWebhookUrl}>Save</Button>
-          </HStack>
+            <InputRightElement width='16'>
+              <Button size="sm" isLoading={updateWebhookUrlMutation.isLoading} onClick={onSaveWebhookUrl}>Save</Button>
+            </InputRightElement>
+          </InputGroup>
         </VStack>
 
         <Box>
