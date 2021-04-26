@@ -34,7 +34,7 @@
           pageId: attrs.pageId,
         },
       })
-      comments = res.data.data
+      comments = res.data.data.comments
     } finally {
       loadingComments = false
     }
