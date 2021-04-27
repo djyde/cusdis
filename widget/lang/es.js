@@ -1,4 +1,4 @@
-window.CUSIDS_LOCALE = {
+window.CUSDIS_LOCALE = {
     powered_by: 'Desarrollado por Cusdis',
     post_comment: 'Comentar',
     loading: 'Cargando',
