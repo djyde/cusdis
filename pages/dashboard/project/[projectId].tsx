@@ -126,9 +126,9 @@ function CommentComponent(props: {
   return (
     <Box key={comment.id} pl={!props.isRoot ? 4 : 0}>
       <HStack spacing={2}>
-        <Tooltip label={comment.page.slug}>
+        {props.isRoot && <Tooltip label={comment.page.slug}>
           <Link color="gray.500" href={comment.page.url}>{comment.page.title}</Link>
-        </Tooltip>
+        </Tooltip> }
         <Spacer />
 
         {comment.moderatorId && <Tag colorScheme="cyan" size="sm">MOD</Tag>}

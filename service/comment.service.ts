@@ -39,10 +39,11 @@ export class CommentService extends RequestScopeService {
       select?: Prisma.CommentSelect
       pageSlug?: string | Prisma.StringFilter
       onlyOwn?: boolean
-      approved?: boolean
+      approved?: boolean,
+      pageSize?: number
     },
   ): Promise<CommentWrapper> {
-    const pageSize = 10
+    const pageSize = options?.pageSize || 10
 
     const select = {
       id: true,
@@ -50,7 +51,7 @@ export class CommentService extends RequestScopeService {
       content: true,
       ...options?.select,
       page: true,
-      moderatorId: true
+      moderatorId: true,
     } as Prisma.CommentSelect
 
     const where = {
@@ -64,7 +65,7 @@ export class CommentService extends RequestScopeService {
         projectId,
         project: {
           deletedAt: {
-            equals: null
+            equals: null,
           },
           ownerId: options?.onlyOwn
             ? await (await this.getSession()).uid
@@ -100,10 +101,18 @@ export class CommentService extends RequestScopeService {
         // get replies
         const replies = await this.getComments(projectId, {
           ...options,
+          page: 1,
+          // hard code 100 because we havent implement pagination in nested comment
+          pageSize: 100,
           parentId: comment.id,
           pageSlug: options?.pageSlug,
           select,
         })
+
+        if (comment.id === '5189938357') {
+          console.log(replies)
+          console.log(options)
+        }
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           'YYYY-MM-DD HH:mm',
         )
@@ -159,7 +168,6 @@ export class CommentService extends RequestScopeService {
     },
     parentId?: string,
   ) {
-
     // touch page
     const page = await this.pageService.upsertPage(pageSlug, projectId, {
       pageTitle: body.pageTitle,
