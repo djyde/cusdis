@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -126,7 +126,9 @@ function CommentComponent(props: {
   return (
     <Box key={comment.id} pl={!props.isRoot ? 4 : 0}>
       <HStack spacing={2}>
-        <Link color="gray.500" href={comment.page.url}>{comment.page.title}</Link>
+        <Tooltip label={comment.page.slug}>
+          <Link color="gray.500" href={comment.page.url}>{comment.page.title}</Link>
+        </Tooltip>
         <Spacer />
 
         {comment.moderatorId && <Tag colorScheme="cyan" size="sm">MOD</Tag>}
@@ -264,7 +266,7 @@ function Settings(props: {
         status: 'success',
         position: 'top'
       })
-      location.href="/dashboard"
+      location.href = "/dashboard"
     },
     onError() {
       toast({
@@ -404,7 +406,7 @@ function Settings(props: {
             <Box mt={2}>
               <Link fontSize="sm" color="telegram.500" href='/doc#/faq?id=what-if-i-delete-a-project'>What if I delete a project?</Link>
             </Box>
-            </AlertDialogBody>
+          </AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelDeleteProjectRef} onClick={onCloseDeleteProjectModal}>
@@ -491,12 +493,15 @@ function Settings(props: {
         <Box>
           <Heading as="h1" size="md" my={4}>Data</Heading>
           <Heading as="h2" size="sm" my={4}>Import from Disqus</Heading>
-          <Input mb={2} type="file" onChange={onChangeFile} />
-          <Button onClick={_ => {
-            if (importFile.current) {
-              uploadMutation.mutate()
-            }
-          }} isLoading={uploadMutation.isLoading}>Import</Button>
+          <HStack>
+            <Input type="file" onChange={onChangeFile} />
+            <Button onClick={_ => {
+              if (importFile.current) {
+                uploadMutation.mutate()
+              }
+            }} isLoading={uploadMutation.isLoading}>Import</Button>
+
+          </HStack>
 
           {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
 
