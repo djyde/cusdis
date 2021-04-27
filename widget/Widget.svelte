@@ -69,7 +69,7 @@
       {#each commentsResult.data as comment (comment.id)}
         <Comment {comment} firstFloor={true} />
       {/each}
-      {#if commentsResult.data.length > 0}
+      {#if commentsResult.pageCount > 1}
         <div class="cusdis-paginator">
           {#each Array(commentsResult.pageCount) as _, index }
             <button class:selected={page === index + 1} class="cusdis-pagination-button" on:click={_ => onClickPage(index + 1)}>{index + 1}</button>
