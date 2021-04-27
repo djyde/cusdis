@@ -39,6 +39,8 @@ export default async function handler(
         content: body.content,
         email: body.email,
         nickname: body.nickname,
+        pageTitle: body.pageTitle,
+        pageUrl: body.pageUrl
       },
       body.parentId,
     )

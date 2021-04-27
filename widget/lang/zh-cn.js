@@ -1,4 +1,4 @@
-window.CUSIDS_LOCALE = {
+window.CUSDIS_LOCALE = {
   powered_by: '评论由 Cusdis 提供',
   post_comment: '发送',
   loading: '加载中',
