@@ -3,6 +3,7 @@ import Widget from "./Widget.svelte";
 
 function render(target) {
   if (target) {
+    target.innerHTML = ''
     new Widget({
       target,
       props: {
