@@ -20,8 +20,8 @@ import { signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import { Footer } from '../components/Footer'
 import { Head } from '../components/Head'
-import { getSession } from '../utils.server'
-import { GetServerSideProps } from 'next'
+import { getSession, resolvedConfig } from '../utils.server'
+import { GetServerSideProps, Redirect } from 'next'
 
 type Props = {
   session: any
@@ -180,8 +180,18 @@ function IndexPage({ session }: Props) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+export const getServerSideProps: GetServerSideProps<Props> | Redirect = async (ctx) => {
   const session = await getSession(ctx.req)
+
+  if (!resolvedConfig.isHosted) {
+    return {
+      redirect: {
+        destination: '/dashboard',
+        permanent: false,
+      }
+    }
+  }
+
   return {
     props: {
       session,

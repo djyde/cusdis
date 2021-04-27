@@ -41,11 +41,11 @@ export function initMiddleware(middleware) {
 }
 
 type EnvVariable = string | undefined
-
 export const resolvedConfig = {
   useLocalAuth: process.env.USERNAME && process.env.PASSWORD,
   useGithub: process.env.GITHUB_ID && process.env.GITHUB_SECRET,
   jwtSecret: process.env.JWT_SECRET,
+  isHosted: process.env.IS_HOSTED === 'true',
   host: process.env.HOST || 'https://cusdis.com',
   umami: {
     id: process.env.UMAMI_ID as EnvVariable,
@@ -57,17 +57,19 @@ export const resolvedConfig = {
   },
   smtp: {
     host: process.env.SMTP_HOST as EnvVariable,
-    port: Number(process.env.SMTP_PORT as EnvVariable || '587'),
-    secure: Boolean(process.env.SMTP_SECURE as EnvVariable || 'true'),
+    port: Number((process.env.SMTP_PORT as EnvVariable) || '587'),
+    secure: Boolean((process.env.SMTP_SECURE as EnvVariable) || 'true'),
     auth: {
       user: process.env.SMTP_USER as EnvVariable,
-      pass: process.env.SMTP_PASSWORD as EnvVariable
+      pass: process.env.SMTP_PASSWORD as EnvVariable,
     },
-    senderAddress: process.env.SMTP_SENDER as EnvVariable || 'Cusdis Notification<notification@cusdis.com>'
+    senderAddress:
+      (process.env.SMTP_SENDER as EnvVariable) ||
+      'Cusdis Notification<notification@cusdis.com>',
   },
   sendgrid: {
-    apiKey: process.env.SENDGRID_API_KEY as EnvVariable
-  }
+    apiKey: process.env.SENDGRID_API_KEY as EnvVariable,
+  },
 }
 
 export const getSession = async (req) => {
