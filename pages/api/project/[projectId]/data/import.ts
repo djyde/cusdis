@@ -53,6 +53,7 @@ export default async function handler(
         projectId,
         fs.readFileSync(files.file.path, { encoding: 'utf-8' }),
       )
+
       res.json({
         data: {
           pageCount: imported.threads.length,

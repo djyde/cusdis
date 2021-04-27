@@ -284,9 +284,10 @@ function Settings(props: {
   const webhookInputRef = useRef<HTMLInputElement>(null)
 
   const uploadMutation = useMutation(upload, {
-    onSuccess() {
+    onSuccess(data) {
       toast({
-        title: 'Saved',
+        title: 'Import success',
+        description: `imported ${data.commentCount} comments`,
         status: 'success',
         position: 'top'
       })
@@ -308,12 +309,17 @@ function Settings(props: {
   async function upload() {
     const formData = new FormData()
     formData.append('file', importFile.current)
-    const res = await apiClient.post(`/project/${props.project.id}/data/import`, formData, {
+    const res = await apiClient.post<{
+      data: {
+        pageCount: number,
+        commentCount: number,
+      }
+    }>(`/project/${props.project.id}/data/import`, formData, {
       headers: {
         'content-type': 'multipart/form-data'
       }
     })
-    return res.data
+    return res.data.data
   }
 
   const onSaveWebhookUrl = async _ => {
@@ -486,7 +492,11 @@ function Settings(props: {
           <Heading as="h1" size="md" my={4}>Data</Heading>
           <Heading as="h2" size="sm" my={4}>Import from Disqus</Heading>
           <Input mb={2} type="file" onChange={onChangeFile} />
-          <Button onClick={_ => uploadMutation.mutate()} isLoading={uploadMutation.isLoading}>Import</Button>
+          <Button onClick={_ => {
+            if (importFile.current) {
+              uploadMutation.mutate()
+            }
+          }} isLoading={uploadMutation.isLoading}>Import</Button>
 
           {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
 
