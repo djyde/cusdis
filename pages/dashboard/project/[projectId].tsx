@@ -126,7 +126,7 @@ function CommentComponent(props: {
   return (
     <Box key={comment.id} pl={!props.isRoot ? 4 : 0}>
       <HStack spacing={2}>
-        <Link color="gray.500" href={comment.page.url}>{comment.page.slug}</Link>
+        <Link color="gray.500" href={comment.page.url}>{comment.page.title}</Link>
         <Spacer />
 
         {comment.moderatorId && <Tag colorScheme="cyan" size="sm">MOD</Tag>}
