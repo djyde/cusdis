@@ -44,10 +44,10 @@ const replyAsModerator = async ({ parentId, content }) => {
   return res.data.data
 }
 
-const generateToken = async ({ projectId }) => {
-  const res = await apiClient.post<{
+const deleteProject = async ({ projectId }) => {
+  const res = await apiClient.delete<{
     data: string
-  }>(`/project/${projectId}/generateToken`)
+  }>(`/project/${projectId}`)
   return res.data.data
 }
 
@@ -257,6 +257,29 @@ function Settings(props: {
   const enableNotificationMutation = useMutation(updateProjectSettings)
   const enableWebhookMutation = useMutation(updateProjectSettings)
   const updateWebhookUrlMutation = useMutation(updateProjectSettings)
+  const deleteProjectMutation = useMutation(deleteProject, {
+    onSuccess() {
+      toast({
+        title: 'Deleted',
+        status: 'success',
+        position: 'top'
+      })
+      location.href="/dashboard"
+    },
+    onError() {
+      toast({
+        title: 'Something went wrong',
+        status: 'error',
+        position: 'top'
+      })
+    }
+  })
+
+  const [isOpenDeleteProjectModal, setIsOpenDeleteProjectModal] = React.useState(false)
+  const cancelDeleteProjectRef = React.useRef()
+  const onCloseDeleteProjectModal = () => {
+    setIsOpenDeleteProjectModal(false)
+  }
 
   const webhookInputRef = useRef<HTMLInputElement>(null)
 
@@ -292,7 +315,7 @@ function Settings(props: {
     })
     return res.data
   }
-  
+
   const onSaveWebhookUrl = async _ => {
     const value = webhookInputRef.current.value
 
@@ -354,6 +377,39 @@ function Settings(props: {
       }
     })
   }
+
+
+  const DeleteProjectDialog = (
+    <AlertDialog
+      isOpen={isOpenDeleteProjectModal}
+      leastDestructiveRef={cancelDeleteProjectRef}
+      onClose={onCloseDeleteProjectModal}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Delete Project
+            </AlertDialogHeader>
+
+          <AlertDialogBody>
+            <Text>
+              Are you sure?
+            </Text>
+            <Box mt={2}>
+              <Link fontSize="sm" color="telegram.500" href='/doc#/faq?id=what-if-i-delete-a-project'>What if I delete a project?</Link>
+            </Box>
+            </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <Button ref={cancelDeleteProjectRef} onClick={onCloseDeleteProjectModal}>
+              Cancel
+              </Button>
+            <Button ml={4} colorScheme="red" onClick={_ => deleteProjectMutation.mutate({ projectId: props.project.id })} isLoading={deleteProjectMutation.isLoading}>Delete</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+  )
 
   return (
     <>
@@ -436,6 +492,13 @@ function Settings(props: {
 
         </Box>
 
+        <Box>
+          <Heading as="h1" size="md" my={4}>Danger Zone</Heading>
+          <Button size="sm" colorScheme="red" onClick={_ => setIsOpenDeleteProjectModal(true)} isLoading={deleteProjectMutation.isLoading}>Delete project</Button>
+          {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
+          {DeleteProjectDialog}
+        </Box>
+
       </VStack>
 
 
@@ -449,6 +512,15 @@ export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
   const session = await getSession(ctx.req)
   const project = await projectService.get(ctx.query.projectId) as Project
+
+  if (project.deletedAt) {
+    return {
+      redirect: {
+        destination: '/404',
+        permanent: false
+      }
+    }
+  }
 
   if (session && (project.ownerId !== session.uid)) {
     return {

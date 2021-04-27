@@ -43,5 +43,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.json({
       message: 'success'
     })
+  } else if (req.method === 'DELETE') {
+    const { projectId } = req.query as {
+      projectId: string
+    }
+
+    const project = (await projectService.get(projectId, {
+      select: {
+        ownerId: true,
+      },
+    })) as Pick<Project, 'ownerId'>
+
+    if (!(await authService.projectOwnerGuard(project))) {
+      return
+    }
+
+    await projectService.delete(projectId)
+
+    res.json({
+      message: 'success'
+    })
   }
 }

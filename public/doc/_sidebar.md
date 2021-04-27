@@ -14,3 +14,4 @@
   - [Webhook Reference](/advanced/webhook.md)
   - [i18n](/advanced/i18n.md)
 - [**Contributing Guide**](/contributing.md)
+- [**FAQ**](/faq.md)

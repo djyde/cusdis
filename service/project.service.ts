@@ -41,6 +41,7 @@ export class ProjectService extends RequestScopeService {
     const session = await this.getSession()
     const projects = await prisma.project.findMany({
       where: {
+        deletedAt: null,
         ownerId: session.uid,
       },
     })
@@ -112,5 +113,33 @@ export class ProjectService extends RequestScopeService {
     }
 
     return results
+  }
+
+  async delete(projectId: string) {
+    await prisma.project.update({
+      where: {
+        id: projectId
+      },
+      data:{
+        deletedAt: new Date()
+      }
+    })
+  }
+
+  async isDeleted(projectId: string) {
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId
+      },
+      select: {
+        deletedAt: true
+      }
+    })
+
+    if (project && !project.deletedAt) {
+      return false
+    }
+
+    return true
   }
 }

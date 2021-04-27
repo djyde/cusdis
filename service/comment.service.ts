@@ -63,12 +63,15 @@ export class CommentService extends RequestScopeService {
         slug: options?.pageSlug,
         projectId,
         project: {
+          deletedAt: {
+            equals: null
+          },
           ownerId: options?.onlyOwn
             ? await (await this.getSession()).uid
             : undefined,
         },
       },
-    }
+    } as Prisma.CommentWhereInput
 
     const baseQuery = {
       select,
@@ -156,6 +159,7 @@ export class CommentService extends RequestScopeService {
     },
     parentId?: string,
   ) {
+
     // touch page
     const page = await this.pageService.upsertPage(pageSlug, projectId, {
       pageTitle: body.pageTitle,

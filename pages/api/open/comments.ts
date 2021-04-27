@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { CommentService } from '../../../service/comment.service'
-import { initMiddleware } from '../../../utils.server'
+import { CommentService, CommentWrapper } from '../../../service/comment.service'
+import { initMiddleware, prisma } from '../../../utils.server'
 import Cors from 'cors'
+import { ProjectService } from '../../../service/project.service'
 
 const cors = initMiddleware(
   // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
@@ -18,6 +19,7 @@ export default async function handler(
   await cors(req, res)
 
   const commentService = new CommentService(req)
+  const projectService = new ProjectService(req)
 
   if (req.method === 'POST') {
     // add comment
@@ -32,6 +34,16 @@ export default async function handler(
       pageTitle?: string
     }
 
+    const isDeleted = await projectService.isDeleted(body.appId)
+
+    if (isDeleted) {
+      res.status(404)
+      res.json({
+        message: 'Project not found',
+      })
+      return
+    }
+
     const comment = await commentService.addComment(
       body.appId,
       body.pageId,
@@ -40,7 +52,7 @@ export default async function handler(
         email: body.email,
         nickname: body.nickname,
         pageTitle: body.pageTitle,
-        pageUrl: body.pageUrl
+        pageUrl: body.pageUrl,
       },
       body.parentId,
     )
@@ -51,9 +63,24 @@ export default async function handler(
   } else if (req.method === 'GET') {
     // get all comments
     const query = req.query as {
-      page?: string,
+      page?: string
       appId: string
       pageId: string
+    }
+
+    const isDeleted = await projectService.isDeleted(query.appId)
+
+    if (isDeleted) {
+      res.status(404)
+      res.json({
+        data: {
+          commentCount: 0,
+          data: [],
+          pageCount: 0,
+          pageSize: 10,
+        } as CommentWrapper,
+      })
+      return
     }
 
     const comments = await commentService.getComments(query.appId, {

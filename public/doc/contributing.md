@@ -51,10 +51,6 @@ Change the attributes of the widget in `widget/index.html` (Don't commit this fi
 
 Database schema is defined in `prisma/$DB_TYPE/schema.prisma`.
 
-If you are just prototyping the schema, after modifying, run `yarn db:push` to force push the change to your local database. 
-
-> For pgsql, run `yarn db:push:pg`
-
 ### Generate database migrations
 
 In general, you don't need to generate migration when contribute a new feature. Create a PR and the core team member will do this for you.
