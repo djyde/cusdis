@@ -1,7 +1,7 @@
 import en from './lang/en'
 
 export function t(key) {
-  const LOCALE_KEY = 'CUSIDS_LOCALE'
+  const LOCALE_KEY = 'CUSDIS_LOCALE'
 
   const locale = window[LOCALE_KEY] || en
 
