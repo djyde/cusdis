@@ -138,6 +138,13 @@ function IndexPage({ session }: Props) {
               </LinkOverlay>
             </LinkBox>
             <LinkBox>
+              <LinkOverlay isExternal href="https://github.com/evillt/vue-cusdis">
+                <Center>
+                  <Img src="/images/vue.png" w={12} mt={8} />
+                </Center>
+              </LinkOverlay>
+            </LinkBox>
+            <LinkBox>
               <LinkOverlay isExternal href="#">
                 <Center>
                   <Img src="/images/svelte.svg" w={24} mt={8} />

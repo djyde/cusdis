@@ -71,7 +71,7 @@ import { t } from "../i18n";
   </div>
 
   <div class="cusdis-field">
-    <button cusdis-disabled={loading} class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? t('sending') : t('post_comment') }</button>
+    <button class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? t('sending') : t('post_comment') }</button>
   </div>
 </div>
 
