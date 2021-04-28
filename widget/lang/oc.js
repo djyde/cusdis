@@ -1,4 +1,4 @@
-export default {
+window.CUSDIS_LOCALE = {
   powered_by: 'Propulsat per Cusdis',
   post_comment: 'Publicar comentari',
   loading: 'Cargament',
