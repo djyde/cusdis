@@ -1,44 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 import { UserSession } from './service'
 import { getSession as nextAuthGetSession } from 'next-auth/client'
+import * as Sentry from '@sentry/node'
+import * as Tracing from '@sentry/tracing'
 
-export const singleton = async <T>(id: string, fn: () => Promise<T>) => {
-  if (process.env.NODE_ENV === 'production') {
-    return await fn()
-  } else {
-    if (!global[id]) {
-      global[id] = await fn()
-    }
-    return global[id] as T
-  }
-}
-
-export const singletonSync = <T>(id: string, fn: () => T) => {
-  if (process.env.NODE_ENV === 'production') {
-    return fn()
-  } else {
-    if (!global[id]) {
-      global[id] = fn()
-    }
-    return global[id] as T
-  }
-}
-
-export const prisma = singletonSync('prisma', () => {
-  return new PrismaClient()
-})
-
-export function initMiddleware(middleware) {
-  return (req, res) =>
-    new Promise((resolve, reject) => {
-      middleware(req, res, (result) => {
-        if (result instanceof Error) {
-          return reject(result)
-        }
-        return resolve(result)
-      })
-    })
-}
 
 type EnvVariable = string | undefined
 export const resolvedConfig = {
@@ -70,6 +35,60 @@ export const resolvedConfig = {
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY as EnvVariable,
   },
+  posthog: {
+    apiKey: process.env.POSTHOG_API_KEY as EnvVariable,
+  },
+  sentry: {
+    dsn: process.env.SENTRY_DSN as EnvVariable,
+  },
+}
+
+export const singleton = async <T>(id: string, fn: () => Promise<T>) => {
+  if (process.env.NODE_ENV === 'production') {
+    return await fn()
+  } else {
+    if (!global[id]) {
+      global[id] = await fn()
+    }
+    return global[id] as T
+  }
+}
+
+export const singletonSync = <T>(id: string, fn: () => T) => {
+  if (process.env.NODE_ENV === 'production') {
+    return fn()
+  } else {
+    if (!global[id]) {
+      global[id] = fn()
+    }
+    return global[id] as T
+  }
+}
+
+export const prisma = singletonSync('prisma', () => {
+  return new PrismaClient()
+})
+
+export const sentry = singletonSync('sentry', () => {
+  if (resolvedConfig.sentry.dsn) {
+    Sentry.init({
+      dsn: resolvedConfig.sentry.dsn,
+      tracesSampleRate: 1.0,
+    })
+    return Sentry
+  }
+})
+
+export function initMiddleware(middleware) {
+  return (req, res) =>
+    new Promise((resolve, reject) => {
+      middleware(req, res, (result) => {
+        if (result instanceof Error) {
+          return reject(result)
+        }
+        return resolve(result)
+      })
+    })
 }
 
 export const getSession = async (req) => {

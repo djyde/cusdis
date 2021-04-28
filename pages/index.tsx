@@ -20,7 +20,7 @@ import { signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import { Footer } from '../components/Footer'
 import { Head } from '../components/Head'
-import { getSession, resolvedConfig } from '../utils.server'
+import { getSession, resolvedConfig, sentry } from '../utils.server'
 import { GetServerSideProps, Redirect } from 'next'
 
 type Props = {

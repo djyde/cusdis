@@ -1,8 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { CommentService, CommentWrapper } from '../../../service/comment.service'
+import {
+  CommentService,
+  CommentWrapper,
+} from '../../../service/comment.service'
 import { initMiddleware, prisma } from '../../../utils.server'
 import Cors from 'cors'
 import { ProjectService } from '../../../service/project.service'
+import { statService } from '../../../service/stat.service'
 
 const cors = initMiddleware(
   // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
@@ -57,6 +61,8 @@ export default async function handler(
       body.parentId,
     )
 
+    statService.capture('add_comment')
+
     res.json({
       data: comment,
     })
@@ -82,6 +88,17 @@ export default async function handler(
       })
       return
     }
+
+    const queryCommentStat = statService.start(
+      'query_comments',
+      'Query Comments',
+      {
+        tags: {
+          project_id: query.appId,
+          from: 'open_api',
+        },
+      },
+    )
 
     const comments = await commentService.getComments(query.appId, {
       approved: true,

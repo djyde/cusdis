@@ -7,6 +7,7 @@ import { UserService } from './user.service'
 
 import { markdown } from './comment.service'
 import { TokenService } from './token.service'
+import { statService } from './stat.service'
 
 export class NotificationService extends RequestScopeService {
   userService = new UserService(this.req)
@@ -98,9 +99,12 @@ export class NotificationService extends RequestScopeService {
         await transporter.sendMail(msg)
       } else if (resolvedConfig.sendgrid.apiKey) {
         // send using sendgrid
+
         try {
           sgMail.setApiKey(resolvedConfig.sendgrid.apiKey)
           await sgMail.send(msg)
+
+          statService.capture('notification_email')
         } catch (e) {
           console.log(e)
         }

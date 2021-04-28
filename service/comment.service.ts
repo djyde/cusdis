@@ -5,6 +5,7 @@ import { PageService } from './page.service'
 import dayjs from 'dayjs'
 import MarkdownIt from 'markdown-it'
 import { HookService } from './hook.service'
+import { statService } from './stat.service'
 
 export const markdown = MarkdownIt({
   linkify: true,
@@ -109,10 +110,6 @@ export class CommentService extends RequestScopeService {
           select,
         })
 
-        if (comment.id === '5189938357') {
-          console.log(replies)
-          console.log(options)
-        }
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           'YYYY-MM-DD HH:mm',
         )
@@ -221,6 +218,8 @@ export class CommentService extends RequestScopeService {
         approved: true,
       },
     })
+
+    statService.capture('comment_approve')
   }
 
   async delete(commentId: string) {

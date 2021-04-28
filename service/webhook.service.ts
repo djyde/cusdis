@@ -1,7 +1,8 @@
 import { Comment } from '@prisma/client'
 import axios from 'axios'
 import { RequestScopeService } from '.'
-import { prisma, resolvedConfig } from '../utils.server'
+import { prisma, resolvedConfig, sentry } from '../utils.server'
+import { statService } from './stat.service'
 import { TokenService } from './token.service'
 
 export enum HookType {
@@ -56,6 +57,10 @@ export class WebhookService extends RequestScopeService {
       const approveToken = this.tokenService.genApproveToken(comment.id)
       const approveLink = `${resolvedConfig.host}/api/open/approve?token=${approveToken}`
 
+      statService.capture('webhook_trigger', {
+        properties: 'add_comment'
+      })
+
       try {
         axios.post(project.webhook, {
           type: HookType.NewComment,
@@ -70,7 +75,7 @@ export class WebhookService extends RequestScopeService {
           },
         } as HookBody<NewCommentHookData>)
       } catch (e) {
-        // TODO: track error
+        
       }
     }
   }

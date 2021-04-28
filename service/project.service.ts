@@ -2,6 +2,7 @@ import { Prisma, User } from '@prisma/client'
 import { nanoid } from 'nanoid'
 import { RequestScopeService } from '.'
 import { prisma } from '../utils.server'
+import { statService } from './stat.service'
 
 export class ProjectService extends RequestScopeService {
   async create(title: string) {
@@ -16,6 +17,8 @@ export class ProjectService extends RequestScopeService {
         },
       },
     })
+
+    statService.capture('project_create')
 
     return created
   }
@@ -124,6 +127,8 @@ export class ProjectService extends RequestScopeService {
         deletedAt: new Date()
       }
     })
+
+    statService.capture('project_delete')
   }
 
   async isDeleted(projectId: string) {
