@@ -208,7 +208,7 @@ function IndexPage({ session }: Props) {
             </Heading>
 
             <Center>
-              <SimpleGrid columns={2} spacing={8}>
+              <SimpleGrid columns={[1, 2]} spacing={8}>
                 <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
                   <Heading size="xl" textAlign="center">$0</Heading>
                   <Box px={6} pb={3}>
