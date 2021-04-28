@@ -89,6 +89,12 @@ export default async function handler(
       return
     }
 
+    statService.capture('get_comments', {
+      properties: {
+        from: 'open_api'
+      }
+    })
+
     const queryCommentStat = statService.start(
       'query_comments',
       'Query Comments',
@@ -109,6 +115,8 @@ export default async function handler(
         by_nickname: true,
       },
     })
+
+    queryCommentStat.end()
 
     res.json({
       data: comments,
