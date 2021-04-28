@@ -58,7 +58,7 @@ function IndexPage({ session }: Props) {
 
   return (
     <>
-      <Head title="Cusdis" />
+      <Head title="Cusdis - Lightweight, privacy-first, open-source comment system" />
       <Box as="nav" py={4} mt={24} mb={12}>
         <Container maxWidth="3xl">
           <HStack>
