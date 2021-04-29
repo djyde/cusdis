@@ -327,7 +327,7 @@ function Settings(props: {
   const onSaveWebhookUrl = async _ => {
     const value = webhookInputRef.current.value
 
-    const validUrlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
+    const validUrlRegexp = /^https?:/
 
     if (!validUrlRegexp.exec(value)) {
       toast({
