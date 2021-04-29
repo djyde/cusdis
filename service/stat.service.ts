@@ -20,7 +20,7 @@ export class StatService {
       this.client.capture({
         distinctId: options?.user?.uid || 'unknown',
         event,
-        properties: options?.properties,
+        properties: options?.properties || {},
       })
     } else {
       return null
