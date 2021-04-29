@@ -8,10 +8,10 @@
   - [Docsify](/integration/docsify.md)
   - [Hexo](https://blog.cusdis.com/integate-cusdis-in-hexo/)
 - **Features**
-  - [Notification](/features/notification.md)
+  - [Email Notification](/features/notification.md)
+  - [Webhook](/advanced/webhook.md)
 - **Advanced**
   - [JS SDK Reference](/advanced/sdk.md)
-  - [Webhook Reference](/advanced/webhook.md)
   - [i18n](/advanced/i18n.md)
 - [**Contributing Guide**](/contributing.md)
 - [**FAQ**](/faq.md)
