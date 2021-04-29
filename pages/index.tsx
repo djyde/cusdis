@@ -17,6 +17,7 @@ import {
   SimpleGrid,
   Spacer,
   Text,
+  UnorderedList,
   VStack,
 } from '@chakra-ui/react'
 import { signIn } from 'next-auth/client'
@@ -27,12 +28,25 @@ import { getSession, resolvedConfig, sentry } from '../utils.server'
 import { GetServerSideProps, Redirect } from 'next'
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { GoMarkGithub } from "react-icons/go";
+import axios from 'axios'
+import { UserSession } from '../service'
 
 type Props = {
-  session: any
+  session: UserSession
+  contributers: Contributer[]
 }
 
-function IndexPage({ session }: Props) {
+type Contributer = {
+  MemberId: string,
+  createdAt: string,
+  role: string,
+  profile: string
+  image: string,
+  name: string,
+  website?: string
+}
+
+function IndexPage({ session, contributers }: Props) {
   const router = useRouter()
 
   const StartButton = session ? (
@@ -272,6 +286,20 @@ function IndexPage({ session }: Props) {
               <Text fontSize="sm" mt={12} color="gray.500">
                 * If you like Cusdis. Consider <Link fontWeight="medium" textDecoration="underline" href="https://opencollective.com/cusdis" isExternal>sponsor us</Link> to help us be sustainable.
               </Text>
+
+              <Text fontSize="sm" mt={12} color="gray.500">
+                * Special thanks to these sponsors
+              </Text>
+              <UnorderedList spacing={1} pl={6} fontSize="sm" mt={12} color="gray.500">
+                {contributers.map(contributer => {
+                  return (
+                    <ListItem key={contributer.MemberId}>
+                      <Link href={contributer.website || contributer.profile} fontSize="sm">{contributer.name}</Link>
+
+                    </ListItem>
+                  )
+                })}
+              </UnorderedList>
             </VStack>
 
           </Box>
@@ -279,7 +307,6 @@ function IndexPage({ session }: Props) {
           <Box mt={24} textAlign="center">
             {StartButton}
           </Box>
-
         </Container>
       </Box>
 
@@ -300,9 +327,18 @@ export const getServerSideProps: GetServerSideProps<Props> | Redirect = async (c
     }
   }
 
+  let contributers = [] as Contributer[]
+
+  try {
+    contributers = (await axios.get<Contributer[]>('https://opencollective.com/cusdis/members/all.json')).data
+  } catch (e) {
+
+  }
+
   return {
     props: {
       session,
+      contributers: contributers.filter(_ => _.role !== 'HOST' && _.role !== 'ADMIN')
     },
   }
 }
