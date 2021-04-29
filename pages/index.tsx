@@ -14,6 +14,14 @@ import {
   LinkOverlay,
   List,
   ListItem,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
   SimpleGrid,
   Spacer,
   Text,
@@ -197,17 +205,42 @@ function IndexPage({ session, contributers }: Props) {
                 The JS SDK embedded to your website is only around <strong>5kb</strong> gzipped.
               </Box>
             </VStack>
-            <VStack alignItems="start">
-              <Heading size="sm">Email Notification</Heading>
-              <Box color="gray.500" fontSize="sm">
-                You will receive Email notification when a new comment comes in, and approve the new comment without login.
-              </Box>
-            </VStack>
+           
+            {/* <Popover isOpen trigger="hover" placement='left' flip={false} arrowPadding={8} offset={[0, 36]}>
+              <PopoverTrigger>
+                <VStack alignItems="start">
+                  <Heading size="sm">Webhook</Heading>
+                  <Box color="gray.500" fontSize="sm">
+                    You can set a Webhook URL that will be triggered when your websites have new comment.
+                    </Box>
+                </VStack>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverBody>
+                  <Img src="/images/telegram_bot.png"></Img>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover> */}
             <VStack alignItems="start">
               <Heading size="sm">Import from Disqus</Heading>
               <Box color="gray.500" fontSize="sm">
                 One-click to import your existed data in Disqus to Cusdis.
               </Box>
+            </VStack>
+            <VStack alignItems="start">
+              <Heading size="sm">Email Notification</Heading>
+              <Box color="gray.500" fontSize="sm">
+                You will receive Email notification when a new comment comes in, and approve the new comment without login.
+              </Box>
+              <Img src="/images/email_notification.png"></Img>
+            </VStack>
+            <VStack alignItems="start">
+              <Heading size="sm">Webhook</Heading>
+              <Box color="gray.500" fontSize="sm">
+                You can set a Webhook URL that will be triggered when your websites have new comment. Integrate Cusdis with your favorite tools such as Telegram.
+              </Box>
+              <Img src="/images/telegram_bot.png"></Img>
             </VStack>
             <VStack alignItems="start">
               <Heading size="sm">Open source</Heading>
