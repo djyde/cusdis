@@ -3,7 +3,7 @@ import {
   CommentService,
   CommentWrapper,
 } from '../../../service/comment.service'
-import { initMiddleware, prisma } from '../../../utils.server'
+import { initMiddleware, prisma, resolvedConfig } from '../../../utils.server'
 import Cors from 'cors'
 import { ProjectService } from '../../../service/project.service'
 import { statService } from '../../../service/stat.service'
@@ -32,6 +32,7 @@ export default async function handler(
       appId: string
       pageId: string
       content: string
+      acceptNotify?: boolean
       email: string
       nickname: string
       pageUrl?: string
@@ -60,6 +61,19 @@ export default async function handler(
       },
       body.parentId,
     )
+
+    // send confirm email
+    if (body.acceptNotify === true && body.email) {
+      try {
+        commentService.sendConfirmReplyNotificationEmail(
+          body.email,
+          body.pageTitle,
+          comment.id,
+        )
+      } catch (e) {
+        // TODO: log error
+      }
+    }
 
     statService.capture('add_comment')
 
@@ -92,8 +106,8 @@ export default async function handler(
     statService.capture('get_comments', {
       properties: {
         project_id: query.appId,
-        from: 'open_api'
-      }
+        from: 'open_api',
+      },
     })
 
     const queryCommentStat = statService.start(

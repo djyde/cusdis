@@ -1,45 +1,75 @@
 import jwt from 'jsonwebtoken'
 import { resolvedConfig } from '../utils.server'
 
-
 export enum UnSubscribeType {
   NEW_COMMENT = 'NEW_COMMENT',
 }
 
 export enum SecretKey {
   ApproveComment = 'approve_comment',
-  Unsubscribe = 'unsubscribe'
+  Unsubscribe = 'unsubscribe',
+  AcceptNotify = 'accept_notify'
+}
+
+export module TokenBody {
+  export type AcceptNotifyToken = {
+    commentId: string
+  }
+
+  export type ApproveComment = {
+    commentId: string
+  }
+
+  export type UnsubscribeNewComment = {
+    userId: string,
+    type: UnSubscribeType
+  }
 }
 
 export class TokenService {
-
   validate(token: string, secretKey: string) {
     const result = jwt.verify(token, `${resolvedConfig.jwtSecret}-${secretKey}`)
     return result
   }
 
+  sign(secretKey: SecretKey, body, expiresIn: string) {
+    return jwt.sign(body, `${resolvedConfig.jwtSecret}-${secretKey}`, {
+      expiresIn,
+    }) as string
+  }
+
   genApproveToken(commentId: string) {
-    return jwt.sign(
+    return this.sign(
+      SecretKey.ApproveComment,
       {
         commentId,
-      },
-      `${resolvedConfig.jwtSecret}-${SecretKey.ApproveComment}`,
-      {
-        expiresIn: '31 days',
-      },
-    ) as string
+      } as TokenBody.ApproveComment,
+      '3 days',
+    )
   }
 
   genUnsubscribeNewCommentToken(userId: string) {
-    return jwt.sign(
+    return this.sign(
+      SecretKey.Unsubscribe,
       {
         userId,
         type: UnSubscribeType.NEW_COMMENT,
-      },
-      `${resolvedConfig.jwtSecret}-${SecretKey.Unsubscribe}`,
+      } as TokenBody.UnsubscribeNewComment,
+      '1y',
+    )
+  }
+
+  genAcceptNotifyToken(commentId: string) {
+    return this.sign(
+      SecretKey.AcceptNotify,
       {
-        expiresIn: '1y',
-      },
-    ) as string
+        commentId
+      } as TokenBody.AcceptNotifyToken,
+      '1 day'
+    )
+  }
+
+  validateAcceptNotifyToken(token: string) {
+    return this.validate(token, SecretKey.AcceptNotify) as TokenBody.AcceptNotifyToken
   }
 }
