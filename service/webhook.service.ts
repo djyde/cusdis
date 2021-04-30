@@ -55,7 +55,7 @@ export class WebhookService extends RequestScopeService {
       })
 
       const approveToken = this.tokenService.genApproveToken(comment.id)
-      const approveLink = `${resolvedConfig.host}/api/open/approve?token=${approveToken}`
+      const approveLink = `${resolvedConfig.host}/open/approve?token=${approveToken}`
 
       statService.capture('webhook_trigger', {
         properties: {

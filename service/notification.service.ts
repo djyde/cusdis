@@ -76,8 +76,8 @@ export class NotificationService extends RequestScopeService {
         html: makeNewCommentEmailTemplate({
           page_slug: fullComment.page.title || fullComment.page.slug,
           by_nickname: comment.by_nickname,
-          approve_link: `${resolvedConfig.host}/api/open/approve?token=${approveToken}`,
-          unsubscribe_link: `${resolvedConfig.host}/api/open/unsubscribe?token=${unsubscribeToken}`,
+          approve_link: `${resolvedConfig.host}/open/approve?token=${approveToken}`,
+          unsubscribe_link: `${resolvedConfig.host}/open/unsubscribe?token=${unsubscribeToken}`,
           content: markdown.render(comment.content),
           notification_preferences_link: `${resolvedConfig.host}/user`,
         })
@@ -331,7 +331,7 @@ function makeNewCommentEmailTemplate(data: {
               <tbody>
                 <tr>
                 <td align="center" bgcolor="#3f72af" class="inner-td" style="border-radius:6px; font-size:16px; text-align:left; background-color:inherit;">
-                  <a href="{{approve_link}}" style="background-color:#3f72af; border:1px solid #333333; border-color:#333333; border-radius:6px; border-width:1px; color:#ffffff; display:inline-block; font-size:12px; font-weight:bold; letter-spacing:0px; line-height:normal; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid; font-family:verdana,geneva,sans-serif;" target="_blank">Approve without login</a>
+                  <a href="{{approve_link}}" style="background-color:#3f72af; border:1px solid #333333; border-color:#333333; border-radius:6px; border-width:1px; color:#ffffff; display:inline-block; font-size:12px; font-weight:bold; letter-spacing:0px; line-height:normal; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid; font-family:verdana,geneva,sans-serif;" target="_blank">Approve/Reply without login</a>
                 </td>
                 </tr>
               </tbody>
