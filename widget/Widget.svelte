@@ -61,7 +61,7 @@
 </script>
 
 {#if !error}
-  <div class={`comment-main ${theme}`}>
+  <div class={`comment-main ${theme !== 'light' ? theme : ''}`}>
     {#if message}
       <div class="cusdis-message">
         {message}
