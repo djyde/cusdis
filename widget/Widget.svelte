@@ -4,6 +4,7 @@
   import Comment from './components/Comment.svelte'
   import Reply from './components/Reply.svelte'
   import { t } from './i18n'
+  import './theme.css'
 
   export let attrs
   export let commentsResult
@@ -15,6 +16,8 @@
   let message = ''
 
   let error
+
+  let theme = attrs.theme || 'auto'
 
   const api = axios.create({
     baseURL: attrs.host,
@@ -58,7 +61,7 @@
 </script>
 
 {#if !error}
-  <div class="comment-main">
+  <div class={`comment-main ${theme}`}>
     {#if message}
       <div class="cusdis-message">
         {message}
@@ -69,7 +72,10 @@
 
     <div>
       {#if loadingComments}
-        <div style="text-align: center; font-size: .8em;">
+        <div
+          class="cusdis-loading-text"
+          style="text-align: center; font-size: .8em;"
+        >
           {t('loading')}...
         </div>
       {:else}
@@ -103,13 +109,18 @@
     margin-top: 1em;
     font-size: 0.8em;
     text-align: center;
+    color: var(--color-text-default);
+  }
+
+  .cusdis-loading-text {
+    color: var(--color-text-default);
   }
   .comment-main {
     font-size: 17px;
   }
   .cusdis-message {
-    background-color: #046582;
-    color: #fff;
+    background-color: var(--color-message-bg);
+    color: var(--color-message-text);
     padding: 0.5em;
     font-size: 1em;
   }
@@ -128,6 +139,6 @@
   }
 
   .cusdis-pagination-button.selected {
-    background-color: #ddd;
+    background-color: var(--color-pagination-bg-selected);
   }
 </style>
