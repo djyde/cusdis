@@ -4,20 +4,27 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg-color: white;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: rgba(0, 0, 0, .8);
+      }
+    }
+  </style>
   <title>Document</title>
 </head>
 
-<body style="">
-  <div style="width: 50%; margin: 0 auto;">
-    <div id="cusdis_thread" 
-      data-host="http://localhost:3000"
-      data-app-id="ae2609bf-7976-498a-a380-cc290e02e56a"
-      data-page-id="svelte"
-      data-theme="light"
-      data-show-indicator="true"
-    ></div>
+<body style="background-color: var(--bg-color);">
+  <div style="width: 70%; margin: 0 auto;">
+    <div id="cusdis_thread" data-theme="auto" data-host="http://localhost:3000" data-app-id="ae2609bf-7976-498a-a380-cc290e02e56a"
+      data-page-id="svelte" data-show-indicator="true"></div>
     <script src="http://localhost:3000/js/widget/lang/zh-cn.js"></script>
     <script type="module" async src="/index.js"></script>
+    <!-- <script async src="http://localhost:3000/js/cusdis.es.js"></script> -->
   </div>
 </body>
 
