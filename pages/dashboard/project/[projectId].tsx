@@ -425,9 +425,9 @@ function Settings(props: {
         spacing={8}
         alignItems="stretch"
       >
-        <Box>
+        <VStack alignItems="start">
           <Heading as="h1" size="md" mb={4} >Embed Code</Heading>
-          {typeof window !== 'undefined' && <Box as="pre" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
+          {typeof window !== 'undefined' && <Box w="full" as="pre" whiteSpace="pre-wrap" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
             <code>
               {`<div id="cusdis_thread"
   data-host="${location.origin}"
@@ -439,8 +439,10 @@ function Settings(props: {
 <script async defer src="${location.origin}/js/cusdis.es.js"></script>
 `}
             </code>
-          </Box>}
-        </Box>
+          </Box>
+          }
+          <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/webhook">SDK reference</Link>
+        </VStack>
 
         <VStack alignItems="start">
           <HStack mt={4}>
@@ -488,6 +490,7 @@ function Settings(props: {
               <Button size="sm" isLoading={updateWebhookUrlMutation.isLoading} onClick={onSaveWebhookUrl}>Save</Button>
             </InputRightElement>
           </InputGroup>
+          <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/webhook">How to use Webhook?</Link>
         </VStack>
 
         <Box>

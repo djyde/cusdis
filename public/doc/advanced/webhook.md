@@ -28,3 +28,11 @@ When new comment comes in, Cusdis will make a `POST` request to your webhook, wi
   }
 }
 ```
+
+## Official Telegram bot
+
+We also provide an official Telegram bot to send notification to you, with the power of Webhook: 
+
+1. Open and start bot https://t.me/CusdisBot
+2. send `/gethook` command
+3. Copy the URL result and paste in Cusdis project's webhook settings
