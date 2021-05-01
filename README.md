@@ -4,15 +4,10 @@ Open source, lightweight (~5kb gzip), privacy-friendly alternative to Disqus.
 
 https://cusdis.com
 
+<a href="https://www.producthunt.com/posts/cusdis?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-cusdis" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=293432&theme=light" alt="Cusdis - Open-source, lightweight comment system for your website | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
+
 ![](/public/images/landing.png)
-
-
-## 💝 Sponsor this project
-
-If you like Cusdis, please consider sponsor us to help us be sustainable. 
-
-[![Contributors](https://opencollective.com/cusdis/tiers/sponsors.svg)](https://opencollective.com/cusdis)
-[![Contributors](https://opencollective.com/cusdis/tiers/backers.svg)](https://opencollective.com/cusdis)
 
 ## Documentation
 
@@ -42,6 +37,11 @@ Given below are the pros and cons of Cusdis:
 - Cusdis is on the early stages of its development.
 - There is no spam filter, hence, you will have to manually moderate your comment section and comments won't be displayed until you approve them.
 - Disqus is a company, we aren't.
+
+## Sponsor this project
+
+[![Contributors](https://opencollective.com/cusdis/tiers/sponsors.svg)](https://opencollective.com/cusdis)
+[![Contributors](https://opencollective.com/cusdis/tiers/backers.svg)](https://opencollective.com/cusdis)
 
 ## Contributing
 

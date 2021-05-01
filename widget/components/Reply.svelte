@@ -1,36 +1,36 @@
 <script>
-  import { getContext } from "svelte";
-import { t } from "../i18n";
-  export let parentId;
+  import { getContext } from 'svelte'
+  import { t } from '../i18n'
+  export let parentId
 
   // form data
-  let content = "";
-  let nickname = "";
-  let email = "";
+  let content = ''
+  let nickname = ''
+  let email = ''
 
-  let loading = false;
+  let loading = false
 
-  export let onSuccess;
+  export let onSuccess
 
-  const api = getContext("api");
+  const api = getContext('api')
   const setMessage = getContext('setMessage')
-  const { appId, pageId, pageUrl, pageTitle } = getContext("attrs");
-  const refresh = getContext("refresh");
+  const { appId, pageId, pageUrl, pageTitle } = getContext('attrs')
+  const refresh = getContext('refresh')
 
   async function addComment() {
     if (!content) {
-      alert(t('content_is_required'));
-      return;
+      alert(t('content_is_required'))
+      return
     }
 
     if (!nickname) {
-      alert(t('nickname_is_required'));
-      return;
+      alert(t('nickname_is_required'))
+      return
     }
 
     try {
-      loading = true;
-      const res = await api.post("/api/open/comments", {
+      loading = true
+      const res = await api.post('/api/open/comments', {
         appId,
         pageId,
         content,
@@ -39,20 +39,20 @@ import { t } from "../i18n";
         parentId,
         pageUrl,
         pageTitle,
-      });
-      await refresh();
-      teardown();
+      })
+      await refresh()
+      teardown()
       setMessage(t('comment_has_been_sent'))
     } finally {
-      loading = false;
+      loading = false
     }
   }
 
   function teardown() {
-    content = "";
-    nickname = "";
-    email = "";
-    onSuccess && onSuccess();
+    content = ''
+    nickname = ''
+    email = ''
+    onSuccess && onSuccess()
   }
 </script>
 
@@ -71,7 +71,11 @@ import { t } from "../i18n";
   </div>
 
   <div class="cusdis-field">
-    <button class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? t('sending') : t('post_comment') }</button>
+    <button
+      class="submit-btn"
+      class:cusdis-disabled={loading}
+      on:click={addComment}>{loading ? t('sending') : t('post_comment')}</button
+    >
   </div>
 </div>
 
@@ -79,7 +83,10 @@ import { t } from "../i18n";
   textarea,
   input {
     width: 100%;
-    border: 2px solid #ddd;
+    border: 2px solid;
+    color: var(--cusdis--color-text-default);
+    border-color: var(--cusdis--color-input-border);
+    background: none;
     padding: 0.5em;
     border-radius: 4px;
     outline: none;
@@ -94,7 +101,7 @@ import { t } from "../i18n";
   }
 
   .cusdis-disabled {
-    background-color: rgba(0, 0, 0, .5);
+    background-color: var(--cusdis--color-btn-bg-disabled);
     cursor: not-allowed;
   }
 
@@ -113,10 +120,10 @@ import { t } from "../i18n";
   }
 
   .submit-btn {
-    background-color: #ddd;
-    border: 0px;
-    color: rgba(0, 0, 0, 0.8);
+    background-color: var(--cusdis--color-btn-bg-default);
+    color: var(--cusdis--color-btn-text);
     border-radius: 0;
+    border: var(--cusdis--color-btn-border);
     padding: 0.5em 1em;
     cursor: pointer;
     border-radius: 2px;

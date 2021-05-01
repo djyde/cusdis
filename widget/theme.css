@@ -1,0 +1,64 @@
+.comment-main {
+  --color-text-default: rgba(0, 0, 0, 0.8);
+  --color-input-border: #ddd;
+  --color-btn-text: rgba(0, 0, 0, 0.8);
+  --color-btn-bg-default: #ddd;
+  --color-btn-bg-disabled: rgba(0, 0, 0, 0.5);
+  --color-btn-border: none;
+  --color-message-text: #fff;
+  --color-message-bg: #046582;
+  --color-pagination-bg-selected: #ddd;
+  --color-comment-indicator-border: #ddd;
+  --color-comment-username-text: #000;
+  --color-mod-text: rgba(0, 0, 0, 0.8);
+  --color-mod-bg: #ddd;
+}
+
+.dark {
+  --color-text-default: rgba(243, 244, 246, 0.8);
+  --color-input-border: rgb(229, 231, 235);
+  --color-btn-text: var(--color-text-default);
+  --color-btn-bg-default: rgb(229, 231, 235, 0);
+  --color-btn-bg-disabled: rgba(55, 65, 81, 0.5);
+  --color-btn-border: 2px solid var(--color-text-default);
+  --color-message-text: rgba(243, 244, 246, 0.8);
+  --color-message-bg: #046582; /* no need change for now */
+  --color-pagination-bg-selected: rgb(229, 231, 235);
+  --color-comment-indicator-border: rgb(229, 231, 235);
+  --color-comment-username-text: #fff;
+  --color-mod-text: rgba(55, 65, 81, 0.8);
+  --color-mod-bg: rgb(229, 231, 235);
+}
+
+.auto {
+  --color-text-default: rgba(0, 0, 0, 0.8);
+  --color-input-border: #ddd;
+  --color-btn-text: rgba(0, 0, 0, 0.8);
+  --color-btn-bg-default: #ddd;
+  --color-btn-bg-disabled: rgba(0, 0, 0, 0.5);
+  --color-btn-border: none;
+  --color-message-text: #fff;
+  --color-message-bg: #046582;
+  --color-pagination-bg-selected: #ddd;
+  --color-comment-indicator-border: #ddd;
+  --color-comment-username-text: #000;
+  --color-mod-text: rgba(0, 0, 0, 0.8);
+  --color-mod-bg: #ddd;
+}
+@media (prefers-color-scheme: dark) {
+  .auto {
+    --color-text-default: rgba(243, 244, 246, 0.8);
+    --color-input-border: rgb(229, 231, 235);
+    --color-btn-text: var(--color-text-default);
+    --color-btn-bg-default: rgb(229, 231, 235, 0);
+    --color-btn-bg-disabled: rgba(55, 65, 81, 0.5);
+    --color-btn-border: 2px solid var(--color-text-default);
+    --color-message-text: rgba(243, 244, 246, 0.8);
+    --color-message-bg: #046582; /* no need change for now */
+    --color-pagination-bg-selected: rgb(229, 231, 235);
+    --color-comment-indicator-border: rgb(229, 231, 235);
+    --color-comment-username-text: #fff;
+    --color-mod-text: rgba(55, 65, 81, 0.8);
+    --color-mod-bg: rgb(229, 231, 235);
+  }
+}
