@@ -1,11 +1,14 @@
 import { Comment, Page, Prisma } from '@prisma/client'
 import { RequestScopeService } from '.'
-import { prisma } from '../utils.server'
+import { prisma, resolvedConfig } from '../utils.server'
 import { PageService } from './page.service'
 import dayjs from 'dayjs'
 import MarkdownIt from 'markdown-it'
 import { HookService } from './hook.service'
 import { statService } from './stat.service'
+import { EmailService } from './email.service'
+import { TokenService } from './token.service'
+import { makeConfirmReplyNotificationTemplate } from '../templates/confirm_reply_notification'
 
 export const markdown = MarkdownIt({
   linkify: true,
@@ -31,6 +34,8 @@ export type CommentItem = Comment & {
 export class CommentService extends RequestScopeService {
   pageService = new PageService(this.req)
   hookService = new HookService(this.req)
+  emailService = new EmailService()
+  tokenService = new TokenService()
 
   async getComments(
     projectId: string,
@@ -40,7 +45,7 @@ export class CommentService extends RequestScopeService {
       select?: Prisma.CommentSelect
       pageSlug?: string | Prisma.StringFilter
       onlyOwn?: boolean
-      approved?: boolean,
+      approved?: boolean
       pageSize?: number
     },
   ): Promise<CommentWrapper> {
@@ -231,5 +236,24 @@ export class CommentService extends RequestScopeService {
         deletedAt: new Date(),
       },
     })
+  }
+
+  async sendConfirmReplyNotificationEmail(
+    to: string,
+    pageSlug: string,
+    commentId: string,
+  ) {
+    const confirmToken = this.tokenService.genAcceptNotifyToken(commentId)
+    const confirmLink = `${resolvedConfig.host}/api/open/confirm_reply_notification?token=${confirmToken}`
+    this.emailService.send({
+      to,
+      from: this.emailService.sender,
+      subject: `Please confirm reply notification`,
+      html: makeConfirmReplyNotificationTemplate({
+        page_slug: pageSlug,
+        confirm_url: confirmLink,
+      }),
+    })
+    statService.capture('send_reply_confirm_email')
   }
 }
