@@ -84,8 +84,8 @@
   input {
     width: 100%;
     border: 2px solid;
-    color: var(--color-text-default);
-    border-color: var(--color-input-border);
+    color: var(--cusdis--color-text-default);
+    border-color: var(--cusdis--color-input-border);
     background: none;
     padding: 0.5em;
     border-radius: 4px;
@@ -101,7 +101,7 @@
   }
 
   .cusdis-disabled {
-    background-color: var(--color-btn-bg-disabled);
+    background-color: var(--cusdis--color-btn-bg-disabled);
     cursor: not-allowed;
   }
 
@@ -120,10 +120,10 @@
   }
 
   .submit-btn {
-    background-color: var(--color-btn-bg-default);
-    color: var(--color-btn-text);
+    background-color: var(--cusdis--color-btn-bg-default);
+    color: var(--cusdis--color-btn-text);
     border-radius: 0;
-    border: var(--color-btn-border);
+    border: var(--cusdis--color-btn-border);
     padding: 0.5em 1em;
     cursor: pointer;
     border-radius: 2px;

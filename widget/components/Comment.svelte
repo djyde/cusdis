@@ -19,7 +19,7 @@
       {comment.by_nickname}
     </div>
     {#if comment.moderatorId}
-      <span class="mod">MOD</span>
+      <span class="cusdis-mod">MOD</span>
     {/if}
     <div class="cusdis-comment-date cusdis-inline">
       {comment.parsedCreatedAt}
@@ -57,7 +57,7 @@
 
   .cusdis-indicator {
     border-left: 2px solid;
-    border-left-color: var(--color-comment-indicator-border);
+    border-left-color: var(--cusdis--color-comment-indicator-border);
   }
   .cusdis-font-bold {
     font-weight: bold;
@@ -69,16 +69,16 @@
 
   .cusdis-comment-nickname {
     font-size: 1em;
-    color: var(--color-comment-username-text);
+    color: var(--cusdis--color-comment-username-text);
   }
 
   .cusdis-comment-content {
-    color: var(--color-text-default);
+    color: var(--cusdis--color-text-default);
     font-size: 1em;
   }
 
   .cusdis-comment-date {
-    color: var(--color-text-default);
+    color: var(--cusdis--color-text-default);
     font-size: 0.8em;
   }
 
@@ -90,16 +90,16 @@
     margin: 0;
     background: none;
     padding: 0;
-    color: var(--color-text-default);
+    color: var(--cusdis--color-text-default);
   }
 
-  .mod {
-    background-color: var(--color-mod-bg);
+  .cusdis-mod {
+    background-color: var(--cusdis--color-mod-bg);
     font-size: 0.8em;
     box-sizing: border-box;
     padding: 0.15em 0.4em;
     border-radius: 4px;
     font-weight: bold;
-    color: var(--color-mod-text);
+    color: var(--cusdis--color-mod-text);
   }
 </style>

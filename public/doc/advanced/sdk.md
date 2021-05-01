@@ -31,6 +31,28 @@ To embed the comment widget to your web page, you need to put **the element and 
 - `data-page-url` Current page URL.
 - `data-page-title` Current page title.
 - `data-theme`
-  - `auto` (default) Auto set theme by `prefers-color-scheme`
-  - `light`
+  - `light` (default)
+  - `auto` Automatically set theme by `prefers-color-scheme`
   - `dark`
+
+## Style customization
+
+We use css variables to define our style. Here is the available variables you can override:
+
+```css
+:root {
+  --cusdis--color-text-default: rgba(0, 0, 0, 0.8);
+  --cusdis--color-input-border: #ddd;
+  --cusdis--color-btn-text: rgba(0, 0, 0, 0.8);
+  --cusdis--color-btn-bg-default: #ddd;
+  --cusdis--color-btn-bg-disabled: rgba(0, 0, 0, 0.5);
+  --cusdis--color-btn-border: none;
+  --cusdis--color-message-text: #fff;
+  --cusdis--color-message-bg: #046582;
+  --cusdis--color-pagination-bg-selected: #ddd;
+  --cusdis--color-comment-indicator-border: #ddd;
+  --cusdis--color-comment-username-text: #000;
+  --cusdis--color-mod-text: rgba(0, 0, 0, 0.8);
+  --cusdis--color-mod-bg: #ddd;
+}
+```

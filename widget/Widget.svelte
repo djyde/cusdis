@@ -4,7 +4,6 @@
   import Comment from './components/Comment.svelte'
   import Reply from './components/Reply.svelte'
   import { t } from './i18n'
-  import './theme.css'
 
   export let attrs
   export let commentsResult
@@ -17,7 +16,7 @@
 
   let error
 
-  let theme = attrs.theme || 'auto'
+  let theme = attrs.theme || 'light'
 
   const api = axios.create({
     baseURL: attrs.host,
@@ -61,7 +60,7 @@
 </script>
 
 {#if !error}
-  <div class={`comment-main ${theme !== 'light' ? theme : ''}`}>
+  <div class='cusdis-comment-main' class:dark={theme === 'dark'} class:auto={theme === 'auto'}>
     {#if message}
       <div class="cusdis-message">
         {message}
@@ -105,22 +104,71 @@
 {/if}
 
 <style>
+  :root {
+    --cusdis--color-text-default: rgba(0, 0, 0, 0.8);
+    --cusdis--color-input-border: #ddd;
+    --cusdis--color-btn-text: rgba(0, 0, 0, 0.8);
+    --cusdis--color-btn-bg-default: #ddd;
+    --cusdis--color-btn-bg-disabled: rgba(0, 0, 0, 0.5);
+    --cusdis--color-btn-border: none;
+    --cusdis--color-message-text: #fff;
+    --cusdis--color-message-bg: #046582;
+    --cusdis--color-pagination-bg-selected: #ddd;
+    --cusdis--color-comment-indicator-border: #ddd;
+    --cusdis--color-comment-username-text: #000;
+    --cusdis--color-mod-text: rgba(0, 0, 0, 0.8);
+    --cusdis--color-mod-bg: #ddd;
+  }
+
+  .dark {
+    --cusdis--color-text-default: rgba(243, 244, 246, 0.8);
+    --cusdis--color-input-border: rgb(229, 231, 235);
+    --cusdis--color-btn-text: var(--cusdis--color-text-default);
+    --cusdis--color-btn-bg-default: rgb(229, 231, 235, 0);
+    --cusdis--color-btn-bg-disabled: rgba(55, 65, 81, 0.5);
+    --cusdis--color-btn-border: 2px solid var(--cusdis--color-text-default);
+    --cusdis--color-message-text: rgba(243, 244, 246, 0.8);
+    --cusdis--color-pagination-bg-selected: rgb(229, 231, 235);
+    --cusdis--color-comment-indicator-border: rgb(229, 231, 235);
+    --cusdis--color-comment-username-text: #fff;
+    --cusdis--color-mod-text: rgba(55, 65, 81, 0.8);
+    --cusdis--color-mod-bg: rgb(229, 231, 235);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .auto {
+      --cusdis--color-text-default: rgba(243, 244, 246, 0.8);
+      --cusdis--color-input-border: rgb(229, 231, 235);
+      --cusdis--color-btn-text: var(--cusdis--color-text-default);
+      --cusdis--color-btn-bg-default: rgb(229, 231, 235, 0);
+      --cusdis--color-btn-bg-disabled: rgba(55, 65, 81, 0.5);
+      --cusdis--color-btn-border: 2px solid var(--cusdis--color-text-default);
+      --cusdis--color-message-text: rgba(243, 244, 246, 0.8);
+      --cusdis--color-message-bg: #046582; /* no need change for now */
+      --cusdis--color-pagination-bg-selected: rgb(229, 231, 235);
+      --cusdis--color-comment-indicator-border: rgb(229, 231, 235);
+      --cusdis--color-comment-username-text: #fff;
+      --cusdis--color-mod-text: rgba(55, 65, 81, 0.8);
+      --cusdis--color-mod-bg: rgb(229, 231, 235);
+    }
+  }
+
   .cusdis-footer {
     margin-top: 1em;
     font-size: 0.8em;
     text-align: center;
-    color: var(--color-text-default);
+    color: var(--cusdis--color-text-default);
   }
 
   .cusdis-loading-text {
-    color: var(--color-text-default);
+    color: var(--cusdis--color-text-default);
   }
-  .comment-main {
+  .cusdis-comment-main {
     font-size: 17px;
   }
   .cusdis-message {
-    background-color: var(--color-message-bg);
-    color: var(--color-message-text);
+    background-color: var(--cusdis--color-message-bg);
+    color: var(--cusdis--color-message-text);
     padding: 0.5em;
     font-size: 1em;
   }
@@ -139,10 +187,10 @@
   }
 
   .cusdis-pagination-button.selected {
-    background-color: var(--color-pagination-bg-selected);
+    background-color: var(--cusdis--color-pagination-bg-selected);
   }
 
   .cusdis-footer a {
-    color: var(--color-text-default);
+    color: var(--cusdis--color-text-default);
   }
 </style>
