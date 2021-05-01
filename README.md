@@ -15,6 +15,14 @@ If you like Cusdis, please consider sponsoring us to help us be sustainable.
 [![Contributors](https://opencollective.com/cusdis/tiers/backers.svg)](https://opencollective.com/cusdis)
 
 
+## Features
+
+- Lightweight comment widget, with i18n, dark mode.
+- Email notification
+- Webhook
+- Easy to self-host
+- Many integrations
+
 ## Documentation
 
 https://cusdis.com/doc
