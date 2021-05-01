@@ -119,16 +119,87 @@ function IndexPage({ session, contributers }: Props) {
             </HStack>
           </Box>
 
-          <Box>
-            <Img w="full" src="/images/landing.png" />
+          <Box mt={24}>
+            <Container maxWidth="3xl">
+              <SimpleGrid columns={[1, 2, 2]} textAlign="left" spacing={12} spacingY={24}>
+                <VStack alignItems="start">
+                  <Img shadow="base" mb={2} src="/images/intro-widget.png" />
+                  <Heading size="sm">Lightweight</Heading>
+                  <Box color="gray.500" fontSize="sm">
+                    The <Link textDecoration='underline' href="/doc#/advanced/sdk">JS SDK</Link> embedded to your website is only around <strong>5kb</strong> (gzipped). It has built-in i18n, dark-mode.
+              </Box>
+                </VStack>
+
+                <VStack alignItems="start">
+                  <Img shadow="base" mb={2} src="/images/intro-dashboard.png" />
+                  <Heading size="sm">Dashboard</Heading>
+                  <Box color="gray.500" fontSize="sm">
+                    Moderate all the comments on a dashboard.
+              </Box>
+                </VStack>
+
+                <VStack alignItems="start">
+                  <Img shadow="base" mb={2} src="/images/intro-email.png" />
+                  <Heading size="sm">Email Notification</Heading>
+                  <Box color="gray.500" fontSize="sm">
+                    You will receive Email notification when a new comment comes in, and approve the new comment without login.
+              </Box>
+                </VStack>
+
+                <VStack alignItems="start">
+                  <Img shadow="base" mb={2} src="/images/intro-bot.png" />
+                  <Heading size="sm">Webhook</Heading>
+                  <VStack color="gray.500" fontSize="sm" alignItems="start">
+                    <Text>You can set a Webhook URL that will be triggered when your websites have new comment. Integrate Cusdis with your favorite tools such as Telegram.</Text>
+                    <Link href="/doc#/advanced/webhook" isExternal textDecoration="underline">How to use Webhook</Link>
+                  </VStack>
+                </VStack>
+
+                <VStack alignItems="start">
+                  <Img shadow="base" mb={2} src="/images/intro-approval.png" />
+                  <Heading size="sm">Approve/Reply without login</Heading>
+                  <Box color="gray.500" fontSize="sm">
+                    In the notification email and webhook, you will get a short-time link to approve/reply the new comment without login to dashboard. All the things get done in your mobile.
+              </Box>
+                </VStack>
+
+                <VStack>
+
+                </VStack>
+
+                <VStack alignItems="start">
+                  <Heading size="sm">Import from Disqus</Heading>
+                  <Box color="gray.500" fontSize="sm">
+                    One-click to import your existed data in Disqus to Cusdis.
+              </Box>
+                </VStack>
+
+
+                <VStack alignItems="start">
+                  <Heading size="sm">Open source</Heading>
+                  <Box color="gray.500" fontSize="sm">
+                    Cusdis is an open-source project. Everyone can sure <strong>we don't track you and your user</strong>. Also, you can deploy your own Cusdis service with ease, to make sure you own your data.
+              </Box>
+                  <Box pt={2}>
+                    <Link href="https://github.com/djyde/cusdis" isExternal>
+                      <Icon w={8} h={8} as={GoMarkGithub} />
+                    </Link>
+                  </Box>
+                </VStack>
+              </SimpleGrid>
+
+            </Container>
           </Box>
+
 
         </VStack>
 
       </Container>
 
+
+
       <Container maxWidth="3xl">
-        <Heading mt={24} mb={12} letterSpacing="wide" color="gray.700" fontSize="md" textAlign="center">
+        <Heading mt={48} mb={12} letterSpacing="wider" color="gray.500" fontSize="md" textAlign="center">
           Integrate with frameworks and platforms with ease
         </Heading>
       </Container>
@@ -175,7 +246,7 @@ function IndexPage({ session, contributers }: Props) {
             <LinkBox>
               <LinkOverlay isExternal href="http://blog.cusdis.com/integate-cusdis-in-hexo/">
                 <Center>
-                  <Img src="/images/hexo.svg" w={12} />
+                  <Img src="/images/hexo.svg" w={12} mt={4} />
                 </Center>
               </LinkOverlay>
             </LinkBox>
@@ -183,155 +254,95 @@ function IndexPage({ session, contributers }: Props) {
         </Container>
       </Box>
 
-      <Box mt={24}>
-        <Container maxWidth="3xl">
-          <Heading mb={24} textAlign="center">
-            Features
-          </Heading>
-
-          <SimpleGrid columns={[1, 2, 2]} textAlign="left" spacing={12}>
-            <VStack alignItems="start">
-              <Heading size="sm">Lightweight</Heading>
-              <Box color="gray.500" fontSize="sm">
-                The JS SDK embedded to your website is only around <strong>5kb</strong> gzipped.
-              </Box>
-            </VStack>
-           
-            {/* <Popover isOpen trigger="hover" placement='left' flip={false} arrowPadding={8} offset={[0, 36]}>
-              <PopoverTrigger>
-                <VStack alignItems="start">
-                  <Heading size="sm">Webhook</Heading>
-                  <Box color="gray.500" fontSize="sm">
-                    You can set a Webhook URL that will be triggered when your websites have new comment.
-                    </Box>
-                </VStack>
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody>
-                  <Img src="/images/telegram_bot.png"></Img>
-                </PopoverBody>
-              </PopoverContent>
-            </Popover> */}
-            <VStack alignItems="start">
-              <Heading size="sm">Import from Disqus</Heading>
-              <Box color="gray.500" fontSize="sm">
-                One-click to import your existed data in Disqus to Cusdis.
-              </Box>
-            </VStack>
-            <VStack alignItems="start">
-              <Heading size="sm">Email Notification</Heading>
-              <Box color="gray.500" fontSize="sm">
-                You will receive Email notification when a new comment comes in, and approve the new comment without login.
-              </Box>
-              <Img src="/images/email_notification.png"></Img>
-            </VStack>
-            <VStack alignItems="start">
-              <Heading size="sm">Webhook</Heading>
-              <Box color="gray.500" fontSize="sm">
-                You can set a Webhook URL that will be triggered when your websites have new comment. Integrate Cusdis with your favorite tools such as Telegram.
-              </Box>
-              <Img src="/images/telegram_bot.png"></Img>
-            </VStack>
-            <VStack alignItems="start">
-              <Heading size="sm">Open source</Heading>
-              <Box color="gray.500" fontSize="sm">
-                Cusdis is an open-source project. Everyone can sure <strong>we don't track you and your user</strong>. Also, you can deploy your own Cusdis service with ease, to make sure you own your data.
-              </Box>
-              <Box pt={2}>
-                <Link href="https://github.com/djyde/cusdis" isExternal>
-                  <Icon w={8} h={8} as={GoMarkGithub} />
-                </Link>
-              </Box>
-            </VStack>
-          </SimpleGrid>
 
 
-          <Box mt={24}>
-            <Heading mb={12} textAlign="center">
-              Pricing
+      <Container maxW="3xl">
+        <Box mt={48}>
+          <Heading mb={12} textAlign="center">
+            Pricing
             </Heading>
 
-            <Center>
-              <SimpleGrid columns={[1, 2]} spacing={8}>
-                <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
-                  <Heading size="xl" textAlign="center">$0</Heading>
-                  <Box px={6} pb={3}>
-                    <Text fontSize="sm" color="gray.500">
-                      Free
+          <Center>
+            <SimpleGrid columns={[1, 2]} spacing={8}>
+              <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
+                <Heading size="xl" textAlign="center">$0</Heading>
+                <Box px={6} pb={3}>
+                  <Text fontSize="sm" color="gray.500">
+                    Free
                     </Text>
-                  </Box>
+                </Box>
 
-                  <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
-                    <List fontSize="sm" spacing={2}>
-                      <ListItem>
-                        <strong>3</strong> Websites
+                <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
+                  <List fontSize="sm" spacing={2}>
+                    <ListItem>
+                      <strong>3</strong> Websites
                     </ListItem>
-                      <ListItem>
-                        Email Notification
+                    <ListItem>
+                      Email Notification
                     </ListItem>
-                    </List>
-                  </Box>
-                </VStack>
-                <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
-                  <Heading size="xl" textAlign="center"><del>$1</del> <Text as="span" fontSize="sm">/month</Text></Heading>
-                  <Box px={6} pb={3}>
-                    <Text fontSize="sm" color="gray.500">
-                      Cusdis is totally free for now.
+                  </List>
+                </Box>
+              </VStack>
+              <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
+                <Heading size="xl" textAlign="center"><del>$1</del> <Text as="span" fontSize="sm">/month</Text></Heading>
+                <Box px={6} pb={3}>
+                  <Text fontSize="sm" color="gray.500">
+                    Cusdis is totally free for now.
                   </Text>
-                  </Box>
+                </Box>
 
-                  <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
-                    <List fontSize="sm" spacing={2}>
-                      <ListItem>
-                        <strong>Unlimited</strong> Websites
+                <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
+                  <List fontSize="sm" spacing={2}>
+                    <ListItem>
+                      <strong>Unlimited</strong> Websites
                     </ListItem>
-                      <ListItem>
-                        Email Notification
+                    <ListItem>
+                      Email Notification
                     </ListItem>
-                      <ListItem>
-                        Webhook
+                    <ListItem>
+                      Webhook
                     </ListItem>
-                      <ListItem>
-                        Spam filter (comming soon)
+                    <ListItem>
+                      Spam filter (comming soon)
                       </ListItem>
-                    </List>
-                  </Box>
-                </VStack>
-              </SimpleGrid>
+                  </List>
+                </Box>
+              </VStack>
+            </SimpleGrid>
 
-            </Center>
+          </Center>
 
-            <VStack alignItems="start">
-              <Text fontSize="sm" mt={12} color="gray.500">
-                * We are not making money yet. Users sign up before we launch our paid plans will get three-months paid membership after the plans launch.
+          <VStack alignItems="start">
+            <Text fontSize="sm" mt={12} color="gray.500">
+              * We are not making money yet. Users sign up before we launch our paid plans will get three-months paid membership after the plans launch.
             </Text>
 
-              <Text fontSize="sm" mt={12} color="gray.500">
-                * If you like Cusdis. Consider <Link fontWeight="medium" textDecoration="underline" href="https://opencollective.com/cusdis" isExternal>sponsor us</Link> to help us be sustainable.
+            <Text fontSize="sm" mt={12} color="gray.500">
+              * If you like Cusdis. Consider <Link fontWeight="medium" textDecoration="underline" href="https://opencollective.com/cusdis" isExternal>sponsor us</Link> to help us be sustainable.
               </Text>
 
-              <Text fontSize="sm" mt={12} color="gray.500">
-                * Special thanks to these sponsors
+            <Text fontSize="sm" mt={12} color="gray.500">
+              * Special thanks to these sponsors
               </Text>
-              <UnorderedList spacing={1} pl={6} fontSize="sm" mt={12} color="gray.500">
-                {contributers.map(contributer => {
-                  return (
-                    <ListItem key={contributer.MemberId}>
-                      <Link href={contributer.website || contributer.profile} fontSize="sm">{contributer.name}</Link>
+            <UnorderedList spacing={1} pl={6} fontSize="sm" mt={12} color="gray.500">
+              {contributers.map(contributer => {
+                return (
+                  <ListItem key={contributer.MemberId}>
+                    <Link href={contributer.website || contributer.profile} fontSize="sm">{contributer.name}</Link>
 
-                    </ListItem>
-                  )
-                })}
-              </UnorderedList>
-            </VStack>
+                  </ListItem>
+                )
+              })}
+            </UnorderedList>
+          </VStack>
 
-          </Box>
+        </Box>
 
-          <Box mt={24} textAlign="center">
-            {StartButton}
-          </Box>
-        </Container>
+      </Container>
+
+
+      <Box mt={24} textAlign="center">
+        {StartButton}
       </Box>
 
       <Footer maxWidth="3xl" />
