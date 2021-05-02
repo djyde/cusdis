@@ -79,7 +79,7 @@ export class NotificationService extends RequestScopeService {
           page_slug: fullComment.page.title || fullComment.page.slug,
           by_nickname: comment.by_nickname,
           approve_link: `${resolvedConfig.host}/open/approve?token=${approveToken}`,
-          unsubscribe_link: `${resolvedConfig.host}/open/unsubscribe?token=${unsubscribeToken}`,
+          unsubscribe_link: `${resolvedConfig.host}/api/open/unsubscribe?token=${unsubscribeToken}`,
           content: markdown.render(comment.content),
           notification_preferences_link: `${resolvedConfig.host}/user`,
         }),
