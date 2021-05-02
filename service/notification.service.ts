@@ -1,6 +1,6 @@
 import { Comment } from '@prisma/client'
 import { RequestScopeService } from '.'
-import { prisma, resolvedConfig } from '../utils.server'
+import { getSession, prisma, resolvedConfig } from '../utils.server'
 import { UserService } from './user.service'
 import { markdown } from './comment.service'
 import { TokenService } from './token.service'
@@ -68,7 +68,8 @@ export class NotificationService extends RequestScopeService {
       let unsubscribeToken = this.tokenService.genUnsubscribeNewCommentToken(
         project.owner.id,
       )
-      const approveToken = this.tokenService.genApproveToken(comment.id)
+
+      const approveToken = await this.tokenService.genApproveToken(comment.id)
 
       const msg = {
         to: notificationEmail, // Change to your recipient

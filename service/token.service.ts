@@ -1,5 +1,7 @@
+import { User } from '@prisma/client'
 import jwt from 'jsonwebtoken'
-import { resolvedConfig } from '../utils.server'
+import { UserSession } from '.'
+import { prisma, resolvedConfig } from '../utils.server'
 
 export enum UnSubscribeType {
   NEW_COMMENT = 'NEW_COMMENT',
@@ -17,7 +19,8 @@ export module TokenBody {
   }
 
   export type ApproveComment = {
-    commentId: string
+    commentId: string,
+    owner: User
   }
 
   export type UnsubscribeNewComment = {
@@ -38,11 +41,30 @@ export class TokenService {
     }) as string
   }
 
-  genApproveToken(commentId: string) {
+  async genApproveToken(commentId: string) {
+
+    const comment = await prisma.comment.findUnique({
+      where: {
+        id: commentId
+      },
+      select: {
+        page: {
+          select: {
+            project: {
+              select: {
+                owner: true
+              }
+            }
+          }
+        }
+      }
+    })
+
     return this.sign(
       SecretKey.ApproveComment,
       {
         commentId,
+        owner: comment.page.project.owner,
       } as TokenBody.ApproveComment,
       '3 days',
     )

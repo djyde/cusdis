@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { resolvedConfig } from '../../../utils.server'
 import jwt from 'jsonwebtoken'
 import { CommentService } from '../../../service/comment.service'
-import { SecretKey, TokenService } from '../../../service/token.service'
+import { SecretKey, TokenBody, TokenService } from '../../../service/token.service'
 
 export default async function handler(
   req: NextApiRequest,
@@ -49,10 +49,10 @@ export default async function handler(
       return
     }
 
-    let commentId
+    let tokenBody: TokenBody.ApproveComment
 
     try {
-      commentId = tokenService.validate(token, SecretKey.ApproveComment).commentId
+      tokenBody = tokenService.validate(token, SecretKey.ApproveComment) as TokenBody.ApproveComment
     } catch (e) {
       res.status(403)
       res.send('Invalid token')
@@ -60,11 +60,13 @@ export default async function handler(
     }
 
     // firstly, approve comment
-    await commentService.approve(commentId)
+    await commentService.approve(tokenBody.commentId)
 
     // then append reply
     if (replyContent) {
-      await commentService.addCommentAsModerator(commentId, replyContent)
+      await commentService.addCommentAsModerator(tokenBody.commentId, replyContent, {
+        owner: tokenBody.owner
+      })
     }
 
     res.json({

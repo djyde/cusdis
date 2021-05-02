@@ -1,5 +1,5 @@
-import { Comment, Page, Prisma } from '@prisma/client'
-import { RequestScopeService } from '.'
+import { Comment, Page, Prisma, User } from '@prisma/client'
+import { RequestScopeService, UserSession } from '.'
 import { prisma, resolvedConfig } from '../utils.server'
 import { PageService } from './page.service'
 import dayjs from 'dayjs'
@@ -191,8 +191,13 @@ export class CommentService extends RequestScopeService {
     return created
   }
 
-  async addCommentAsModerator(parentId: string, content: string) {
-    const session = await this.getSession()
+  async addCommentAsModerator(parentId: string, content: string, options?: {
+    owner?: User
+  }) {
+    const session = options?.owner ? {
+      user: options.owner,
+      uid: options.owner.id
+    } : await this.getSession()
     const parent = await prisma.comment.findUnique({
       where: {
         id: parentId,
