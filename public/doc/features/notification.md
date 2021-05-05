@@ -20,6 +20,15 @@ You can change notification preferences (such as changing notification email add
 
 ![](../images/advance-notification-settings.png ':size=400')
 
-## 🚧 Self-host
+## Self-host
 
-We are still working on supporting custom SMTP configuration.
+To enable Email notification in self-host Cusdis, you need to set SMTP configuration in environment variables:
+
+- `SMTP_HOST` **required** SMTP host
+- `SMTP_USER` **required** SMTP username
+- `SMTP_PASSWORD` **required** SMTP password
+- `SMTP_SENDER` **required** sender email address
+- `SMTP_PORT` default: 587 SMTP port
+- `SMTP_SECURE` default: `true` enable SMTP secure
+
+> Remember to set `HOST` to your own domain name, in order to get the correct approve link and unsubscribe link in the Email content

@@ -16,7 +16,9 @@
     "widget": "vite",
     "start": "next start -p 3000",
     "start:with-migrate": "npm run db:generate && npm run db:deploy && next start -p 3000",
-    "build:widget": "vite build --config vite.library.config.js"
+    "cp-widget-lang": "mkdir -p public/js/widget/lang && cp -r widget/lang public/js/widget",
+    "build:widget": "vite build --config vite.widget.config.js && npm run cp-widget-lang",
+    "build:sdk": "vite build --config vite.sdk.config.js"
   },
   "prettier": "@egoist/prettier-config",
   "dependencies": {
@@ -26,6 +28,8 @@
     "@emotion/styled": "^11.0.0",
     "@prisma/client": "^2.19.0",
     "@sendgrid/mail": "^7.4.2",
+    "@sentry/node": "^6.3.1",
+    "@sentry/tracing": "^6.3.1",
     "autoprefixer": "^10.2.5",
     "axios": "^0.21.1",
     "class-validator": "^0.13.1",
@@ -41,9 +45,11 @@
     "next-auth": "3.15.5",
     "nodemailer": "^6.5.0",
     "postcss": "^8.2.10",
+    "posthog-node": "^1.0.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-hook-form": "^7.1.1",
+    "react-icons": "^4.2.0",
     "react-query": "^3.6.0",
     "redaxios": "^0.4.1",
     "reflect-metadata": "^0.1.13",

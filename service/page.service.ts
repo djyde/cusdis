@@ -10,6 +10,7 @@ export class PageService extends RequestScopeService {
       pageTitle?: string;
     }
   ) {
+    //TODO: should use unique index
     const exist = await prisma.page.findFirst({
       where: {
         projectId,
@@ -27,6 +28,16 @@ export class PageService extends RequestScopeService {
         },
       });
     } else {
+      await prisma.page.updateMany({
+        where: {
+          projectId,
+          slug,
+        },
+        data: {
+          title: options?.pageTitle,
+          url: options?.pageUrl,
+        },
+      })
       return exist;
     }
   }

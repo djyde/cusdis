@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { resolvedConfig } from '../../../utils.server'
 import jwt from 'jsonwebtoken'
-import { UnSubscribeType } from '../../../service/notification.service'
 import { UserService } from '../../../service/user.service'
+import { UnSubscribeType } from '../../../service/token.service'
 
 export default async function handler(
   req: NextApiRequest,

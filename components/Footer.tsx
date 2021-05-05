@@ -1,5 +1,6 @@
 import { Box, Container, HStack, Link, List, ListItem, Text, VStack } from '@chakra-ui/react'
 import * as React from 'react'
+import { VERSION } from '../utils.client'
 
 export function Footer(props: {
   maxWidth?: string
@@ -42,9 +43,18 @@ export function Footer(props: {
                 <ListItem>
                   <Link isExternal href="https://opencollective.com/cusdis">Sponsor</Link>
                 </ListItem>
+                <ListItem>
+                  <Link isExternal href="/privacy-policy">Privacy Policy</Link>
+                </ListItem>
               </List>
             </Box>
           </HStack>
+
+          <Box>
+            <Text fontSize="sm" textAlign="right" color="gray.500">
+              v{VERSION}
+            </Text>
+          </Box>
 
         </Container>
       </Box>

@@ -2,6 +2,7 @@ import { Prisma, User } from '@prisma/client'
 import { nanoid } from 'nanoid'
 import { RequestScopeService } from '.'
 import { prisma } from '../utils.server'
+import { statService } from './stat.service'
 
 export class ProjectService extends RequestScopeService {
   async create(title: string) {
@@ -16,6 +17,8 @@ export class ProjectService extends RequestScopeService {
         },
       },
     })
+
+    statService.capture('project_create')
 
     return created
   }
@@ -41,6 +44,7 @@ export class ProjectService extends RequestScopeService {
     const session = await this.getSession()
     const projects = await prisma.project.findMany({
       where: {
+        deletedAt: null,
         ownerId: session.uid,
       },
     })
@@ -112,5 +116,35 @@ export class ProjectService extends RequestScopeService {
     }
 
     return results
+  }
+
+  async delete(projectId: string) {
+    await prisma.project.update({
+      where: {
+        id: projectId
+      },
+      data:{
+        deletedAt: new Date()
+      }
+    })
+
+    statService.capture('project_delete')
+  }
+
+  async isDeleted(projectId: string) {
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId
+      },
+      select: {
+        deletedAt: true
+      }
+    })
+
+    if (project && !project.deletedAt) {
+      return false
+    }
+
+    return true
   }
 }

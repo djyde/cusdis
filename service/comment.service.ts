@@ -1,10 +1,14 @@
-import { Comment, Prisma } from '@prisma/client'
-import { RequestScopeService } from '.'
-import { prisma } from '../utils.server'
+import { Comment, Page, Prisma, User } from '@prisma/client'
+import { RequestScopeService, UserSession } from '.'
+import { prisma, resolvedConfig } from '../utils.server'
 import { PageService } from './page.service'
 import dayjs from 'dayjs'
 import MarkdownIt from 'markdown-it'
 import { HookService } from './hook.service'
+import { statService } from './stat.service'
+import { EmailService } from './email.service'
+import { TokenService } from './token.service'
+import { makeConfirmReplyNotificationTemplate } from '../templates/confirm_reply_notification'
 
 export const markdown = MarkdownIt({
   linkify: true,
@@ -12,9 +16,26 @@ export const markdown = MarkdownIt({
 
 markdown.disable(['image', 'link'])
 
+export type CommentWrapper = {
+  commentCount: number
+  pageSize: number
+  pageCount: number
+  data: CommentItem[]
+}
+
+export type CommentItem = Comment & {
+  page: Page
+} & {
+  replies: CommentWrapper
+  parsedContent: string
+  parsedCreatedAt: string
+}
+
 export class CommentService extends RequestScopeService {
   pageService = new PageService(this.req)
   hookService = new HookService(this.req)
+  emailService = new EmailService()
+  tokenService = new TokenService()
 
   async getComments(
     projectId: string,
@@ -25,9 +46,10 @@ export class CommentService extends RequestScopeService {
       pageSlug?: string | Prisma.StringFilter
       onlyOwn?: boolean
       approved?: boolean
+      pageSize?: number
     },
-  ): Promise<Comment[]> {
-    const pageSize = 10
+  ): Promise<CommentWrapper> {
+    const pageSize = options?.pageSize || 10
 
     const select = {
       id: true,
@@ -35,65 +57,83 @@ export class CommentService extends RequestScopeService {
       content: true,
       ...options?.select,
       page: true,
+      moderatorId: true,
+    } as Prisma.CommentSelect
+
+    const where = {
+      approved: options?.approved === true ? true : options?.approved,
+      parentId: options?.parentId,
+      deletedAt: {
+        equals: null,
+      },
+      page: {
+        slug: options?.pageSlug,
+        projectId,
+        project: {
+          deletedAt: {
+            equals: null,
+          },
+          ownerId: options?.onlyOwn
+            ? await (await this.getSession()).uid
+            : undefined,
+        },
+      },
+    } as Prisma.CommentWhereInput
+
+    const baseQuery = {
+      select,
+      where,
     }
 
-    const comments = await prisma.comment.findMany({
-      skip: options?.page ? (options.page - 1) * pageSize : 0,
-      take: options?.page ? pageSize : 100,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select,
-      where: {
-        approved: options?.approved === true ? true : options?.approved,
-        parentId: options?.parentId,
-        deletedAt: {
-          equals: null,
+    const page = options?.page || 1
+
+    const [commentCount, comments] = await prisma.$transaction([
+      prisma.comment.count({ where }),
+      prisma.comment.findMany({
+        ...baseQuery,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: {
+          createdAt: 'desc',
         },
-        page: {
-          slug: options?.pageSlug,
-          projectId,
-          project: {
-            ownerId: options?.onlyOwn
-              ? await (await this.getSession()).uid
-              : undefined,
-          },
-        },
-      },
-    })
+      }),
+    ])
+
+    // If there are 0 comments, there is still 1 page
+    const pageCount = Math.ceil(commentCount / pageSize) || 1
 
     const allComments = await Promise.all(
-      comments.map(async (comment) => {
+      comments.map(async (comment: Comment) => {
         // get replies
         const replies = await this.getComments(projectId, {
           ...options,
+          page: 1,
+          // hard code 100 because we havent implement pagination in nested comment
+          pageSize: 100,
           parentId: comment.id,
           pageSlug: options?.pageSlug,
           select,
         })
+
         const parsedCreatedAt = dayjs(comment.createdAt).format(
           'YYYY-MM-DD HH:mm',
         )
-        const parsedContent = markdown.render(comment.content)
-        if (replies.length) {
-          return {
-            ...comment,
-            replies,
-            parsedContent,
-            parsedCreatedAt,
-          }
-        } else {
-          return {
-            ...comment,
-            replies: [],
-            parsedContent,
-            parsedCreatedAt,
-          }
-        }
+        const parsedContent = markdown.render(comment.content) as string
+        return {
+          ...comment,
+          replies,
+          parsedContent,
+          parsedCreatedAt,
+        } as CommentItem
       }),
     )
 
-    return allComments as any[]
+    return {
+      data: allComments,
+      commentCount,
+      pageSize,
+      pageCount,
+    }
   }
 
   async getProject(commentId: string) {
@@ -151,8 +191,13 @@ export class CommentService extends RequestScopeService {
     return created
   }
 
-  async addCommentAsModerator(parentId: string, content: string) {
-    const session = await this.getSession()
+  async addCommentAsModerator(parentId: string, content: string, options?: {
+    owner?: User
+  }) {
+    const session = options?.owner ? {
+      user: options.owner,
+      uid: options.owner.id
+    } : await this.getSession()
     const parent = await prisma.comment.findUnique({
       where: {
         id: parentId,
@@ -183,6 +228,8 @@ export class CommentService extends RequestScopeService {
         approved: true,
       },
     })
+
+    statService.capture('comment_approve')
   }
 
   async delete(commentId: string) {
@@ -194,5 +241,24 @@ export class CommentService extends RequestScopeService {
         deletedAt: new Date(),
       },
     })
+  }
+
+  async sendConfirmReplyNotificationEmail(
+    to: string,
+    pageSlug: string,
+    commentId: string,
+  ) {
+    const confirmToken = this.tokenService.genAcceptNotifyToken(commentId)
+    const confirmLink = `${resolvedConfig.host}/api/open/confirm_reply_notification?token=${confirmToken}`
+    this.emailService.send({
+      to,
+      from: this.emailService.sender,
+      subject: `Please confirm reply notification`,
+      html: makeConfirmReplyNotificationTemplate({
+        page_slug: pageSlug,
+        confirm_url: confirmLink,
+      }),
+    })
+    statService.capture('send_reply_confirm_email')
   }
 }

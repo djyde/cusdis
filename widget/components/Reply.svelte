@@ -1,35 +1,36 @@
 <script>
-  import { getContext } from "svelte";
-  export let parentId;
+  import { getContext } from 'svelte'
+  import { t } from '../i18n'
+  export let parentId
 
   // form data
-  let content = "";
-  let nickname = "";
-  let email = "";
+  let content = ''
+  let nickname = ''
+  let email = ''
 
-  let loading = false;
+  let loading = false
 
-  export let onSuccess;
+  export let onSuccess
 
-  const api = getContext("api");
+  const api = getContext('api')
   const setMessage = getContext('setMessage')
-  const { appId, pageId, pageUrl, pageTitle } = getContext("attrs");
-  const refresh = getContext("refresh");
+  const { appId, pageId, pageUrl, pageTitle } = getContext('attrs')
+  const refresh = getContext('refresh')
 
   async function addComment() {
     if (!content) {
-      alert("İçerik bölümü doldurulmalıdır");
-      return;
+      alert(t('content_is_required'))
+      return
     }
 
     if (!nickname) {
-      alert("İsim bölümü doldurulmalıdır");
-      return;
+      alert(t('nickname_is_required'))
+      return
     }
 
     try {
-      loading = true;
-      const res = await api.post("/api/open/comments", {
+      loading = true
+      const res = await api.post('/api/open/comments', {
         appId,
         pageId,
         content,
@@ -38,39 +39,43 @@
         parentId,
         pageUrl,
         pageTitle,
-      });
-      await refresh();
-      teardown();
-      setMessage('Yorumunuz gönderildi. Lütfen onaylanmasını bekleyiniz.')
+      })
+      await refresh()
+      teardown()
+      setMessage(t('comment_has_been_sent'))
     } finally {
-      loading = false;
+      loading = false
     }
   }
 
   function teardown() {
-    content = "";
-    nickname = "";
-    email = "";
-    onSuccess && onSuccess();
+    content = ''
+    nickname = ''
+    email = ''
+    onSuccess && onSuccess()
   }
 </script>
 
 <div style="margin-top: 1em;">
   <div class="cusdis-reply-info cusdis-field">
     <div>
-      <input type="text" placeholder="İsim" bind:value={nickname} />
+      <input type="text" placeholder={t('nickname')} bind:value={nickname} />
     </div>
     <div>
-      <input type="text" placeholder="E-posta" bind:value={email} />
+      <input type="text" placeholder={t('email')} bind:value={email} />
     </div>
   </div>
 
   <div class="cusdis-field">
-    <textarea bind:value={content} placeholder="Yorumunuz..." />
+    <textarea bind:value={content} placeholder={t('reply_placeholder')} />
   </div>
 
   <div class="cusdis-field">
-    <button cusdis-disabled={loading} class="submit-btn" class:cusdis-disabled={loading} on:click={addComment}>{ loading ? 'Gönderiliyor...' : 'Yorumu Gönder' }</button>
+    <button
+      class="submit-btn"
+      class:cusdis-disabled={loading}
+      on:click={addComment}>{loading ? t('sending') : t('post_comment')}</button
+    >
   </div>
 </div>
 
@@ -78,12 +83,16 @@
   textarea,
   input {
     width: 100%;
-    border: 2px solid #ddd;
+    border: 2px solid;
+    color: var(--cusdis--color-text-default);
+    border-color: var(--cusdis--color-input-border);
+    background: none;
     padding: 0.5em;
     border-radius: 4px;
     outline: none;
     font-family: inherit;
     box-sizing: border-box;
+    font-size: 1em;
   }
 
   textarea {
@@ -92,24 +101,41 @@
   }
 
   .cusdis-disabled {
-    background-color: rgba(0, 0, 0, .5);
+    background-color: var(--cusdis--color-btn-bg-disabled);
     cursor: not-allowed;
   }
 
-  .cusdis-reply-info div {
-    display: inline-block;
+  .cusdis-reply-info {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-column-gap: 0.5em;
+  }
+
+  @media only screen and (max-width: 767px) {
+    .cusdis-reply-info {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-row-gap: 0.5em;
+    }
   }
 
   .submit-btn {
-    background-color: #ddd;
-    border: 0px;
-    color: rgba(0, 0, 0, 0.8);
+    background-color: var(--cusdis--color-btn-bg-default);
+    color: var(--cusdis--color-btn-text);
     border-radius: 0;
+    border: var(--cusdis--color-btn-border);
     padding: 0.5em 1em;
     cursor: pointer;
     border-radius: 2px;
-    font-weight: bold;
     font-family: inherit;
+    font-size: 1em;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0;
+    text-shadow: none;
+    font: inherit;
+    font-weight: bold;
+    align-items: center;
   }
 
   .cusdis-field {

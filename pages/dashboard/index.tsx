@@ -146,7 +146,7 @@ function Dashboard(props: { session: UserSession }) {
           </Heading>
 
           <Box>
-            <SimpleGrid columns={4} spacing={4}>
+            <SimpleGrid columns={[1, 1, 4]} spacing={4}>
               {getProjects.isLoading && (
                 <>
                   <Skeleton height={4} />
@@ -156,25 +156,28 @@ function Dashboard(props: { session: UserSession }) {
               )}
               {getProjects.data?.map((project) => {
                 return (
-                  <Box py={4}
+                  <LinkBox
+                    py={4}
                     px={4}
+                    cursor="pointer"
                     shadow="sm"
                     rounded="lg"
-                    border="1px"
-                    borderColor="gray.100"
+                    _hover={{
+                      shadow: 'base'
+                    }}
                     key={project.id}>
-                    <HStack alignItems="start">
-                      <Link href={`/dashboard/project/${project.id}`}>
-                        {project.title}
-                      </Link>
-                      <Spacer />
-                      <Box>
-                        {project.enableNotification && <Tooltip label="Notification enabled">
-                          <BellIcon />
-                        </Tooltip>}
-                      </Box>
-                    </HStack>
-                  </Box>
+                    <LinkOverlay href={`/dashboard/project/${project.id}`}>
+                      <HStack alignItems="start">
+                        <Text>{project.title}</Text>
+                        <Spacer />
+                        <Box zIndex={1}>
+                          {project.enableNotification && <Tooltip label="Notification enabled">
+                            <BellIcon />
+                          </Tooltip>}
+                        </Box>
+                      </HStack>
+                    </LinkOverlay>
+                  </LinkBox>
                 )
               })}
               <LinkBox
@@ -182,7 +185,10 @@ function Dashboard(props: { session: UserSession }) {
                 px={4}
                 cursor="pointer"
                 shadow="sm"
-                rounded="lg">
+                rounded="lg"
+                _hover={{
+                  shadow: 'base'
+                }}>
                 <LinkOverlay
                   onClick={(_) => createProjectModal.onOpen()}
                   fontWeight="medium">
@@ -195,8 +201,6 @@ function Dashboard(props: { session: UserSession }) {
             </SimpleGrid>
           </Box>
         </VStack>
-
-
       </Container>
 
       <Footer maxWidth="5xl" />

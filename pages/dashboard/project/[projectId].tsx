@@ -1,10 +1,11 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, Link, Spacer, Spinner, StackDivider, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useRef } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { ProjectService } from '../../../service/project.service'
+import { CommentItem, CommentWrapper } from '../../../service/comment.service'
 import { apiClient } from '../../../utils.client'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
@@ -17,13 +18,7 @@ import { Footer } from '../../../components/Footer'
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
   const res = await apiClient.get<{
-    data: Array<Comment & {
-      replies: Array<Comment & {
-        page: Page
-      }>,
-      page: Page,
-      parsedContent: string
-    }>
+    data: CommentWrapper,
   }>(`/project/${projectId}/comments`, {
     params: {
       page
@@ -49,10 +44,10 @@ const replyAsModerator = async ({ parentId, content }) => {
   return res.data.data
 }
 
-const generateToken = async ({ projectId }) => {
-  const res = await apiClient.post<{
+const deleteProject = async ({ projectId }) => {
+  const res = await apiClient.delete<{
     data: string
-  }>(`/project/${projectId}/generateToken`)
+  }>(`/project/${projectId}`)
   return res.data.data
 }
 
@@ -64,13 +59,7 @@ const updateProjectSettings = async ({ projectId, body }) => {
 function CommentComponent(props: {
   isRoot: boolean,
   refetch: any,
-  comment: Comment & {
-    replies: Array<Comment & {
-      page: Page
-    }>,
-    parsedContent: string,
-    page: Page
-  }
+  comment: CommentItem
 }) {
   const toast = useToast()
 
@@ -137,7 +126,9 @@ function CommentComponent(props: {
   return (
     <Box key={comment.id} pl={!props.isRoot ? 4 : 0}>
       <HStack spacing={2}>
-        <Link color="gray.500" href={comment.page.url}>{comment.page.slug}</Link>
+        {props.isRoot && <Tooltip label={comment.page.slug}>
+          <Link color="gray.500" href={comment.page.url}>{comment.page.title}</Link>
+        </Tooltip> }
         <Spacer />
 
         {comment.moderatorId && <Tag colorScheme="cyan" size="sm">MOD</Tag>}
@@ -173,7 +164,7 @@ function CommentComponent(props: {
         {showReplyForm && <ReplyForm parentId={comment.id} />}
       </Box>
 
-      { comment.replies.length > 0 && comment.replies.map(reply => <CommentComponent {...props} comment={reply as any} isRoot={false} />)}
+      { comment.replies.data.length > 0 && comment.replies.data.map(reply => <CommentComponent key={reply.id} {...props} comment={reply} isRoot={false} />)}
     </Box>
   )
 }
@@ -198,6 +189,8 @@ function ProjectPage(props: {
 
   const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string, page }], getComments, {
   })
+
+  const { commentCount = 0, pageCount = 1 } = getCommentsQuery.data || {}
 
   return (
     <>
@@ -227,11 +220,11 @@ function ProjectPage(props: {
                   {getCommentsQuery.isLoading && <Center p={8}><Spinner /></Center>}
                   <VStack alignItems="stretch" spacing={4}>
                     <VStack align="stretch" spacing={4} divider={<StackDivider borderColor="gray.200" />}>
-                      {getCommentsQuery.data?.length === 0 && !getCommentsQuery.isLoading ? <Text py={12} textAlign="center" color="gray.500">No Comments</Text> : null}
-                      {getCommentsQuery.data?.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
+                      {commentCount === 0 && !getCommentsQuery.isLoading ? <Text py={12} textAlign="center" color="gray.500">No Comments</Text> : null}
+                      {getCommentsQuery.data?.data.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
                     </VStack>
                     <HStack spacing={2} mt={8}>
-                      {new Array(10).fill(0).map((_, index) => {
+                      {new Array(pageCount).fill(0).map((_, index) => {
                         return (
                           <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
                         )
@@ -264,11 +257,39 @@ function Settings(props: {
   const toast = useToast()
 
   const enableNotificationMutation = useMutation(updateProjectSettings)
-
-  const uploadMutation = useMutation(upload, {
+  const enableWebhookMutation = useMutation(updateProjectSettings)
+  const updateWebhookUrlMutation = useMutation(updateProjectSettings)
+  const deleteProjectMutation = useMutation(deleteProject, {
     onSuccess() {
       toast({
-        title: 'Saved',
+        title: 'Deleted',
+        status: 'success',
+        position: 'top'
+      })
+      location.href = "/dashboard"
+    },
+    onError() {
+      toast({
+        title: 'Something went wrong',
+        status: 'error',
+        position: 'top'
+      })
+    }
+  })
+
+  const [isOpenDeleteProjectModal, setIsOpenDeleteProjectModal] = React.useState(false)
+  const cancelDeleteProjectRef = React.useRef()
+  const onCloseDeleteProjectModal = () => {
+    setIsOpenDeleteProjectModal(false)
+  }
+
+  const webhookInputRef = useRef<HTMLInputElement>(null)
+
+  const uploadMutation = useMutation(upload, {
+    onSuccess(data) {
+      toast({
+        title: 'Import success',
+        description: `imported ${data.commentCount} comments`,
         status: 'success',
         position: 'top'
       })
@@ -290,13 +311,113 @@ function Settings(props: {
   async function upload() {
     const formData = new FormData()
     formData.append('file', importFile.current)
-    const res = await apiClient.post(`/project/${props.project.id}/data/import`, formData, {
+    const res = await apiClient.post<{
+      data: {
+        pageCount: number,
+        commentCount: number,
+      }
+    }>(`/project/${props.project.id}/data/import`, formData, {
       headers: {
         'content-type': 'multipart/form-data'
       }
     })
-    return res.data
+    return res.data.data
   }
+
+  const onSaveWebhookUrl = async _ => {
+    const value = webhookInputRef.current.value
+
+    const validUrlRegexp = /^https?:/
+
+    if (!validUrlRegexp.exec(value)) {
+      toast({
+        title: 'Not a valid http/https URL',
+        status: 'error',
+        position: 'top'
+      })
+      return
+    }
+
+    updateWebhookUrlMutation.mutate({
+      projectId: props.project.id,
+      body: {
+        webhookUrl: value
+      }
+    }, {
+      onSuccess() {
+        toast({
+          title: 'Saved',
+          status: 'success',
+          position: 'top'
+        })
+      },
+      onError() {
+        toast({
+          title: 'Something went wrong',
+          status: 'error',
+          position: 'top'
+        })
+      }
+    })
+  }
+
+  const onChangeEnableWebhook = async _ => {
+    const value = _.target.checked
+    enableWebhookMutation.mutate({
+      projectId: props.project.id,
+      body: {
+        enableWebhook: value
+      }
+    }, {
+      onSuccess() {
+        toast({
+          title: 'Saved',
+          status: 'success',
+          position: 'top'
+        })
+      },
+      onError() {
+        toast({
+          title: 'Something went wrong',
+          status: 'error',
+          position: 'top'
+        })
+      }
+    })
+  }
+
+
+  const DeleteProjectDialog = (
+    <AlertDialog
+      isOpen={isOpenDeleteProjectModal}
+      leastDestructiveRef={cancelDeleteProjectRef}
+      onClose={onCloseDeleteProjectModal}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Delete Project
+            </AlertDialogHeader>
+
+          <AlertDialogBody>
+            <Text>
+              Are you sure?
+            </Text>
+            <Box mt={2}>
+              <Link fontSize="sm" color="telegram.500" href='/doc#/faq?id=what-if-i-delete-a-project'>What if I delete a project?</Link>
+            </Box>
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <Button ref={cancelDeleteProjectRef} onClick={onCloseDeleteProjectModal}>
+              Cancel
+              </Button>
+            <Button ml={4} colorScheme="red" onClick={_ => deleteProjectMutation.mutate({ projectId: props.project.id })} isLoading={deleteProjectMutation.isLoading}>Delete</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+  )
 
   return (
     <>
@@ -304,9 +425,9 @@ function Settings(props: {
         spacing={8}
         alignItems="stretch"
       >
-        <Box>
+        <VStack alignItems="start">
           <Heading as="h1" size="md" mb={4} >Embed Code</Heading>
-          {typeof window !== 'undefined' && <Box as="pre" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
+          {typeof window !== 'undefined' && <Box w="full" as="pre" whiteSpace="pre-wrap" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
             <code>
               {`<div id="cusdis_thread"
   data-host="${location.origin}"
@@ -315,16 +436,17 @@ function Settings(props: {
   data-page-url="{{ PAGE_URL }}"
   data-page-title="{{ PAGE_TITLE }}"
 ></div>
-<script async src="${location.origin}/js/cusdis.es.js"></script>
+<script async defer src="${location.origin}/js/cusdis.es.js"></script>
 `}
             </code>
-          </Box>}
-        </Box>
+          </Box>
+          }
+          <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/webhook">SDK reference</Link>
+        </VStack>
 
         <VStack alignItems="start">
-          <Box>
-            <Heading as="h1" size="md" my={4}>Notification</Heading>
-            <Checkbox onChange={e => {
+          <HStack mt={4}>
+            <Switch onChange={e => {
               enableNotificationMutation.mutate({
                 projectId: props.project.id,
                 body: {
@@ -346,8 +468,10 @@ function Settings(props: {
                   })
                 }
               })
-            }} defaultChecked={props.project.enableNotification}>Enable Notification for this project</Checkbox>
-          </Box>
+            }} defaultChecked={props.project.enableNotification}></Switch>
+            <Heading as="h1" size="md">Email Notification</Heading>
+
+          </HStack>
           <Box>
             <Link href="/user" fontSize="sm">
               Advanced Notification Settings
@@ -355,14 +479,42 @@ function Settings(props: {
           </Box>
         </VStack>
 
+        <VStack alignItems="start">
+          <HStack>
+            <Switch onChange={onChangeEnableWebhook} defaultChecked={props.project.enableWebhook} />
+            <Heading size="md">Webhook</Heading>
+          </HStack>
+          <InputGroup>
+            <Input defaultValue={props.project.webhook} type="text" ref={webhookInputRef}></Input>
+            <InputRightElement width='16'>
+              <Button size="sm" isLoading={updateWebhookUrlMutation.isLoading} onClick={onSaveWebhookUrl}>Save</Button>
+            </InputRightElement>
+          </InputGroup>
+          <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/webhook">How to use Webhook?</Link>
+        </VStack>
+
         <Box>
           <Heading as="h1" size="md" my={4}>Data</Heading>
           <Heading as="h2" size="sm" my={4}>Import from Disqus</Heading>
-          <Input mb={2} type="file" onChange={onChangeFile} />
-          <Button onClick={_ => uploadMutation.mutate()} isLoading={uploadMutation.isLoading}>Import</Button>
+          <HStack>
+            <Input type="file" onChange={onChangeFile} />
+            <Button onClick={_ => {
+              if (importFile.current) {
+                uploadMutation.mutate()
+              }
+            }} isLoading={uploadMutation.isLoading}>Import</Button>
+
+          </HStack>
 
           {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
 
+        </Box>
+
+        <Box>
+          <Heading as="h1" size="md" my={4}>Danger Zone</Heading>
+          <Button size="sm" colorScheme="red" onClick={_ => setIsOpenDeleteProjectModal(true)} isLoading={deleteProjectMutation.isLoading}>Delete project</Button>
+          {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
+          {DeleteProjectDialog}
         </Box>
 
       </VStack>
@@ -372,12 +524,21 @@ function Settings(props: {
   )
 }
 
-type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token' | 'enableNotification'>
+type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token' | 'enableNotification' | 'webhook' | 'enableWebhook'>
 
 export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
   const session = await getSession(ctx.req)
   const project = await projectService.get(ctx.query.projectId) as Project
+
+  if (project.deletedAt) {
+    return {
+      redirect: {
+        destination: '/404',
+        permanent: false
+      }
+    }
+  }
 
   if (session && (project.ownerId !== session.uid)) {
     return {
@@ -396,7 +557,9 @@ export async function getServerSideProps(ctx) {
         title: project.title,
         ownerId: project.ownerId,
         token: project.token,
-        enableNotification: project.enableNotification
+        enableNotification: project.enableNotification,
+        enableWebhook: project.enableWebhook,
+        webhook: project.webhook
       } as ProjectServerSideProps
     }
 
