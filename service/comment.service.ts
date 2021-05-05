@@ -1,20 +1,27 @@
 import { Comment, Page, Prisma, User } from '@prisma/client'
-import { RequestScopeService, UserSession } from '.'
-import { prisma, resolvedConfig } from '../utils.server'
-import { PageService } from './page.service'
 import dayjs from 'dayjs'
 import MarkdownIt from 'markdown-it'
-import { HookService } from './hook.service'
-import { statService } from './stat.service'
-import { EmailService } from './email.service'
-import { TokenService } from './token.service'
+import { RequestScopeService } from '.'
 import { makeConfirmReplyNotificationTemplate } from '../templates/confirm_reply_notification'
+import { prisma, resolvedConfig } from '../utils.server'
+import { EmailService } from './email.service'
+import { HookService } from './hook.service'
+import { PageService } from './page.service'
+import { statService } from './stat.service'
+import { TokenService } from './token.service'
 
 export const markdown = MarkdownIt({
   linkify: true,
 })
 
 markdown.disable(['image', 'link'])
+
+export enum CommentStatus {
+  Approved = 'approved',
+  Pending = 'pending',
+  Spam = 'spam',
+  Deleted = 'deleted',
+}
 
 export type CommentWrapper = {
   commentCount: number
@@ -169,12 +176,18 @@ export class CommentService extends RequestScopeService {
       pageTitle?: string
     },
     parentId?: string,
+    status?: CommentStatus,
   ) {
     // touch page
     const page = await this.pageService.upsertPage(pageSlug, projectId, {
       pageTitle: body.pageTitle,
       pageUrl: body.pageUrl,
     })
+
+    let deletedAt: Date = null
+    if (status === CommentStatus.Deleted) {
+      deletedAt = new Date()
+    }
 
     const created = await prisma.comment.create({
       data: {
@@ -183,6 +196,8 @@ export class CommentService extends RequestScopeService {
         by_nickname: body.nickname,
         pageId: page.id,
         parentId,
+        deletedAt,
+        approved: status === CommentStatus.Approved,
       },
     })
 
