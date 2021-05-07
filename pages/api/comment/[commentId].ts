@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { CommentService } from "../../../service/comment.service";
+import { CommentService } from "@/service/comment.service";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const commentService = new CommentService(req)

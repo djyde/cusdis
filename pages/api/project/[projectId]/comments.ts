@@ -1,9 +1,9 @@
 import { Project } from '@prisma/client'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AuthService } from '../../../../service/auth.service'
-import { CommentService } from '../../../../service/comment.service'
-import { ProjectService } from '../../../../service/project.service'
-import { statService } from '../../../../service/stat.service'
+import { AuthService } from '@/service/auth.service'
+import { CommentService } from '@/service/comment.service'
+import { ProjectService } from '@/service/project.service'
+import { statService } from '@/service/stat.service'
 
 export default async function handler(
   req: NextApiRequest,

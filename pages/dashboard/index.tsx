@@ -1,6 +1,6 @@
 import * as React from "react"
 import { signIn, useSession } from "next-auth/client"
-import { apiClient } from "../../utils.client"
+import { apiClient } from "@/root/utils.client"
 import { useMutation, useQuery } from "react-query"
 import {
   AddIcon,
@@ -46,12 +46,12 @@ import {
 } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { Project } from "@prisma/client"
-import type { UserSession } from "../../service"
+import type { UserSession } from "@/service/index"
 import { useRouter } from "next/router"
-import { Head } from "../../components/Head"
-import { Footer } from "../../components/Footer"
-import { Navbar } from "../../components/Navbar"
-import { getSession } from "../../utils.server"
+import { Head } from "@/components/Head"
+import { Footer } from "@/components/Footer"
+import { Navbar } from "@/components/Navbar"
+import { getSession } from "@/root/utils.server"
 
 export const createProject = async (body: { title: string }) => {
   const res = await apiClient.post("/projects", {

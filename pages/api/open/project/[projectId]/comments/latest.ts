@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { ProjectService } from "../../../../../../service/project.service";
-import { prisma } from "../../../../../../utils.server";
+import { ProjectService } from "@/service/project.service";
+import { prisma } from "@/root/utils.server";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const projectService = new ProjectService(req)

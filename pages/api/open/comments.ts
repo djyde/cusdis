@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import {
   CommentService,
   CommentWrapper,
-} from '../../../service/comment.service'
-import { initMiddleware, prisma, resolvedConfig } from '../../../utils.server'
+} from '@/service/comment.service'
+import { initMiddleware } from '@/root/utils.server'
 import Cors from 'cors'
-import { ProjectService } from '../../../service/project.service'
-import { statService } from '../../../service/stat.service'
+import { ProjectService } from '@/service/project.service'
+import { statService } from '@/service/stat.service'
 
 const cors = initMiddleware(
   // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options

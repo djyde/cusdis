@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import Adapters from "next-auth/adapters";
-import { prisma, resolvedConfig, singletonSync } from "../../../utils.server";
-import { authProviders } from "../../../config.server";
-import { statService } from "../../../service/stat.service";
+import { prisma, resolvedConfig } from "@/root/utils.server";
+import { authProviders } from "@/root/config.server";
+import { statService } from "@/service/stat.service";
 
 // Using Module Augmentation
 // https://next-auth.js.org/getting-started/typescript
