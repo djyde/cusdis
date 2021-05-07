@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/service/*": ["service/*"],
+      "@/components/*": ["components/*"],
+      "@/root/*": ["./*"],
+    },
     "target": "esnext",
     "lib": [
       "dom",
