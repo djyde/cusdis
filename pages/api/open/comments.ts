@@ -1,12 +1,14 @@
+import Cors from 'cors'
 import { NextApiRequest, NextApiResponse } from 'next'
+import requestIp from 'request-ip'
+import { antiSpamServive } from '../../../service/antispam.service'
 import {
   CommentService,
-  CommentWrapper,
+  CommentWrapper
 } from '../../../service/comment.service'
-import { initMiddleware, prisma, resolvedConfig } from '../../../utils.server'
-import Cors from 'cors'
 import { ProjectService } from '../../../service/project.service'
 import { statService } from '../../../service/stat.service'
+import { initMiddleware } from '../../../utils.server'
 
 const cors = initMiddleware(
   // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
@@ -49,19 +51,29 @@ export default async function handler(
       return
     }
 
+    const opts = {
+      content: body.content,
+      email: body.email,
+      nickname: body.nickname,
+      pageTitle: body.pageTitle,
+      pageUrl: body.pageUrl,
+    }
+
+    const clientIp = requestIp.getClientIp(req)
+    const useragent = req.headers['user-agent']
+    const status = await antiSpamServive.checkSpam({
+      ...opts,
+      ip: clientIp,
+      useragent,
+    })
+
     const comment = await commentService.addComment(
       body.appId,
       body.pageId,
-      {
-        content: body.content,
-        email: body.email,
-        nickname: body.nickname,
-        pageTitle: body.pageTitle,
-        pageUrl: body.pageUrl,
-      },
+      opts,
       body.parentId,
+      status,
     )
-
     // send confirm email
     if (body.acceptNotify === true && body.email) {
       try {
@@ -78,7 +90,7 @@ export default async function handler(
     statService.capture('add_comment')
 
     res.json({
-      data: comment,
+      data: 'ok',
     })
   } else if (req.method === 'GET') {
     // get all comments

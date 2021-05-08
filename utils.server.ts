@@ -4,7 +4,6 @@ import { getSession as nextAuthGetSession } from 'next-auth/client'
 import * as Sentry from '@sentry/node'
 import * as Tracing from '@sentry/tracing'
 
-
 type EnvVariable = string | undefined
 export const resolvedConfig = {
   useLocalAuth: process.env.USERNAME && process.env.PASSWORD,
@@ -40,6 +39,10 @@ export const resolvedConfig = {
   },
   sentry: {
     dsn: process.env.SENTRY_DSN as EnvVariable,
+  },
+  antispamMode: (process.env.ANTISPAM_MODE as EnvVariable) || 'auto',
+  akismet: {
+    key: process.env.AKISMET_KEY as EnvVariable,
   },
 }
 
@@ -82,7 +85,7 @@ export const sentry = singletonSync('sentry', () => {
 export function initMiddleware(middleware) {
   return (req, res) =>
     new Promise((resolve, reject) => {
-      middleware(req, res, (result) => {
+      middleware(req, res, result => {
         if (result instanceof Error) {
           return reject(result)
         }
@@ -91,6 +94,6 @@ export function initMiddleware(middleware) {
     })
 }
 
-export const getSession = async (req) => {
+export const getSession = async req => {
   return (await nextAuthGetSession({ req })) as UserSession
 }
