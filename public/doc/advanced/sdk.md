@@ -35,6 +35,22 @@ To embed the comment widget to your web page, you need to put **the element and 
   - `auto` Automatically set theme by `prefers-color-scheme`
   - `dark`
 
+## API
+
+Cusdis exposes some global APIs on `window.CUSDIS`:
+
+#### window.CUSDIS.initial()
+
+Initialize widget.
+
+#### window.CUSDIS.renderTo(target: HTMLElement)
+
+Render widget to specific DOM element.
+
+#### window.CUSDIS.setTheme(theme: 'dark' | 'light' | 'auto')
+
+Manually set theme. 
+
 ## Style customization
 
 We use css variables to define our style. Here is the available variables you can override:

@@ -26,6 +26,10 @@
     message = msg
   }
 
+  window.CUSDIS.setTheme = function(themeName) {
+    theme = themeName
+  }
+
   setContext('api', api)
   setContext('attrs', attrs)
   setContext('refresh', getComments)
