@@ -35,11 +35,11 @@ export const resolvedConfig = {
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY as EnvVariable,
   },
-  posthog: {
-    apiKey: process.env.POSTHOG_API_KEY as EnvVariable,
-  },
   sentry: {
     dsn: process.env.SENTRY_DSN as EnvVariable,
+  },
+  minicapture: {
+    apiKey: process.env.MINICAPTURE_API_KEY as EnvVariable,
   },
 }
 

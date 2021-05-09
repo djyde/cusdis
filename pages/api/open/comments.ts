@@ -104,8 +104,8 @@ export default async function handler(
     }
 
     statService.capture('get_comments', {
+      identity: query.appId,
       properties: {
-        project_id: query.appId,
         from: 'open_api',
       },
     })

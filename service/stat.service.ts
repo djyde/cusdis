@@ -1,25 +1,21 @@
-import PostHog from 'posthog-node'
-import { RequestScopeService, UserSession } from '.'
 import { resolvedConfig, sentry } from '../utils.server'
-
+import { MiniCapture } from 'mini-capture'
 export class StatService {
-  private client = resolvedConfig.posthog.apiKey
-    ? new PostHog(resolvedConfig.posthog.apiKey, {
-        host: 'https://app.posthog.com',
-      })
+
+  private client = resolvedConfig.minicapture.apiKey
+    ? new MiniCapture(resolvedConfig.minicapture.apiKey)
     : null
 
   async capture(
     event: string,
     options?: {
+      identity?: string
       properties: any
-      user?: UserSession
     },
   ) {
     if (this.client) {
-      this.client.capture({
-        distinctId: options?.user?.uid || 'unknown',
-        event,
+      this.client.capture(event, {
+        identity: options?.identity,
         properties: options?.properties || {},
       })
     } else {
