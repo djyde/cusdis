@@ -1,7 +1,6 @@
 import { resolvedConfig, sentry } from '../utils.server'
 import { MiniCapture } from 'mini-capture'
 export class StatService {
-
   private client = resolvedConfig.minicapture.apiKey
     ? new MiniCapture(resolvedConfig.minicapture.apiKey)
     : null
@@ -14,10 +13,15 @@ export class StatService {
     },
   ) {
     if (this.client) {
-      this.client.capture(event, {
-        identity: options?.identity,
-        properties: options?.properties || {},
-      })
+      try {
+        this.client.capture(event, {
+          identity: options?.identity,
+          properties: options?.properties || {},
+        })
+      } catch (e) {
+        console.error(e)
+        // TODO: log error
+      }
     } else {
       return null
     }
