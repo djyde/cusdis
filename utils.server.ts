@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client'
 import { UserSession } from './service'
 import { getSession as nextAuthGetSession } from 'next-auth/client'
 import * as Sentry from '@sentry/node'
-import * as Tracing from '@sentry/tracing'
 
 
 type EnvVariable = string | undefined
