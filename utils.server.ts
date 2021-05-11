@@ -2,12 +2,6 @@ import { PrismaClient } from '@prisma/client'
 import { UserSession } from './service'
 import { getSession as nextAuthGetSession } from 'next-auth/client'
 import * as Sentry from '@sentry/node'
-import * as dotenv from 'dotenv'
-import * as path from 'path'
-
-try {
-  dotenv.config({path: path.resolve(__dirname, '.env')})
-} catch (e) {}
 
 
 type EnvVariable = string | undefined
