@@ -4,6 +4,7 @@
 - **Self-host Guide**
   - [Docker](/self-host/docker.md)
   - [Vercel](/self-host/vercel.md)
+  - [Manual](/self-host/manual.md)
 - **Integration**
   - [Docsify](/integration/docsify.md)
   - [Hexo](https://blog.cusdis.com/integate-cusdis-in-hexo/)
