@@ -7,6 +7,7 @@
 - **Integration**
   - [Docsify](/integration/docsify.md)
   - [Hexo](https://blog.cusdis.com/integate-cusdis-in-hexo/)
+  - [Mkdocs](/integration/mkdocs.md)
 - **Features**
   - [Email Notification](/features/notification.md)
   - [Webhook](/advanced/webhook.md)
