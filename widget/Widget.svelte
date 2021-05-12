@@ -39,6 +39,9 @@
     loadingComments = true
     try {
       const res = await api.get(`/api/open/comments`, {
+        headers: {
+          'x-timezone-offset': -new Date().getTimezoneOffset()
+        },
         params: {
           page: p,
           appId: attrs.appId,
