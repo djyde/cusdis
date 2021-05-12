@@ -18,6 +18,8 @@ export default async function handler(
       page: string
     }
 
+    const timezoneOffsetInHour = req.headers['x-timezone-offset'] || 0
+
     // only owner can get comments
     const project = (await projectService.get(projectId, {
       select: {
@@ -36,7 +38,7 @@ export default async function handler(
       }
     })
 
-    const comments = await commentService.getComments(projectId, {
+    const comments = await commentService.getComments(projectId, Number(timezoneOffsetInHour), {
       parentId: null,
       page: Number(page),
       onlyOwn: true,

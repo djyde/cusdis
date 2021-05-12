@@ -9,6 +9,8 @@ import { statService } from './stat.service'
 import { EmailService } from './email.service'
 import { TokenService } from './token.service'
 import { makeConfirmReplyNotificationTemplate } from '../templates/confirm_reply_notification'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
 
 export const markdown = MarkdownIt({
   linkify: true,
@@ -39,6 +41,7 @@ export class CommentService extends RequestScopeService {
 
   async getComments(
     projectId: string,
+    timezoneOffset: number,
     options?: {
       parentId?: string
       page?: number
@@ -105,7 +108,7 @@ export class CommentService extends RequestScopeService {
     const allComments = await Promise.all(
       comments.map(async (comment: Comment) => {
         // get replies
-        const replies = await this.getComments(projectId, {
+        const replies = await this.getComments(projectId, timezoneOffset, {
           ...options,
           page: 1,
           // hard code 100 because we havent implement pagination in nested comment
@@ -115,7 +118,7 @@ export class CommentService extends RequestScopeService {
           select,
         })
 
-        const parsedCreatedAt = dayjs(comment.createdAt).format(
+        const parsedCreatedAt = dayjs.utc(comment.createdAt).utcOffset(timezoneOffset).format(
           'YYYY-MM-DD HH:mm',
         )
         const parsedContent = markdown.render(comment.content) as string

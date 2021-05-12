@@ -88,6 +88,8 @@ export default async function handler(
       pageId: string
     }
 
+    const timezoneOffsetInHour = req.headers['x-timezone-offset']
+
     const isDeleted = await projectService.isDeleted(query.appId)
 
     if (isDeleted) {
@@ -121,15 +123,19 @@ export default async function handler(
       },
     )
 
-    const comments = await commentService.getComments(query.appId, {
-      approved: true,
-      parentId: null,
-      pageSlug: query.pageId,
-      page: Number(query.page) || 1,
-      select: {
-        by_nickname: true,
+    const comments = await commentService.getComments(
+      query.appId,
+      Number(timezoneOffsetInHour),
+      {
+        approved: true,
+        parentId: null,
+        pageSlug: query.pageId,
+        page: Number(query.page) || 1,
+        select: {
+          by_nickname: true,
+        },
       },
-    })
+    )
 
     queryCommentStat.end()
 
