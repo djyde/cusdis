@@ -441,7 +441,7 @@ function Settings(props: {
             </code>
           </Box>
           }
-          <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/webhook">SDK reference</Link>
+          <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/sdk">SDK reference</Link>
         </VStack>
 
         <VStack alignItems="start">
