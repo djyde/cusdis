@@ -1,16 +1,58 @@
-import Widget from "./Widget.svelte";
-
 window.CUSDIS = {}
+
+const makeIframeContent = (target) => {
+  const iframeJsPath = `http://localhost:3001/iframe.js`
+  return `<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_parent" />
+    <script>
+      window.__DATA__ = ${JSON.stringify(target.dataset)}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="${iframeJsPath}" type="module">
+      
+    </script>
+  </body>
+</html>`
+}
+
+let singleTonIframe
+function createIframe(target) {
+  if (!singleTonIframe) {
+    singleTonIframe = document.createElement('iframe')
+  }
+  // srcdoc dosen't work on IE11
+  singleTonIframe.srcdoc = makeIframeContent(target)
+  singleTonIframe.style.width = '100%'
+  singleTonIframe.style.height = '100%'
+  singleTonIframe.style.border = '0'
+
+  return singleTonIframe
+}
 
 function render(target) {
   if (target) {
     target.innerHTML = ''
-    new Widget({
-      target,
-      props: {
-        attrs: target.dataset,
-      },
-    });
+    const iframe = createIframe(target)
+    target.appendChild(iframe)
+
+    window.addEventListener('message', (e) => {
+      try {
+        const msg = JSON.parse(e.data)
+        if (msg.from === 'cusdis') {
+          switch (msg.event) {
+            case 'resize':
+              {
+                iframe.style.height = msg.data + 'px'
+              }
+              break
+          }
+        }
+      } catch (e) {}
+    })
   }
 }
 
