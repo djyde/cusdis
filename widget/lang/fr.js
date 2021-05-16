@@ -6,15 +6,15 @@ window.CUSDIS_LOCALE = {
   // comment
   email: 'Email (optionnel)',
   nickname: 'Pseudonyme',
-  reply_placeholder: 'Réponse...',
+  reply_placeholder: 'Commentaire...',
   reply_btn: 'Répondre',
-  sending: 'Envoi...',
+  sending: 'Publication...',
 
   // reply
   mod_badge: 'MOD',
-  content_is_required: 'Contenu requis',
+  content_is_required: 'Commentaire requis',
   nickname_is_required: 'Pseudonyme requis',
 
   comment_has_been_sent:
-    'Votre commentaire a été envoyé. Attendez son approbation.',
+    'Votre commentaire a été publié. Attendez son approbation.',
 }
