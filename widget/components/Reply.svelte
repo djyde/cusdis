@@ -56,23 +56,23 @@
   }
 </script>
 
-<div style="margin-top: 1em;">
-  <div class="cusdis-reply-info cusdis-field">
+<div class="grid grid-cols-1 gap-4">
+  <div class="grid grid-cols-2 gap-4">
     <div>
-      <input type="text" placeholder={t('nickname')} bind:value={nickname} />
+      <input class="w-full p-2 border border-gray-100" type="text" placeholder={t('nickname')} bind:value={nickname} />
     </div>
     <div>
-      <input type="text" placeholder={t('email')} bind:value={email} />
+      <input class="w-full p-2 border border-gray-100" type="text" placeholder={t('email')} bind:value={email} />
     </div>
   </div>
 
-  <div class="cusdis-field">
-    <textarea bind:value={content} placeholder={t('reply_placeholder')} />
+  <div>
+    <textarea class="w-full p-2 border border-gray-100 h-24" bind:value={content} placeholder={t('reply_placeholder')} />
   </div>
 
-  <div class="cusdis-field">
+  <div>
     <button
-      class="submit-btn"
+      class="text-sm bg-gray-200 p-2 px-4 font-bold"
       class:cusdis-disabled={loading}
       on:click={addComment}>{loading ? t('sending') : t('post_comment')}</button
     >
@@ -80,7 +80,7 @@
 </div>
 
 <style>
-  textarea,
+  /* textarea,
   input {
     width: 100%;
     border: 2px solid;
@@ -141,5 +141,5 @@
   .cusdis-field {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-  }
+  } */
 </style>

@@ -1,8 +1,6 @@
 module.exports = {
   plugins: {
-    tailwindcss: {
-      prefix: 'comment'
-    },
+    tailwindcss: {},
     autoprefixer: {},
   },
 };

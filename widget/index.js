@@ -2,11 +2,13 @@ window.CUSDIS = {}
 
 const makeIframeContent = (target) => {
   const iframeJsPath = `http://localhost:3001/iframe.js`
+  const cssPath = `http://localhost:3001`
   return `<!DOCTYPE html>
 <html>
   <head>
     <base target="_parent" />
     <script>
+      window.CUSDIS_LOCALE = ${JSON.stringify(window.CUSDIS_LOCALE)}
       window.__DATA__ = ${JSON.stringify(target.dataset)}
     </script>
   </head>

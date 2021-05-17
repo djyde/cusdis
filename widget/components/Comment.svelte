@@ -5,53 +5,72 @@
   import Reply from './Reply.svelte'
   export let comment
   export let showReplyForm = false
+  export let isChild = false
 
   const { showIndicator } = getContext('attrs')
+
 </script>
 
 <div
-  class:cusdis-padding={true}
+  class="my-4"
+  class:pl-4={isChild}
+  class:border-l-2={isChild}
+  class:border-color-gray-200={isChild}
   class:cusdis-indicator={showIndicator}
-  style="margin-top: 2em; margin-bottom: 2em;"
 >
-  <div style="margin-bottom: .5em;">
-    <div class="cusdis-comment-nickname cusdis-inline cusdis-font-bold">
+  <div class="flex">
+    <div class="mr-2 font-medium">
       {comment.by_nickname}
     </div>
+
     {#if comment.moderatorId}
-      <span class="cusdis-mod">MOD</span>
+      <div class="mr-2">
+        <span>MOD</span>
+      </div>
     {/if}
-    <div class="cusdis-comment-date cusdis-inline">
-      {comment.parsedCreatedAt}
-    </div>
   </div>
 
-  <div class="cusdis-comment-content" style="margin-bottom: .5em;">
+  <div class="text-gray-500 text-sm">
+    {comment.parsedCreatedAt}
+  </div>
+
+  <div class="text-gray-500 my-2">
     {@html comment.parsedContent}
   </div>
 
-  <div style="margin-top: .25em; margin-bottom: .25em;">
-    <button style="" type="button" on:click={_ => { showReplyForm = !showReplyForm }} class="cusdis-link-btn">{t('reply_btn')}</button>
-  </div>
-
-  {#if showReplyForm}
-    <Reply
-      parentId={comment.id}
-      onSuccess={() => {
-        showReplyForm = false
-      }}
-    />
-  {/if}
-
   {#if comment.replies.data.length > 0}
     {#each comment.replies.data as child (child.id)}
-      <svelte:self comment={child} />
+      <svelte:self isChild={true} comment={child} />
     {/each}
   {/if}
+
+  <div>
+    <button
+      class="font-medium text-sm text-gray-500"
+      type="button"
+      on:click={(_) => {
+        showReplyForm = !showReplyForm
+      }}>{t('reply_btn')}</button
+    >
+  </div>
+
+
+  {#if showReplyForm}
+    <div class="mt-4 pl-4 border-l-2 border-gray-200">
+      <Reply
+        parentId={comment.id}
+        onSuccess={() => {
+          showReplyForm = false
+        }}
+      />
+    </div>
+  {/if}
+
+
 </div>
 
 <style>
-  .cusdis-padding {
+  /* .cusdis-padding {
     padding-left: 1em;
   }
 
@@ -101,5 +120,6 @@
     border-radius: 4px;
     font-weight: bold;
     color: var(--cusdis--color-mod-text);
-  }
+  } */
+
 </style>

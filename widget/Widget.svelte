@@ -1,4 +1,5 @@
 <script>
+  import './theme.css'
   import { onMount, setContext } from 'svelte'
   import axios from 'redaxios'
   import Comment from './components/Comment.svelte'
@@ -67,20 +68,20 @@
 </script>
 
 {#if !error}
-  <div class='cusdis-comment-main' class:dark={theme === 'dark'} class:auto={theme === 'auto'}>
+  <div class:dark={theme === 'dark'} class:auto={theme === 'auto'}>
     {#if message}
-      <div class="cusdis-message">
+      <div class="p-2 mb-4 bg-blue-500 text-white">
         {message}
       </div>
     {/if}
 
     <Reply />
 
-    <div>
+    <div class="my-8" />
+
+    <div class="mt-4">
       {#if loadingComments}
         <div
-          class="cusdis-loading-text"
-          style="text-align: center; font-size: .8em;"
         >
           {t('loading')}...
         </div>
@@ -89,11 +90,11 @@
           <Comment {comment} firstFloor={true} />
         {/each}
         {#if commentsResult.pageCount > 1}
-          <div class="cusdis-paginator">
+          <div>
             {#each Array(commentsResult.pageCount) as _, index}
               <button
-                class:selected={page === index + 1}
-                class="cusdis-pagination-button"
+                class="px-2 py-1 text-sm mr-2"
+                class:bg-gray-100={page === index + 1}
                 on:click={(_) => onClickPage(index + 1)}>{index + 1}</button
               >
             {/each}
@@ -102,8 +103,10 @@
       {/if}
     </div>
 
-    <div class="cusdis-footer">
-      <a style="text-decoration: none;" href="https://cusdis.com"
+    <div class="my-8" />
+
+    <div class="text-center text-sm text-gray-900">
+      <a class="underline " href="https://cusdis.com"
         >{t('powered_by')}</a
       >
     </div>
@@ -111,55 +114,8 @@
 {/if}
 
 <style>
-  :root {
-    --cusdis--color-text-default: rgba(0, 0, 0, 0.8);
-    --cusdis--color-input-border: #ddd;
-    --cusdis--color-btn-text: rgba(0, 0, 0, 0.8);
-    --cusdis--color-btn-bg-default: #ddd;
-    --cusdis--color-btn-bg-disabled: rgba(0, 0, 0, 0.5);
-    --cusdis--color-btn-border: none;
-    --cusdis--color-message-text: #fff;
-    --cusdis--color-message-bg: #046582;
-    --cusdis--color-pagination-bg-selected: #ddd;
-    --cusdis--color-comment-indicator-border: #ddd;
-    --cusdis--color-comment-username-text: #000;
-    --cusdis--color-mod-text: rgba(0, 0, 0, 0.8);
-    --cusdis--color-mod-bg: #ddd;
-  }
-
-  .dark {
-    --cusdis--color-text-default: rgba(243, 244, 246, 0.8);
-    --cusdis--color-input-border: rgb(229, 231, 235);
-    --cusdis--color-btn-text: var(--cusdis--color-text-default);
-    --cusdis--color-btn-bg-default: rgb(229, 231, 235, 0);
-    --cusdis--color-btn-bg-disabled: rgba(55, 65, 81, 0.5);
-    --cusdis--color-btn-border: 2px solid var(--cusdis--color-text-default);
-    --cusdis--color-message-text: rgba(243, 244, 246, 0.8);
-    --cusdis--color-pagination-bg-selected: rgb(229, 231, 235);
-    --cusdis--color-comment-indicator-border: rgb(229, 231, 235);
-    --cusdis--color-comment-username-text: #fff;
-    --cusdis--color-mod-text: rgba(55, 65, 81, 0.8);
-    --cusdis--color-mod-bg: rgb(229, 231, 235);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .auto {
-      --cusdis--color-text-default: rgba(243, 244, 246, 0.8);
-      --cusdis--color-input-border: rgb(229, 231, 235);
-      --cusdis--color-btn-text: var(--cusdis--color-text-default);
-      --cusdis--color-btn-bg-default: rgb(229, 231, 235, 0);
-      --cusdis--color-btn-bg-disabled: rgba(55, 65, 81, 0.5);
-      --cusdis--color-btn-border: 2px solid var(--cusdis--color-text-default);
-      --cusdis--color-message-text: rgba(243, 244, 246, 0.8);
-      --cusdis--color-message-bg: #046582; /* no need change for now */
-      --cusdis--color-pagination-bg-selected: rgb(229, 231, 235);
-      --cusdis--color-comment-indicator-border: rgb(229, 231, 235);
-      --cusdis--color-comment-username-text: #fff;
-      --cusdis--color-mod-text: rgba(55, 65, 81, 0.8);
-      --cusdis--color-mod-bg: rgb(229, 231, 235);
-    }
-  }
-
+  
+/* 
   .cusdis-footer {
     margin-top: 1em;
     font-size: 0.8em;
@@ -199,5 +155,5 @@
 
   .cusdis-footer a {
     color: var(--cusdis--color-text-default);
-  }
+  } */
 </style>
