@@ -59,15 +59,15 @@
 <div class="grid grid-cols-1 gap-4">
   <div class="grid grid-cols-2 gap-4">
     <div>
-      <input class="w-full p-2 border border-gray-100" type="text" placeholder={t('nickname')} bind:value={nickname} />
+      <input class="w-full p-2 border border-gray-100 dark:bg-transparent dark:text-gray-100 dark:outline-none" type="text" placeholder={t('nickname')} bind:value={nickname} />
     </div>
     <div>
-      <input class="w-full p-2 border border-gray-100" type="text" placeholder={t('email')} bind:value={email} />
+      <input class="w-full p-2 border border-gray-100 dark:bg-transparent  dark:text-gray-100 dark:outline-none" type="text" placeholder={t('email')} bind:value={email} />
     </div>
   </div>
 
   <div>
-    <textarea class="w-full p-2 border border-gray-100 h-24" bind:value={content} placeholder={t('reply_placeholder')} />
+    <textarea class="w-full p-2 border border-gray-100 h-24 dark:bg-transparent dark:text-gray-100 dark:outline-none" bind:value={content} placeholder={t('reply_placeholder')} />
   </div>
 
   <div>

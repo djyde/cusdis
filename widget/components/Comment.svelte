@@ -18,23 +18,23 @@
   class:border-color-gray-200={isChild}
   class:cusdis-indicator={showIndicator}
 >
-  <div class="flex">
-    <div class="mr-2 font-medium">
+  <div class="flex items-center">
+    <div class="mr-2 font-medium dark:text-gray-100">
       {comment.by_nickname}
     </div>
 
     {#if comment.moderatorId}
-      <div class="mr-2">
+      <div class="mr-2 dark:bg-gray-500 bg-gray-200 text-xs py-0.5 px-1 rounded dark:text-gray-100">
         <span>MOD</span>
       </div>
     {/if}
   </div>
 
-  <div class="text-gray-500 text-sm">
+  <div class="text-gray-500 text-sm dark:text-gray-400">
     {comment.parsedCreatedAt}
   </div>
 
-  <div class="text-gray-500 my-2">
+  <div class="text-gray-500 my-2 dark:text-gray-200">
     {@html comment.parsedContent}
   </div>
 
@@ -46,7 +46,7 @@
 
   <div>
     <button
-      class="font-medium text-sm text-gray-500"
+      class="font-medium text-sm text-gray-500 dark:bg-transparent dark:text-gray-100"
       type="button"
       on:click={(_) => {
         showReplyForm = !showReplyForm
@@ -68,58 +68,3 @@
 
 
 </div>
-
-<style>
-  /* .cusdis-padding {
-    padding-left: 1em;
-  }
-
-  .cusdis-indicator {
-    border-left: 2px solid;
-    border-left-color: var(--cusdis--color-comment-indicator-border);
-  }
-  .cusdis-font-bold {
-    font-weight: bold;
-  }
-
-  .cusdis-inline {
-    display: inline-block;
-  }
-
-  .cusdis-comment-nickname {
-    font-size: 1em;
-    color: var(--cusdis--color-comment-username-text);
-  }
-
-  .cusdis-comment-content {
-    color: var(--cusdis--color-text-default);
-    font-size: 1em;
-  }
-
-  .cusdis-comment-date {
-    color: var(--cusdis--color-text-default);
-    font-size: 0.8em;
-  }
-
-  .cusdis-link-btn {
-    font-size: 0.8em;
-    text-decoration: underline;
-    cursor: pointer;
-    border: 0;
-    margin: 0;
-    background: none;
-    padding: 0;
-    color: var(--cusdis--color-text-default);
-  }
-
-  .cusdis-mod {
-    background-color: var(--cusdis--color-mod-bg);
-    font-size: 0.8em;
-    box-sizing: border-box;
-    padding: 0.15em 0.4em;
-    border-radius: 4px;
-    font-weight: bold;
-    color: var(--cusdis--color-mod-text);
-  } */
-
-</style>

@@ -63,6 +63,14 @@ window.renderCusdis = render
 
 window.CUSDIS.renderTo = render
 
+window.CUSDIS.setTheme = function (theme) {
+  singleTonIframe.contentWindow.postMessage(JSON.stringify({
+    from: 'cusdis',
+    event: 'setTheme',
+    data: theme
+  }))
+}
+
 function initial() {
   let target
 

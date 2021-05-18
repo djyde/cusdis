@@ -27,9 +27,26 @@
     message = msg
   }
 
-  window.CUSDIS.setTheme = function(themeName) {
-    theme = themeName
-  }
+  onMount(() => {
+    function onMessage(e) {
+      try {
+        const msg = JSON.parse(e.data)
+        if (msg.from === 'cusdis') {
+          switch (msg.event) {
+            case 'setTheme':
+              {
+                theme = msg.data
+              }
+              break
+          }
+        }
+      } catch (e) {}
+    }
+    window.addEventListener('message', onMessage)
+    return () => {
+      window.removeEventListener('message', onMessage)
+    }
+  })
 
   setContext('api', api)
   setContext('attrs', attrs)
@@ -68,7 +85,7 @@
 </script>
 
 {#if !error}
-  <div class:dark={theme === 'dark'} class:auto={theme === 'auto'}>
+  <div class:dark={theme === 'dark'}>
     {#if message}
       <div class="p-2 mb-4 bg-blue-500 text-white">
         {message}
@@ -93,8 +110,8 @@
           <div>
             {#each Array(commentsResult.pageCount) as _, index}
               <button
-                class="px-2 py-1 text-sm mr-2"
-                class:bg-gray-100={page === index + 1}
+                class="px-2 py-1 text-sm mr-2 dark:text-gray-200"
+                class:underline={page === index + 1}
                 on:click={(_) => onClickPage(index + 1)}>{index + 1}</button
               >
             {/each}
@@ -105,55 +122,10 @@
 
     <div class="my-8" />
 
-    <div class="text-center text-sm text-gray-900">
+    <div class="text-center text-sm text-gray-900 dark:text-gray-100">
       <a class="underline " href="https://cusdis.com"
         >{t('powered_by')}</a
       >
     </div>
   </div>
 {/if}
-
-<style>
-  
-/* 
-  .cusdis-footer {
-    margin-top: 1em;
-    font-size: 0.8em;
-    text-align: center;
-    color: var(--cusdis--color-text-default);
-  }
-
-  .cusdis-loading-text {
-    color: var(--cusdis--color-text-default);
-  }
-  .cusdis-comment-main {
-    font-size: 17px;
-  }
-  .cusdis-message {
-    background-color: var(--cusdis--color-message-bg);
-    color: var(--cusdis--color-message-text);
-    padding: 0.5em;
-    font-size: 1em;
-  }
-
-  .cusdis-paginator {
-    display: flex;
-  }
-
-  .cusdis-pagination-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-right: 0.5em;
-    padding: 0.2em 0.5em;
-    box-sizing: border-box;
-  }
-
-  .cusdis-pagination-button.selected {
-    background-color: var(--cusdis--color-pagination-bg-selected);
-  }
-
-  .cusdis-footer a {
-    color: var(--cusdis--color-text-default);
-  } */
-</style>
