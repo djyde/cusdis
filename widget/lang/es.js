@@ -16,6 +16,6 @@ window.CUSDIS_LOCALE = {
     nickname_is_required: 'El nombre es obligatorio',
   
     comment_has_been_sent:
-      'Tu comentario ha sido enviado. Porfavor espera su aprovación.',
+      'Tu comentario ha sido enviado. Por favor, espera su aprobación.',
   }
   
