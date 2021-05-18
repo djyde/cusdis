@@ -1,4 +1,4 @@
-export default {
+window.CUSDIS_LOCALE = {
   powered_by: 'Diberdayakan oleh Cusdis',
   post_comment: 'Kirim Komentar',
   loading: 'Memuat',
