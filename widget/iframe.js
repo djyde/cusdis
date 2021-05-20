@@ -25,6 +25,8 @@ function requestResize() {
   })
 }
 
+requestResize()
+
 const resizeObserve = new MutationObserver(() => {
   requestResize()
 })
