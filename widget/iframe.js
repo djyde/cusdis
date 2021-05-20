@@ -5,7 +5,6 @@ window.CUSDIS = {}
 const parent = window.parent
 const target = document.querySelector('#root')
 
-
 const dataset = window.__DATA__
 const widget = new Widget({
   target,
