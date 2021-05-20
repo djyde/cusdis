@@ -28,6 +28,7 @@
   }
 
   onMount(() => {
+
     function onMessage(e) {
       try {
         const msg = JSON.parse(e.data)
@@ -43,6 +44,7 @@
       } catch (e) {}
     }
     window.addEventListener('message', onMessage)
+
     return () => {
       window.removeEventListener('message', onMessage)
     }
@@ -58,7 +60,7 @@
     try {
       const res = await api.get(`/api/open/comments`, {
         headers: {
-          'x-timezone-offset': -new Date().getTimezoneOffset()
+          'x-timezone-offset': -new Date().getTimezoneOffset(),
         },
         params: {
           page: p,
@@ -82,6 +84,7 @@
   onMount(() => {
     getComments()
   })
+
 </script>
 
 {#if !error}
@@ -98,8 +101,7 @@
 
     <div class="mt-4">
       {#if loadingComments}
-        <div
-        >
+        <div>
           {t('loading')}...
         </div>
       {:else}
@@ -123,9 +125,7 @@
     <div class="my-8" />
 
     <div class="text-center text-sm text-gray-900 dark:text-gray-100">
-      <a class="underline " href="https://cusdis.com"
-        >{t('powered_by')}</a
-      >
+      <a class="underline " href="https://cusdis.com">{t('powered_by')}</a>
     </div>
   </div>
 {/if}

@@ -13,19 +13,21 @@ const widget = new Widget({
   },
 })
 
-function requestResize() {
-  setTimeout(() => {
-    parent.postMessage(
-      JSON.stringify({
-        from: 'cusdis',
-        event: 'resize',
-        data: document.documentElement.offsetHeight,
-      }),
-    )
-  })
+function postMessage(event, data = {}) {
+  parent.postMessage(
+    JSON.stringify({
+      from: 'cusdis',
+      event,
+      data,
+    }),
+  )
 }
 
-requestResize()
+postMessage('onload')
+
+function requestResize() {
+  postMessage('resize', document.documentElement.offsetHeight)
+}
 
 const resizeObserve = new MutationObserver(() => {
   requestResize()

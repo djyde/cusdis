@@ -2,7 +2,7 @@ window.CUSDIS = {}
 
 const makeIframeContent = (target) => {
   const host = target.dataset.host || 'https://cusdis.com'
-  const iframeJsPath = `${host}/js/iframe.umd.js`
+  const iframeJsPath = target.dataset.iframe || `${host}/js/iframe.umd.js`
   const cssPath = `${host}/js/style.css`
   return `<!DOCTYPE html>
 <html>
@@ -28,14 +28,73 @@ let singleTonIframe
 function createIframe(target) {
   if (!singleTonIframe) {
     singleTonIframe = document.createElement('iframe')
+    listenEvent(singleTonIframe, target)
   }
   // srcdoc dosen't work on IE11
   singleTonIframe.srcdoc = makeIframeContent(target)
   singleTonIframe.style.width = '100%'
-  singleTonIframe.style.height = '100%'
   singleTonIframe.style.border = '0'
 
   return singleTonIframe
+}
+
+function postMessage(event, data) {
+  if (singleTonIframe) {
+    singleTonIframe.contentWindow.postMessage(
+      JSON.stringify({
+        from: 'cusdis',
+        event,
+        data,
+      }),
+    )
+  }
+}
+
+function listenEvent(iframe, target) {
+  const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+  const onMessage = (e) => {
+    try {
+      const msg = JSON.parse(e.data)
+      if (msg.from === 'cusdis') {
+        console.log(msg.event)
+        switch (msg.event) {
+          case 'onload':
+            console.log('load')
+            {
+              if (target.dataset.theme === 'auto') {
+                postMessage(
+                  'setTheme',
+                  darkModeQuery.matches ? 'dark' : 'light',
+                )
+              }
+            }
+            break
+          case 'resize':
+            {
+              iframe.style.height = msg.data + 'px'
+            }
+            break
+        }
+      }
+    } catch (e) {}
+  }
+
+  window.addEventListener('message', onMessage)
+
+  function onChangeColorScheme(e) {
+    const isDarkMode = e.matches
+    if (target.dataset.theme === 'auto') {
+      postMessage('setTheme', isDarkMode ? 'dark' : 'light')
+    }
+  }
+
+  darkModeQuery.addEventListener('change', onChangeColorScheme)
+
+  return () => {
+    darkModeQuery.removeEventListener('change', onChangeColorScheme)
+    window.removeEventListener('message', onMessage)
+  }
 }
 
 function render(target) {
@@ -43,21 +102,6 @@ function render(target) {
     target.innerHTML = ''
     const iframe = createIframe(target)
     target.appendChild(iframe)
-
-    window.addEventListener('message', (e) => {
-      try {
-        const msg = JSON.parse(e.data)
-        if (msg.from === 'cusdis') {
-          switch (msg.event) {
-            case 'resize':
-              {
-                iframe.style.height = msg.data + 'px'
-              }
-              break
-          }
-        }
-      } catch (e) {}
-    })
   }
 }
 
@@ -67,11 +111,7 @@ window.renderCusdis = render
 window.CUSDIS.renderTo = render
 
 window.CUSDIS.setTheme = function (theme) {
-  singleTonIframe.contentWindow.postMessage(JSON.stringify({
-    from: 'cusdis',
-    event: 'setTheme',
-    data: theme
-  }))
+  postMessage('setTheme', theme)
 }
 
 function initial() {
