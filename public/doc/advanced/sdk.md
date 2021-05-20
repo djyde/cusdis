@@ -50,25 +50,3 @@ Render widget to specific DOM element.
 #### window.CUSDIS.setTheme(theme: 'dark' | 'light' | 'auto')
 
 Manually set theme. 
-
-## Style customization
-
-We use css variables to define our style. Here is the available variables you can override:
-
-```css
-:root {
-  --cusdis--color-text-default: rgba(0, 0, 0, 0.8);
-  --cusdis--color-input-border: #ddd;
-  --cusdis--color-btn-text: rgba(0, 0, 0, 0.8);
-  --cusdis--color-btn-bg-default: #ddd;
-  --cusdis--color-btn-bg-disabled: rgba(0, 0, 0, 0.5);
-  --cusdis--color-btn-border: none;
-  --cusdis--color-message-text: #fff;
-  --cusdis--color-message-bg: #046582;
-  --cusdis--color-pagination-bg-selected: #ddd;
-  --cusdis--color-comment-indicator-border: #ddd;
-  --cusdis--color-comment-username-text: #000;
-  --cusdis--color-mod-text: rgba(0, 0, 0, 0.8);
-  --cusdis--color-mod-bg: #ddd;
-}
-```

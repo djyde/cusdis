@@ -1,7 +1,15 @@
 module.exports = {
   plugins: {
     tailwindcss: {
-      prefix: 'comment'
+      purge: [
+        "widget/**/*.svelte"
+      ],
+      darkMode: 'class',
+      variants: {
+        extend: {
+          outline: ['dark']
+        }
+      }
     },
     autoprefixer: {},
   },
