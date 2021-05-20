@@ -24,6 +24,7 @@ function postMessage(event, data = {}) {
 }
 
 postMessage('onload')
+requestResize()
 
 function requestResize() {
   postMessage('resize', document.documentElement.offsetHeight)
