@@ -38,13 +38,3 @@ resizeObserve.observe(target, {
   childList: true,
   subtree: true
 })
-
-window.addEventListener('message', (e) => {
-  const msg = JSON.parse(e.data)
-
-  switch (msg.event) {
-    case 'dataset': {
-      
-    }
-  }
-})
