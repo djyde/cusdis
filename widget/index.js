@@ -57,10 +57,8 @@ function listenEvent(iframe, target) {
     try {
       const msg = JSON.parse(e.data)
       if (msg.from === 'cusdis') {
-        console.log(msg.event)
         switch (msg.event) {
           case 'onload':
-            console.log('load')
             {
               if (target.dataset.theme === 'auto') {
                 postMessage(
