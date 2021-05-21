@@ -1,4 +1,4 @@
-export default {
+window.CUSDIS_LOCALE = {
   powered_by: 'Voimalähteenä Cusdis',
   post_comment: 'Kommentoi',
   loading: 'Lataa',
