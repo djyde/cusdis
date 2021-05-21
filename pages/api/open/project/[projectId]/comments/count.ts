@@ -22,6 +22,8 @@ export default async function handler(
       projectId: string
     }
 
+    const data = {}
+
     const counts = (await prisma.$transaction(
       pageIds.split(',').map((id) => {
         return prisma.comment.count({
@@ -33,15 +35,12 @@ export default async function handler(
           },
         })
       }),
-    )).map((count, index) => {
-      return {
-        pageId: pageIds.split(',')[index],
-        count
-      }
+    )).forEach((count, index) => {
+      data[pageIds.split(',')[index]] = count
     })
 
     res.json({
-      data: counts,
+      data,
     })
   }
 }

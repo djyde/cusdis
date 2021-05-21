@@ -20,9 +20,8 @@ export async function initial() {
     }
   })
 
-  results.data.data.map(result => {
-    const el = document.querySelector(`*[data-cusdis-count-page-id=${result.pageId}]`)
-    el.innerHTML = result.count
+  Array.from(nodes).forEach(el => {
+    el.innerHTML = results.data.data[el.dataset.cusdisCountPageId]
   })
 }
 

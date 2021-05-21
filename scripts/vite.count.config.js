@@ -6,7 +6,7 @@ module.exports = {
     lib: {
       entry: path.resolve(__dirname, '..', 'widget', 'count.js'),
       name: 'CUSDIS_COUNT',
-      fileName: 'count',
+      fileName: 'cusdis-count',
       formats: ['umd'],
     },
     outDir: path.resolve(__dirname, '..', 'public', 'js'),
