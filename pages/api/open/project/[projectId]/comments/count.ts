@@ -1,22 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { initMiddleware, prisma } from '../../../../../../utils.server'
+import {
+  apiHandler,
+  initMiddleware,
+  prisma,
+} from '../../../../../../utils.server'
 import Cors from 'cors'
 
-const cors = initMiddleware(
-  // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
-  Cors({
-    // Only allow requests with GET, POST and OPTIONS
-    methods: ['GET', 'POST', 'OPTIONS'],
-  }),
-)
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  await cors(req, res)
-
-  if (req.method === 'GET') {
+export default apiHandler
+  .use(
+    Cors({
+      // Only allow requests with GET, POST and OPTIONS
+      methods: ['GET', 'POST', 'OPTIONS'],
+    })
+  )
+  .get(async (req, res) => {
     const { projectId, pageIds } = req.query as {
       pageIds: string
       projectId: string
@@ -24,23 +21,24 @@ export default async function handler(
 
     const data = {}
 
-    const counts = (await prisma.$transaction(
-      pageIds.split(',').map((id) => {
-        return prisma.comment.count({
-          where: {
-            page: {
-              slug: id,
-              projectId,
+    const counts = (
+      await prisma.$transaction(
+        pageIds.split(',').map((id) => {
+          return prisma.comment.count({
+            where: {
+              page: {
+                slug: id,
+                projectId,
+              },
             },
-          },
-        })
-      }),
-    )).forEach((count, index) => {
+          })
+        }),
+      )
+    ).forEach((count, index) => {
       data[pageIds.split(',')[index]] = count
     })
 
     res.json({
       data,
     })
-  }
-}
+  })

@@ -2,7 +2,9 @@ import { PrismaClient } from '@prisma/client'
 import { UserSession } from './service'
 import { getSession as nextAuthGetSession } from 'next-auth/client'
 import * as Sentry from '@sentry/node'
-
+import { NextApiRequest, NextApiResponse } from 'next'
+import nc from 'next-connect'
+import Boom from '@hapi/boom'
 
 type EnvVariable = string | undefined
 export const resolvedConfig = {
@@ -89,6 +91,26 @@ export function initMiddleware(middleware) {
       })
     })
 }
+
+export const HTTPException = Boom
+export const apiHandler = nc<NextApiRequest, NextApiResponse>({
+  onError(e, req, res, next) {
+    if (Boom.isBoom(e)) {
+      res.status(e.output.payload.statusCode)
+      res.json({
+        error: e.output.payload.error,
+        message: e.output.payload.message,
+      })
+    } else {
+      res.status(500)
+      res.json({
+        message: 'Unexpected error',
+      })
+      console.error(e)
+      // unexcepted error
+    }
+  },
+})
 
 export const getSession = async (req) => {
   return (await nextAuthGetSession({ req })) as UserSession
