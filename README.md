@@ -11,7 +11,11 @@ https://cusdis.com
 
 If you like Cusdis, please consider sponsoring us to help us be sustainable.
 
-[![Contributors](https://opencollective.com/cusdis/tiers/organization-support.svg?avatarHeight=50&width=600)](https://opencollective.com/cusdis)
+### Principle Sponsor
+
+[![Contributors](https://opencollective.com/cusdis/tiers/organization-support/0/avatar.svg)](https://opencollective.com/cusdis/tiers/organization-support/0/website)
+
+### Sponsors / Backers
 
 [![Contributors](https://opencollective.com/cusdis/tiers/sponsor.svg?avatarHeight=50)](https://opencollective.com/cusdis)
 [![Contributors](https://opencollective.com/cusdis/tiers/backer.svg?avatarHeight=50)](https://opencollective.com/cusdis)
