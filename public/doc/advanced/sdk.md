@@ -27,9 +27,9 @@ To embed the comment widget to your web page, you need to put **the element and 
 
 - `data-host` **(required)** API server host.
 - `data-app-id` **(required)** The website ID.
-- `data-page-id` **(required)** Current page ID. Should be unique in a website. 
-- `data-page-url` Current page URL.
-- `data-page-title` Current page title.
+- `data-page-id` **(required)** Current page ID. Used to identity your page. Should be unique in a website. Such as page slug, permalink.
+- `data-page-url` Current page URL. Used to display on dashboard.
+- `data-page-title` Current page title. Used to display on dashboard.
 - `data-theme`
   - `light` (default)
   - `auto` Automatically set theme by `prefers-color-scheme`
