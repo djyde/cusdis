@@ -6,7 +6,7 @@
   export let comment
   export let showReplyForm = false
 
-  const { showIndicator } = getContext('attrs')
+  const { showIndicator, mod } = getContext('attrs')
 </script>
 
 <div
@@ -19,7 +19,7 @@
       {comment.by_nickname}
     </div>
     {#if comment.moderatorId}
-      <span class="cusdis-mod">MOD</span>
+      <span class="cusdis-mod">{mod || 'MOD'}</span>
     {/if}
     <div class="cusdis-comment-date cusdis-inline">
       {comment.parsedCreatedAt}
