@@ -49,6 +49,7 @@
     "next-auth": "3.15.5",
     "next-connect": "^0.10.1",
     "nodemailer": "^6.5.0",
+    "php-serialize": "^4.0.2",
     "postcss": "^8.2.10",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

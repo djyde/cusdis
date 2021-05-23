@@ -58,7 +58,10 @@ model User {
   Comment Comment[]
 
   enableNewCommentNotification Boolean? @default(true) @map(name: "enable_new_comment_notification")
-  notificationEmail            String? @map(name: "notification_email")
+  notificationEmail            String?  @map(name: "notification_email")
+
+  // subscription
+  subscription Subscription? @relation(name: "user_subscription")
 
   @@map(name: "users")
 }
@@ -77,10 +80,10 @@ model VerificationRequest {
 // next-auth END
 
 model Project {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   title     String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @default(now()) @map(name: "updated_at")
   deletedAt DateTime? @map(name: "deleted_at")
 
   ownerId String
@@ -93,7 +96,7 @@ model Project {
 
   enableNotification Boolean? @default(true) @map(name: "enable_notification")
 
-  webhook String?
+  webhook       String?
   enableWebhook Boolean?
 
   @@map(name: "projects")
@@ -142,4 +145,21 @@ model Comment {
   replies  Comment[] @relation("replies")
 
   @@map("comments")
+}
+
+model Subscription {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(name: "user_subscription", fields: [userId], references: [id])
+
+  checkoutId   String  @map(name: "checkout_id") @unique
+  cancelUrl    String @map(name: "cancel_url")
+  billingEmail String @map(name: "billing_email")
+  passthrough  String @map(name: "pass_through")
+  planId       String @map(name: "plan_id")
+  customUserId String @map(name: "custom_user_id")
+  nextBillDate DateTime @map(name: "next_bill_date")
+
+  @@map(name: "subscriptions")
 }

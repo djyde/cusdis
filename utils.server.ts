@@ -6,12 +6,26 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import nc from 'next-connect'
 import Boom from '@hapi/boom'
 
+const isLocal = process.env.IS_LOCAL === 'true'
+
 type EnvVariable = string | undefined
 export const resolvedConfig = {
   useLocalAuth: process.env.USERNAME && process.env.PASSWORD,
   useGithub: process.env.GITHUB_ID && process.env.GITHUB_SECRET,
   jwtSecret: process.env.JWT_SECRET,
+  paddle: {
+    publicKey: process.env.PADDLE_PUBLICKEY as EnvVariable,
+    // vendorId: isLocal ? 2177 : 104659,
+    // plan: {
+    //   pro: isLocal ? 576315 : 11807
+    // }
+    vendorId: isLocal ? 2177 : 104659,
+    plan: {
+      pro: isLocal ? 11807 : 576315,
+    },
+  },
   isHosted: process.env.IS_HOSTED === 'true',
+  isLocal,
   host: process.env.HOST || 'https://cusdis.com',
   umami: {
     id: process.env.UMAMI_ID as EnvVariable,

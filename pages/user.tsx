@@ -1,14 +1,17 @@
-import { User } from "@prisma/client"
-import { Box, Button, Checkbox, Container, FormControl, FormLabel, Heading, HStack, Input, InputGroup, InputRightAddon, Switch, useToast, VStack } from "@chakra-ui/react"
+import { Subscription, User } from "@prisma/client"
+import { Box, Button, Checkbox, Container, FormControl, FormLabel, Heading, HStack, Input, InputGroup, InputRightAddon, Link, Switch, Text, useToast, VStack } from "@chakra-ui/react"
 import React from "react"
 import { useMutation } from "react-query"
 import { Footer } from "../components/Footer"
 import { Navbar } from "../components/Navbar"
 import { UserSession } from "../service"
 import { apiClient } from "../utils.client"
-import { getSession, prisma } from "../utils.server"
+import { getSession, prisma, resolvedConfig } from "../utils.server"
 import { Head } from "../components/Head"
+import NextHead from 'next/head'
+import dayjs from "dayjs"
 
+declare var Paddle
 
 // From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
 function validateEmail(email) {
@@ -32,6 +35,13 @@ const updateUserSettings = async (params: {
 
 function UserPage(props: {
   session: UserSession,
+  isLocal: boolean,
+  paddle: {
+    vendorId?: number,
+    plan: {
+      pro: number
+    }
+  },
   defaultUserInfo: DefaultUserInfo
 }) {
 
@@ -46,7 +56,7 @@ function UserPage(props: {
 
     const value = notificationEmailInputRef.current.value
 
-    if(!validateEmail(value)) {
+    if (!validateEmail(value)) {
       toast({
         title: 'Email address is not valid',
         status: 'error',
@@ -96,7 +106,14 @@ function UserPage(props: {
 
   return (
     <>
-  <Head title="User Settings" />
+      <Head title="User Settings" />
+      <NextHead>
+        {props.paddle && <><script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+          <script type="text/javascript">
+            {props.isLocal && `Paddle.Environment.set('sandbox');`}
+            {`Paddle.Setup({ vendor: ${props.paddle.vendorId} });`}
+          </script></>}
+      </NextHead>
       <Navbar session={props.session} />
       <Container maxWidth="5xl" mt={24}>
 
@@ -117,7 +134,32 @@ function UserPage(props: {
                 <Input disabled value={props.session.user.email} />
               </FormControl>
             </HStack>
+          </VStack>
 
+          <VStack alignItems="flex-start">
+            <Heading size="md">Membership</Heading>
+
+            {props.defaultUserInfo.subscription ? <>
+              <Box>
+                Next bill date: {props.defaultUserInfo.subscription.nextBillDate}
+              </Box>
+              <Box>
+                Billing Email: {props.defaultUserInfo.subscription.billingEmail}
+              </Box>
+              <Box>
+                <Link isExternal textDecor="underline" href={props.defaultUserInfo.subscription.cancelUrl}>Cancel</Link>
+              </Box>
+
+            </> : <><Button size="sm" onClick={_ => {
+              // @ts-expect-error
+              window.Paddle.Checkout.open({
+                product: props.paddle.plan.pro,
+                email: props.session.user.email,
+                passthrough: JSON.stringify({
+                  userId: props.session.uid
+                })
+              })
+            }}>Upgrade</Button></>}
           </VStack>
 
           <VStack alignItems="flex-start" spacing={4}>
@@ -150,7 +192,9 @@ function UserPage(props: {
   )
 }
 
-type DefaultUserInfo = Pick<User, "notificationEmail" | "email" | "name" | "enableNewCommentNotification">
+type DefaultUserInfo = Pick<User, "notificationEmail" | "id" | "email" | "name" | "enableNewCommentNotification"> & {
+  subscription: Pick<Subscription, "cancelUrl" | "planId" | "billingEmail" | "nextBillDate">
+}
 export async function getServerSideProps(ctx) {
   const session = await getSession(ctx.req)
 
@@ -168,17 +212,36 @@ export async function getServerSideProps(ctx) {
       id: session.uid
     },
     select: {
+      id: true,
       notificationEmail: true,
       enableNewCommentNotification: true,
       name: true,
-      email: true
+      email: true,
+      subscription: {
+        select: {
+          cancelUrl: true,
+          planId: true,
+          billingEmail: true,
+          nextBillDate: true
+        }
+      }
     }
   }) as DefaultUserInfo
+
+  if (defaultUserInfo.subscription) {
+    //@ts-expect-error
+    defaultUserInfo.subscription.nextBillDate = dayjs(defaultUserInfo.subscription.nextBillDate).format('YYYY/MM/DD')
+  }
 
   return {
     props: {
       session,
-      defaultUserInfo
+      defaultUserInfo,
+      isLocal: resolvedConfig.isLocal,
+      paddle: resolvedConfig.paddle.publicKey ? {
+        vendorId: resolvedConfig.paddle.vendorId,
+        plan: resolvedConfig.paddle.plan
+      } : null
     }
   }
 }

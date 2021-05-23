@@ -24,13 +24,14 @@ import { signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import { Footer } from '../components/Footer'
 import { Head } from '../components/Head'
-import { getSession, resolvedConfig, sentry } from '../utils.server'
+import { getSession, resolvedConfig } from '../utils.server'
 import { GetServerSideProps, Redirect } from 'next'
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { GoMarkGithub } from "react-icons/go";
 import axios from 'axios'
 import { UserSession } from '../service'
 import NextHead from 'next/head'
+import { SubscriptionPlan } from '../components/SubscriptionPlan'
 
 type Props = {
   session: UserSession
@@ -270,53 +271,7 @@ function IndexPage({ session, contributers }: Props) {
             </Heading>
 
           <Center>
-            <SimpleGrid columns={[1, 2]} spacing={8}>
-              <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
-                <Heading size="xl" textAlign="center">$0</Heading>
-                <Box px={6} pb={3}>
-                  <Text fontSize="sm" color="gray.500">
-                    Free
-                    </Text>
-                </Box>
-
-                <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
-                  <List fontSize="sm" spacing={2}>
-                    <ListItem>
-                      <strong>3</strong> Websites
-                    </ListItem>
-                    <ListItem>
-                      Email Notification
-                    </ListItem>
-                  </List>
-                </Box>
-              </VStack>
-              <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
-                <Heading size="xl" textAlign="center"><del>$1</del> <Text as="span" fontSize="sm">/month</Text></Heading>
-                <Box px={6} pb={3}>
-                  <Text fontSize="sm" color="gray.500">
-                    Cusdis is totally free for now.
-                  </Text>
-                </Box>
-
-                <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
-                  <List fontSize="sm" spacing={2}>
-                    <ListItem>
-                      <strong>Unlimited</strong> Websites
-                    </ListItem>
-                    <ListItem>
-                      Email Notification
-                    </ListItem>
-                    <ListItem>
-                      Webhook
-                    </ListItem>
-                    <ListItem>
-                      Spam filter (comming soon)
-                      </ListItem>
-                  </List>
-                </Box>
-              </VStack>
-            </SimpleGrid>
-
+            <SubscriptionPlan />
           </Center>
 
           <VStack alignItems="start">
