@@ -30,6 +30,7 @@ To embed the comment widget to your web page, you need to put **the element and 
 - `data-page-id` **(required)** Current page ID. Should be unique in a website. 
 - `data-page-url` Current page URL.
 - `data-page-title` Current page title.
+- `data-mod` Custom moderator badge text
 - `data-theme`
   - `light` (default)
   - `auto` Automatically set theme by `prefers-color-scheme`
