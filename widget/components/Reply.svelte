@@ -54,25 +54,44 @@
     email = ''
     onSuccess && onSuccess()
   }
+
 </script>
 
-<div style="margin-top: 1em;">
-  <div class="cusdis-reply-info cusdis-field">
+<div class="grid grid-cols-1 gap-4">
+  <div class="grid grid-cols-2 gap-4">
     <div>
-      <input type="text" placeholder={t('nickname')} bind:value={nickname} />
+      <label class="mb-2 block dark:text-gray-200" for="nickname">{t('nickname')}</label>
+      <input
+        name="nickname"
+        class="w-full p-2 border border-gray-200 bg-transparent dark:text-gray-100 dark:outline-none"
+        type="text"
+        bind:value={nickname}
+      />
     </div>
     <div>
-      <input type="text" placeholder={t('email')} bind:value={email} />
+      <label class="mb-2 block dark:text-gray-200" for="email">{t('email')}</label>
+      <input
+        name="email"
+        class="w-full p-2 border border-gray-200 bg-transparent  dark:text-gray-100 dark:outline-none"
+        type="email"
+        bind:value={email}
+      />
     </div>
   </div>
 
-  <div class="cusdis-field">
-    <textarea bind:value={content} placeholder={t('reply_placeholder')} />
+  <div>
+    <label class="mb-2 block dark:text-gray-200" for="reply_content">{t('reply_placeholder')}</label>
+    <textarea
+      name="reply_content"
+      class="w-full p-2 border border-gray-200 h-24 bg-transparent dark:text-gray-100 dark:outline-none"
+      bind:value={content}
+    />
   </div>
 
-  <div class="cusdis-field">
+  <div>
     <button
-      class="submit-btn"
+      
+      class="text-sm bg-gray-200 p-2 px-4 font-bold"
       class:cusdis-disabled={loading}
       on:click={addComment}>{loading ? t('sending') : t('post_comment')}</button
     >
@@ -80,7 +99,7 @@
 </div>
 
 <style>
-  textarea,
+  /* textarea,
   input {
     width: 100%;
     border: 2px solid;
@@ -141,5 +160,6 @@
   .cusdis-field {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-  }
+  } */
+
 </style>

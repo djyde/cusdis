@@ -1,17 +1,23 @@
-# Cusdis
 
-Open source, lightweight (~5kb gzip), privacy-friendly alternative to Disqus.
+<p align="center"><a href="https://cusdis.com" target="_blank" rel="noopener noreferrer"><img width="100" src="/public/images/artworks/logo-256.png" alt="logo"></a></p>
+
+Cusdis is an open-source, lightweight (~5kb gzip), privacy-friendly alternative to Disqus.
 
 https://cusdis.com
 
 ![](/public/images/landing.png)
 
-
 ## 💝 Sponsor this project
 
 If you like Cusdis, please consider sponsoring us to help us be sustainable.
 
-[![Contributors](https://opencollective.com/cusdis/tiers/organization-support.svg?avatarHeight=50&width=600)](https://opencollective.com/cusdis)
+### Principle Sponsor
+
+[![Contributors](https://opencollective.com/cusdis/tiers/organization-support/0/avatar.svg)](https://opencollective.com/cusdis/tiers/organization-support/0/website)
+
+[Become a principle sponsor](https://opencollective.com/cusdis/contribute/organization-support-27992/checkout)
+
+### Sponsors / Backers
 
 [![Contributors](https://opencollective.com/cusdis/tiers/sponsor.svg?avatarHeight=50)](https://opencollective.com/cusdis)
 [![Contributors](https://opencollective.com/cusdis/tiers/backer.svg?avatarHeight=50)](https://opencollective.com/cusdis)

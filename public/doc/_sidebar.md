@@ -14,6 +14,7 @@
   - [Webhook](/advanced/webhook.md)
 - **Advanced**
   - [JS SDK Reference](/advanced/sdk.md)
+  - [Show comment count](/advanced/show-comment-count.md)
   - [i18n](/advanced/i18n.md)
 - [**Contributing Guide**](/contributing.md)
 - [**FAQ**](/faq.md)

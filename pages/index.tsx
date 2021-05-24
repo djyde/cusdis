@@ -7,6 +7,7 @@ import {
   Heading,
   HStack,
   Icon,
+  Image,
   Img,
   Link,
   LinkBox,
@@ -29,6 +30,7 @@ import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { GoMarkGithub } from "react-icons/go";
 import axios from 'axios'
 import { UserSession } from '../service'
+import NextHead from 'next/head'
 
 type Props = {
   session: UserSession
@@ -70,12 +72,17 @@ function IndexPage({ session, contributers }: Props) {
   )
 
   return (
-    <>
+    <Box className="font">
       <Head title="Cusdis - Lightweight, privacy-first, open-source comment system" />
-      <Box as="nav" py={4} mt={24} mb={12}>
+      <NextHead>
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
+      </NextHead>
+      <Box as="nav" py={4} mt={[2, 24]} mb={12}>
         <Container maxWidth="3xl">
           <HStack>
-            <Text fontWeight="bold" fontSize="2xl">
+            <Image w={12} src="/images/artworks/logo-256.png" />
+            <Text className="font" fontWeight="bold" fontSize="2xl">
               Cusdis
             </Text>
             <Spacer />
@@ -103,10 +110,10 @@ function IndexPage({ session, contributers }: Props) {
       <Container maxWidth="3xl">
         <VStack alignItems="start" spacing={16}>
           <Box>
-            <Box mt={16} boxSizing="border-box">
+            <Box mt={16} boxSizing="border-box" className="font">
               <Heading as="h1" size="4xl" fontSize={['5xl', '7xl']}><Text color="#014f86" as="span">Lightweight</Text>, <Text color="#2c7da0" as="span">privacy-first</Text>,  <Text color="#1b263b" as="span">open-source</Text> comment system</Heading>
             </Box>
-            <Text fontSize="lg" mt={8} color="gray.700">
+            <Text fontSize="lg" mt={8} color="gray.700" className="font">
               <strong>Cusdis</strong> is an open-source, lightweight (~5kb gzipped), privacy-first <strong>alternative to Disqus</strong>. It's super easy to use and integrate with your existed website. We don't track you and your user.
             </Text>
 
@@ -346,7 +353,7 @@ function IndexPage({ session, contributers }: Props) {
       </Box>
 
       <Footer maxWidth="3xl" />
-    </>
+    </Box>
   )
 }
 
