@@ -10,6 +10,7 @@ import { getSession, prisma, resolvedConfig } from "../utils.server"
 import { Head } from "../components/Head"
 import NextHead from 'next/head'
 import dayjs from "dayjs"
+import { PaymentService } from "../service/payment.service"
 
 declare var Paddle
 
@@ -36,6 +37,7 @@ const updateUserSettings = async (params: {
 function UserPage(props: {
   session: UserSession,
   isLocal: boolean,
+  isPro: boolean,
   paddle: {
     vendorId?: number,
     plan: {
@@ -104,6 +106,17 @@ function UserPage(props: {
     })
   }
 
+  const UpgradeButton = <Button size="sm" onClick={_ => {
+    // @ts-expect-error
+    window.Paddle.Checkout.open({
+      product: props.paddle.plan.pro,
+      email: props.session.user.email,
+      passthrough: JSON.stringify({
+        userId: props.session.uid
+      })
+    })
+  }}>Upgrade</Button>
+
   return (
     <>
       <Head title="User Settings" />
@@ -114,7 +127,7 @@ function UserPage(props: {
             {`Paddle.Setup({ vendor: ${props.paddle.vendorId} });`}
           </script></>}
       </NextHead>
-      <Navbar session={props.session} />
+      <Navbar isPro={props.isPro} session={props.session} />
       <Container maxWidth="5xl" mt={24}>
 
         <VStack alignItems="flex-start" spacing={12}>
@@ -139,27 +152,22 @@ function UserPage(props: {
           <VStack alignItems="flex-start">
             <Heading size="md">Membership</Heading>
 
-            {props.defaultUserInfo.subscription ? <>
-              <Box>
+            {props.isPro ? <>
+              {props.defaultUserInfo.subscription.cancellationEffectiveDate ? <Box>
+                Your subscription will be ended at <Text as="span" fontWeight="medium">{props.defaultUserInfo.subscription.cancellationEffectiveDate}</Text>
+              </Box> : <Box>
                 Next bill date: {props.defaultUserInfo.subscription.nextBillDate}
-              </Box>
+              </Box>}
               <Box>
                 Billing Email: {props.defaultUserInfo.subscription.billingEmail}
               </Box>
-              <Box>
+              {!props.defaultUserInfo.subscription.cancellationEffectiveDate && <Box>
                 <Link isExternal textDecor="underline" href={props.defaultUserInfo.subscription.cancelUrl}>Cancel</Link>
-              </Box>
+              </Box>}
 
-            </> : <><Button size="sm" onClick={_ => {
-              // @ts-expect-error
-              window.Paddle.Checkout.open({
-                product: props.paddle.plan.pro,
-                email: props.session.user.email,
-                passthrough: JSON.stringify({
-                  userId: props.session.uid
-                })
-              })
-            }}>Upgrade</Button></>}
+              {props.defaultUserInfo.subscription.cancellationEffectiveDate && UpgradeButton}
+
+            </> : <>{UpgradeButton}</>}
           </VStack>
 
           <VStack alignItems="flex-start" spacing={4}>
@@ -193,10 +201,12 @@ function UserPage(props: {
 }
 
 type DefaultUserInfo = Pick<User, "notificationEmail" | "id" | "email" | "name" | "enableNewCommentNotification"> & {
-  subscription: Pick<Subscription, "cancelUrl" | "planId" | "billingEmail" | "nextBillDate">
+  subscription: Pick<Subscription, "cancelUrl" | "planId" | "billingEmail" | "nextBillDate" | "cancellationEffectiveDate">
 }
 export async function getServerSideProps(ctx) {
   const session = await getSession(ctx.req)
+
+  const paymentService = new PaymentService()
 
   if (!session) {
     return {
@@ -222,7 +232,8 @@ export async function getServerSideProps(ctx) {
           cancelUrl: true,
           planId: true,
           billingEmail: true,
-          nextBillDate: true
+          nextBillDate: true,
+          cancellationEffectiveDate: true
         }
       }
     }
@@ -233,11 +244,17 @@ export async function getServerSideProps(ctx) {
     defaultUserInfo.subscription.nextBillDate = dayjs(defaultUserInfo.subscription.nextBillDate).format('YYYY/MM/DD')
   }
 
+  if (defaultUserInfo.subscription?.cancellationEffectiveDate) {
+    //@ts-expect-error
+    defaultUserInfo.subscription.cancellationEffectiveDate = dayjs(defaultUserInfo.subscription.cancellationEffectiveDate).format('YYYY/MM/DD')
+  }
+
   return {
     props: {
       session,
       defaultUserInfo,
       isLocal: resolvedConfig.isLocal,
+      isPro: await paymentService.isPro(session.uid),
       paddle: resolvedConfig.paddle.publicKey ? {
         vendorId: resolvedConfig.paddle.vendorId,
         plan: resolvedConfig.paddle.plan

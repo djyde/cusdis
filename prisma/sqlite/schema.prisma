@@ -160,6 +160,6 @@ model Subscription {
   planId       String @map(name: "plan_id")
   customUserId String @map(name: "custom_user_id")
   nextBillDate DateTime @map(name: "next_bill_date")
-
+  cancellationEffectiveDate DateTime? @map(name: "cancellation_effective_date")
   @@map(name: "subscriptions")
 }

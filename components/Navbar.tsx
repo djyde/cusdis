@@ -13,7 +13,7 @@ import React from "react"
 import { signOut } from "next-auth/client"
 import { UserSession } from "../service"
 
-export function Navbar(props: { session: UserSession }) {
+export function Navbar(props: { session: UserSession, isPro?: boolean }) {
   return (
     <Box py={4}>
       <Container maxWidth={"5xl"}>

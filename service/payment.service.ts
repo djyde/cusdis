@@ -24,8 +24,6 @@ export class PaymentService {
       throw HTTPException.forbidden('Invalid signature')
     }
 
-    console.log(body)
-
     const parsedPassthrough = JSON.parse(body.passthrough) as Passthrough
 
     switch (body.alert_name) {
@@ -66,6 +64,7 @@ export class PaymentService {
         passthrough: JSON.stringify(passthrough),
         planId: data.subscription_plan_id,
         userId: passthrough.userId,
+        cancellationEffectiveDate: null,
       },
     })
 
@@ -73,16 +72,51 @@ export class PaymentService {
   }
 
   private async onSubscriptionCanceled(
-    data: PaddleWebhookData,
+    data: PaddleWebhookData & {
+      cancellation_effective_date: string
+    },
     passthrough: Passthrough,
   ) {
-    await prisma.subscription.delete({
+    await prisma.subscription.update({
       where: {
         checkoutId: data.checkout_id,
+      },
+      data: {
+        cancellationEffectiveDate: dayjs(data.cancellation_effective_date).toDate(),
       },
     })
 
     return { status: 'success', userId: passthrough.userId }
+  }
+
+  async isPro(userId: string) {
+    // self host user always return true
+    if (!resolvedConfig.isHosted) {
+      return true
+    }
+
+    // user signed up before launching paid tier
+
+    // check subscription
+    const subscription = await prisma.subscription.findUnique({
+      where: {
+        userId,
+      },
+    })
+
+    if (subscription) {
+      if (subscription.cancellationEffectiveDate === null) {
+        return true
+      }
+
+      if (dayjs(subscription.cancellationEffectiveDate).isAfter(dayjs())) {
+        return true
+      }
+
+      return false
+    }
+
+    return false
   }
 }
 
