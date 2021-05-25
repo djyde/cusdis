@@ -153,12 +153,12 @@ model Subscription {
   userId String @unique
   user   User   @relation(name: "user_subscription", fields: [userId], references: [id])
 
-  checkoutId   String  @map(name: "checkout_id") @unique
+  subscriptionId String @map(name: "subscription_id") @unique
   cancelUrl    String @map(name: "cancel_url")
+  updateUrl String @map(name: "update_url")
   billingEmail String @map(name: "billing_email")
   passthrough  String @map(name: "pass_through")
   planId       String @map(name: "plan_id")
-  customUserId String @map(name: "custom_user_id")
   nextBillDate DateTime @map(name: "next_bill_date")
   cancellationEffectiveDate DateTime? @map(name: "cancellation_effective_date")
   @@map(name: "subscriptions")

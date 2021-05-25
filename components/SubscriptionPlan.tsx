@@ -16,12 +16,17 @@ export function SubscriptionPlan() {
           <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
             <List fontSize="sm" spacing={2}>
               <ListItem>
-                <strong>3</strong> Websites
+                <strong>2</strong> Websites
                     </ListItem>
               <ListItem>
                 Email Notification
                     </ListItem>
+
+              <ListItem>
+                Webhook
+              </ListItem>
             </List>
+
           </Box>
         </VStack>
         <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
@@ -35,14 +40,12 @@ export function SubscriptionPlan() {
           <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
             <List fontSize="sm" spacing={2}>
               <ListItem>
+                All features in Free plan
+                    </ListItem>
+              <ListItem>
                 <strong>Unlimited</strong> Websites
                     </ListItem>
-              <ListItem>
-                Email Notification
-                    </ListItem>
-              <ListItem>
-                Webhook
-              </ListItem>
+
             </List>
           </Box>
         </VStack>

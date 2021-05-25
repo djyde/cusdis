@@ -1,12 +1,18 @@
 import { Prisma, User } from '@prisma/client'
 import { nanoid } from 'nanoid'
 import { RequestScopeService } from '.'
-import { prisma } from '../utils.server'
+import { HTTPException, prisma } from '../utils.server'
+import { PaymentService } from './payment.service'
 import { statService } from './stat.service'
 
 export class ProjectService extends RequestScopeService {
   async create(title: string) {
+    const paymentService = new PaymentService()
+
     const session = await this.getSession()
+
+    await paymentService.checkProjectsLimit(session.uid)
+
     const created = await prisma.project.create({
       data: {
         title,
@@ -117,6 +123,7 @@ export class ProjectService extends RequestScopeService {
 
     return results
   }
+
 
   async delete(projectId: string) {
     await prisma.project.update({

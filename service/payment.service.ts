@@ -12,6 +12,7 @@ type PaddleWebhookData = {
   subscription_id: string
   subscription_plan_id: string
   user_id: string
+  update_url: string
 }
 
 type Passthrough = {
@@ -46,25 +47,24 @@ export class PaymentService {
         userId: passthrough.userId,
       },
       create: {
+        subscriptionId: data.subscription_id,
         billingEmail: data.email,
         cancelUrl: data.cancel_url,
-        checkoutId: data.checkout_id,
-        customUserId: data.user_id,
         nextBillDate: dayjs(data.next_bill_date).toDate(),
         passthrough: JSON.stringify(passthrough),
         planId: data.subscription_plan_id,
         userId: passthrough.userId,
+        updateUrl: data.update_url,
       },
       update: {
         billingEmail: data.email,
         cancelUrl: data.cancel_url,
-        checkoutId: data.checkout_id,
-        customUserId: data.user_id,
         nextBillDate: dayjs(data.next_bill_date).toDate(),
         passthrough: JSON.stringify(passthrough),
         planId: data.subscription_plan_id,
         userId: passthrough.userId,
         cancellationEffectiveDate: null,
+        updateUrl: data.update_url,
       },
     })
 
@@ -79,10 +79,12 @@ export class PaymentService {
   ) {
     await prisma.subscription.update({
       where: {
-        checkoutId: data.checkout_id,
+        subscriptionId: data.subscription_id
       },
       data: {
-        cancellationEffectiveDate: dayjs(data.cancellation_effective_date).toDate(),
+        cancellationEffectiveDate: dayjs(
+          data.cancellation_effective_date,
+        ).toDate(),
       },
     })
 
@@ -117,6 +119,33 @@ export class PaymentService {
     }
 
     return false
+  }
+
+  async getFreeProjects() {
+    const res = await prisma.project.findMany({
+      where: {
+        deletedAt: null
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+      take: 2,
+      select: {
+        id: true,
+      },
+    })
+    return res
+  }
+
+  async checkProjectsLimit(userId: string) {
+    if (!(await this.isPro(userId))) {
+      const freeProjects = await this.getFreeProjects()
+      if (freeProjects.length >= 2) {
+        throw HTTPException.paymentRequired(
+          'Please upgrade to Cusdis Pro to create unlimited projects.',
+        )
+      }
+    }
   }
 }
 
