@@ -93,24 +93,26 @@ export function initMiddleware(middleware) {
 }
 
 export const HTTPException = Boom
-export const apiHandler = nc<NextApiRequest, NextApiResponse>({
-  onError(e, req, res, next) {
-    if (Boom.isBoom(e)) {
-      res.status(e.output.payload.statusCode)
-      res.json({
-        error: e.output.payload.error,
-        message: e.output.payload.message,
-      })
-    } else {
-      res.status(500)
-      res.json({
-        message: 'Unexpected error',
-      })
-      console.error(e)
-      // unexcepted error
-    }
-  },
-})
+export const apiHandler = () => {
+  return nc<NextApiRequest, NextApiResponse>({
+    onError(e, req, res, next) {
+      if (Boom.isBoom(e)) {
+        res.status(e.output.payload.statusCode)
+        res.json({
+          error: e.output.payload.error,
+          message: e.output.payload.message,
+        })
+      } else {
+        res.status(500)
+        res.json({
+          message: 'Unexpected error',
+        })
+        console.error(e)
+        // unexcepted error
+      }
+    },
+  })
+}
 
 export const getSession = async (req) => {
   return (await nextAuthGetSession({ req })) as UserSession

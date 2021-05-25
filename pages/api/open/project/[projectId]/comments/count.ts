@@ -6,7 +6,7 @@ import {
 } from '../../../../../../utils.server'
 import Cors from 'cors'
 
-export default apiHandler
+export default apiHandler()
   .use(
     Cors({
       // Only allow requests with GET, POST and OPTIONS

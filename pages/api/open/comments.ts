@@ -8,7 +8,7 @@ import Cors from 'cors'
 import { ProjectService } from '../../../service/project.service'
 import { statService } from '../../../service/stat.service'
 
-export default apiHandler
+export default apiHandler()
   .use(
     Cors({
       // Only allow requests with GET, POST and OPTIONS
