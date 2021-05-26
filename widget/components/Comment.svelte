@@ -25,7 +25,7 @@
 
     {#if comment.moderatorId}
       <div class="mr-2 dark:bg-gray-500 bg-gray-200 text-xs py-0.5 px-1 rounded dark:text-gray-100">
-        <span>MOD</span>
+        <span>{t('mod_badge')}</span>
       </div>
     {/if}
   </div>
