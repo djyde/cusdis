@@ -10,6 +10,7 @@ import { EmailService } from './email.service'
 import { TokenService } from './token.service'
 import { makeConfirmReplyNotificationTemplate } from '../templates/confirm_reply_notification'
 import utc from 'dayjs/plugin/utc'
+import { PaymentService } from './payment.service'
 dayjs.extend(utc)
 
 export const markdown = MarkdownIt({
@@ -38,6 +39,7 @@ export class CommentService extends RequestScopeService {
   hookService = new HookService(this.req)
   emailService = new EmailService()
   tokenService = new TokenService()
+  paymentService = new PaymentService()
 
   async getComments(
     projectId: string,
@@ -197,6 +199,9 @@ export class CommentService extends RequestScopeService {
   async addCommentAsModerator(parentId: string, content: string, options?: {
     owner?: User
   }) {
+
+    await this.paymentService.approvalGuard(parentId)
+
     const session = options?.owner ? {
       user: options.owner,
       uid: options.owner.id
@@ -223,6 +228,9 @@ export class CommentService extends RequestScopeService {
   }
 
   async approve(commentId: string) {
+
+    await this.paymentService.approvalGuard(commentId)
+
     await prisma.comment.update({
       where: {
         id: commentId,

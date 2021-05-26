@@ -79,7 +79,7 @@ export class PaymentService {
   ) {
     await prisma.subscription.update({
       where: {
-        subscriptionId: data.subscription_id
+        subscriptionId: data.subscription_id,
       },
       data: {
         cancellationEffectiveDate: dayjs(
@@ -98,6 +98,18 @@ export class PaymentService {
     }
 
     // user signed up before launching paid tier
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        createdAt: true,
+      },
+    })
+
+    if (dayjs(user.createdAt).isBefore('2021-05-30')) {
+      return true
+    }
 
     // check subscription
     const subscription = await prisma.subscription.findUnique({
@@ -124,7 +136,7 @@ export class PaymentService {
   async getFreeProjects() {
     const res = await prisma.project.findMany({
       where: {
-        deletedAt: null
+        deletedAt: null,
       },
       orderBy: {
         createdAt: 'asc',
@@ -135,6 +147,46 @@ export class PaymentService {
       },
     })
     return res
+  }
+
+  async isProjectAvailable(projectId: string) {
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId,
+      },
+      select: {
+        ownerId: true,
+      },
+    })
+
+    if (await this.isPro(project.ownerId)) {
+      return true
+    }
+    const projects = await this.getFreeProjects()
+    return !!projects.find((_) => _.id === projectId)
+  }
+
+  async approvalGuard(commentId: string) {
+    const comment = await prisma.comment.findUnique({
+      where: {
+        id: commentId,
+      },
+      select: {
+        page: {
+          select: {
+            projectId: true,
+          },
+        },
+      },
+    })
+
+    const availabe = await this.isProjectAvailable(comment.page.projectId)
+
+    if (!availabe) {
+      throw HTTPException.paymentRequired(
+        'Please upgrade to Cusdis Pro to have unlimited projects.',
+      )
+    }
   }
 
   async checkProjectsLimit(userId: string) {
@@ -185,8 +237,6 @@ function validateWebhook(jsonObj) {
   const verifier = crypto.createVerify('sha1')
   verifier.update(serialized)
   verifier.end()
-  console.log(serialized)
-  console.log(resolvedConfig.paddle.publicKey)
   const verification = verifier.verify(resolvedConfig.paddle.publicKey, mySig)
   // Used in response if statement
   return verification

@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { Alert, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertTitle, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -14,6 +14,7 @@ import { Head } from '../../../components/Head'
 import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
+import { PaymentService } from '../../../service/payment.service'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -128,7 +129,7 @@ function CommentComponent(props: {
       <HStack spacing={2}>
         {props.isRoot && <Tooltip label={comment.page.slug}>
           <Link color="gray.500" href={comment.page.url}>{comment.page.title}</Link>
-        </Tooltip> }
+        </Tooltip>}
         <Spacer />
 
         {comment.moderatorId && <Tag colorScheme="cyan" size="sm">MOD</Tag>}
@@ -170,6 +171,7 @@ function CommentComponent(props: {
 }
 
 function ProjectPage(props: {
+  isAvailable: boolean,
   project: ProjectServerSideProps,
   session: UserSession
 }) {
@@ -200,6 +202,12 @@ function ProjectPage(props: {
       <Container maxWidth="5xl" mt={24}>
         <VStack alignItems="stretch" spacing={4}>
           <VStack spacing={2} alignItems="start">
+            {!props.isAvailable && <Box w="full" mb={4}>
+              <Alert status="warning">
+                <AlertTitle>You have reached free plan limitation (2 websites)</AlertTitle>
+                <Link textDecor="underline" href="/user">Upgrade</Link>
+              </Alert>
+            </Box>}
             <Heading>
               {props.project.title}
             </Heading>
@@ -530,6 +538,7 @@ export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
   const session = await getSession(ctx.req)
   const project = await projectService.get(ctx.query.projectId) as Project
+  const paymentService = new PaymentService()
 
   if (project.deletedAt) {
     return {
@@ -552,6 +561,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       session: await getSession(ctx.req),
+      isAvailable: await paymentService.isProjectAvailable(project.id),
       project: {
         id: project.id,
         title: project.title,

@@ -1,12 +1,13 @@
 import { Button } from "@chakra-ui/button"
 import { Container, Text, VStack } from "@chakra-ui/layout"
-import { Box, Divider, FormControl, FormLabel, Heading, Link, Textarea, useToast } from "@chakra-ui/react"
+import { Alert, AlertTitle, Box, Divider, FormControl, FormLabel, Heading, Link, Textarea, useToast } from "@chakra-ui/react"
 import { Comment, Page, Project } from "@prisma/client"
 import { useRouter } from "next/router"
 import React from "react"
 import { useMutation } from "react-query"
 import { Head } from "../../components/Head"
 import { CommentService } from "../../service/comment.service"
+import { PaymentService } from "../../service/payment.service"
 import { SecretKey, TokenService } from "../../service/token.service"
 import { apiClient } from "../../utils.client"
 import { prisma } from "../../utils.server"
@@ -17,7 +18,7 @@ const approveComment = async ({ token }) => {
   return res.data
 }
 
-const appendReply = async ({  replyContent, token }) => {
+const appendReply = async ({ replyContent, token }) => {
   const res = await apiClient.post(`/open/approve?token=${token}`, {
     replyContent
   })
@@ -25,6 +26,7 @@ const appendReply = async ({  replyContent, token }) => {
 }
 
 function ApprovePage(props: {
+  isAvailable: boolean,
   comment: Comment & {
     page: Page & {
       project: Project
@@ -80,6 +82,10 @@ function ApprovePage(props: {
           Cusdis
         </Heading>
         <VStack alignItems="start" spacing={4}>
+          {!props.isAvailable && <Alert status="warning">
+            <AlertTitle>You have reached free plan limit</AlertTitle>
+            <Link textDecor="underline" href="/user">Upgrade</Link>
+          </Alert>}
           <Text>New comment on project <strong>{props.comment.page.project.title}</strong>, page <Link fontWeight="bold" isExternal href={props.comment.page.url}>{props.comment.page.title || props.comment.page.slug}</Link></Text>
           <Text><strong>{props.comment.by_nickname}</strong> ({props.comment.by_email || 'Email not provided'})</Text>
           <Text whiteSpace="pre-wrap" as='pre' bgColor="gray.100" p={2} w="full">{props.comment.content}</Text>
@@ -90,7 +96,7 @@ function ApprovePage(props: {
                 approveCommentMutation.mutate({
                   token: router.query.token as string
                 })
-              }} isLoading={approveCommentMutation.isLoading} colorScheme="telegram">
+              }} disabled={!props.isAvailable} isLoading={approveCommentMutation.isLoading} colorScheme="telegram">
                 Approve
           </Button>
             }
@@ -115,7 +121,7 @@ function ApprovePage(props: {
             token: router.query.token as string,
             replyContent
           })
-        }} isLoading={appendReplyMutation.isLoading} mt={4}>Append</Button>
+        }} disabled={!props.isAvailable} isLoading={appendReplyMutation.isLoading} mt={4}>Append</Button>
 
       </Container>
     </>
@@ -135,6 +141,7 @@ export async function getServerSideProps(ctx) {
 
   const tokenService = new TokenService()
   const commentService = new CommentService(ctx.req)
+  const paymentService = new PaymentService()
 
   const { token } = ctx.query
 
@@ -149,7 +156,6 @@ export async function getServerSideProps(ctx) {
   } catch (e) {
     return redirectError(ErrorCode.INVALID_TOKEN)
   }
-
 
   const comment = await prisma.comment.findUnique({
     where: {
@@ -167,6 +173,7 @@ export async function getServerSideProps(ctx) {
           url: true,
           project: {
             select: {
+              id: true,
               title: true
             }
           }
@@ -177,6 +184,7 @@ export async function getServerSideProps(ctx) {
 
   return {
     props: {
+      isAvailable: await paymentService.isProjectAvailable(comment.page.project.id),
       comment
     }
   }

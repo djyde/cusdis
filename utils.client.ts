@@ -23,6 +23,7 @@ apiClient.interceptors.response.use(
         position: 'top',
         title: 'You have reached the free plan limit',
         status: 'warning',
+        isClosable: true,
         description: React.createElement(UpgradeToastBody, {
           msg: err.response.data.message,
         }),

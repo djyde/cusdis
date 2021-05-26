@@ -37,6 +37,7 @@ const updateUserSettings = async (params: {
 function UserPage(props: {
   session: UserSession,
   isLocal: boolean,
+  isHosted: boolean,
   isPro: boolean,
   paddle: {
     vendorId?: number,
@@ -149,26 +150,31 @@ function UserPage(props: {
             </HStack>
           </VStack>
 
-          <VStack alignItems="flex-start">
+          {props.isHosted && <VStack alignItems="flex-start">
             <Heading size="md">Membership</Heading>
 
-            {props.isPro ? <>
-              {props.defaultUserInfo.subscription.cancellationEffectiveDate ? <Box>
-                Your subscription will be ended at <Text as="span" fontWeight="medium">{props.defaultUserInfo.subscription.cancellationEffectiveDate}</Text>
-              </Box> : <Box>
-                Next bill date: {props.defaultUserInfo.subscription.nextBillDate}
-              </Box>}
-              <Box>
-                Billing Email: {props.defaultUserInfo.subscription.billingEmail}
-              </Box>
-              {!props.defaultUserInfo.subscription.cancellationEffectiveDate && <Box>
-                <Link isExternal textDecor="underline" href={props.defaultUserInfo.subscription.cancelUrl}>Cancel</Link>
-              </Box>}
+            {props.isPro ?
+              props.defaultUserInfo.subscription ? <>
+                {props.defaultUserInfo.subscription.cancellationEffectiveDate ? <Box>
+                  Your subscription will be ended at <Text as="span" fontWeight="medium">{props.defaultUserInfo.subscription.cancellationEffectiveDate}</Text>
+                </Box> : <Box>
+                  Next bill date: {props.defaultUserInfo.subscription.nextBillDate}
+                </Box>}
+                <Box>
+                  Billing Email: {props.defaultUserInfo.subscription.billingEmail}
+                </Box>
+                {!props.defaultUserInfo.subscription.cancellationEffectiveDate && <Box>
+                  <Link isExternal textDecor="underline" href={props.defaultUserInfo.subscription.cancelUrl}>Cancel</Link>
+                </Box>}
 
-              {props.defaultUserInfo.subscription.cancellationEffectiveDate && UpgradeButton}
+                {props.defaultUserInfo.subscription.cancellationEffectiveDate && UpgradeButton}
 
-            </> : <>{UpgradeButton}</>}
-          </VStack>
+              </>
+                : <>
+                  Thank you early adoptor! You are Cusdis Pro until 2021/08/01
+              </>
+              : <>{UpgradeButton}</>}
+          </VStack>}
 
           <VStack alignItems="flex-start" spacing={4}>
             <Heading size="md">Notification</Heading>
@@ -254,6 +260,7 @@ export async function getServerSideProps(ctx) {
       session,
       defaultUserInfo,
       isLocal: resolvedConfig.isLocal,
+      isHosted: resolvedConfig.isHosted,
       isPro: await paymentService.isPro(session.uid),
       paddle: resolvedConfig.paddle.publicKey ? {
         vendorId: resolvedConfig.paddle.vendorId,

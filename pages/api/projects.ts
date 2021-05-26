@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { ProjectService } from '../../service/project.service'
 import { apiHandler } from '../../utils.server'
 
-export default apiHandler
+export default apiHandler()
   .get(async (req, res) => {
     const projectService = new ProjectService(req)
     const projects = await projectService.list()

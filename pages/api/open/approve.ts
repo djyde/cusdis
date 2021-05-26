@@ -1,17 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { resolvedConfig } from '../../../utils.server'
+import { apiHandler, resolvedConfig } from '../../../utils.server'
 import jwt from 'jsonwebtoken'
 import { CommentService } from '../../../service/comment.service'
-import { SecretKey, TokenBody, TokenService } from '../../../service/token.service'
+import {
+  SecretKey,
+  TokenBody,
+  TokenService,
+} from '../../../service/token.service'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  const commentService = new CommentService(req)
-  const tokenService = new TokenService()
+export default apiHandler()
+  .get(async (req, res) => {
+    const commentService = new CommentService(req)
 
-  if (req.method === 'GET') {
     const { token } = req.query as {
       token?: string
     }
@@ -34,7 +34,11 @@ export default async function handler(
       res.send('Invalid token')
       return
     }
-  } else if (req.method === 'POST') {
+  })
+  .post(async (req, res) => {
+    const commentService = new CommentService(req)
+    const tokenService = new TokenService()
+
     const { token } = req.query as {
       token?: string
     }
@@ -52,7 +56,10 @@ export default async function handler(
     let tokenBody: TokenBody.ApproveComment
 
     try {
-      tokenBody = tokenService.validate(token, SecretKey.ApproveComment) as TokenBody.ApproveComment
+      tokenBody = tokenService.validate(
+        token,
+        SecretKey.ApproveComment,
+      ) as TokenBody.ApproveComment
     } catch (e) {
       res.status(403)
       res.send('Invalid token')
@@ -64,13 +71,16 @@ export default async function handler(
 
     // then append reply
     if (replyContent) {
-      await commentService.addCommentAsModerator(tokenBody.commentId, replyContent, {
-        owner: tokenBody.owner
-      })
+      await commentService.addCommentAsModerator(
+        tokenBody.commentId,
+        replyContent,
+        {
+          owner: tokenBody.owner,
+        },
+      )
     }
 
     res.json({
-      message: 'success'
+      message: 'success',
     })
-  }
-}
+  })
