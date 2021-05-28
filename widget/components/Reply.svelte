@@ -60,18 +60,20 @@
 <div class="grid grid-cols-1 gap-4">
   <div class="grid grid-cols-2 gap-4">
     <div>
-      <label class="mb-2 block dark:text-gray-200" for="nickname">{t('nickname')}</label>
+      <label class="mb-2 block dark:text-gray-200" for="cusdis_nickname">{t('nickname')}</label>
       <input
         name="nickname"
+        id="cusdis_nickname"
         class="w-full p-2 border border-gray-200 bg-transparent dark:text-gray-100 dark:outline-none"
         type="text"
         bind:value={nickname}
       />
     </div>
     <div>
-      <label class="mb-2 block dark:text-gray-200" for="email">{t('email')}</label>
+      <label class="mb-2 block dark:text-gray-200" for="cusdis_email">{t('email')}</label>
       <input
         name="email"
+        id="cusdis_email"
         class="w-full p-2 border border-gray-200 bg-transparent  dark:text-gray-100 dark:outline-none"
         type="email"
         bind:value={email}
@@ -80,9 +82,10 @@
   </div>
 
   <div>
-    <label class="mb-2 block dark:text-gray-200" for="reply_content">{t('reply_placeholder')}</label>
+    <label class="mb-2 block dark:text-gray-200" for="cusdis_reply_content">{t('reply_placeholder')}</label>
     <textarea
       name="reply_content"
+      id="cusdis_reply_content"
       class="w-full p-2 border border-gray-200 h-24 bg-transparent dark:text-gray-100 dark:outline-none"
       bind:value={content}
     />
