@@ -12,8 +12,6 @@ window.CUSDIS_LOCALE = {
 
   // reply
   mod_badge: 'MOD',
-  content_is_required: 'Sisältö on pakollinen',
-  nickname_is_required: 'Nimi on pakollinen',
 
   comment_has_been_sent:
     'Kommenttisi on lähetetty. Odotathan hetken sen hyväksyntää.',

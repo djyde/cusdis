@@ -18,16 +18,6 @@
   const refresh = getContext('refresh')
 
   async function addComment() {
-    if (!content) {
-      alert(t('content_is_required'))
-      return
-    }
-
-    if (!nickname) {
-      alert(t('nickname_is_required'))
-      return
-    }
-
     try {
       loading = true
       const res = await api.post('/api/open/comments', {
@@ -66,6 +56,7 @@
         id="cusdis_nickname"
         class="w-full p-2 border border-gray-200 bg-transparent dark:text-gray-100 dark:outline-none"
         type="text"
+        required
         bind:value={nickname}
       />
     </div>
@@ -86,6 +77,7 @@
     <textarea
       name="reply_content"
       id="cusdis_reply_content"
+      required
       class="w-full p-2 border border-gray-200 h-24 bg-transparent dark:text-gray-100 dark:outline-none"
       bind:value={content}
     />

@@ -12,8 +12,6 @@ window.CUSDIS_LOCALE = {
 
   // reply
   mod_badge: 'MOD',
-  content_is_required: 'Yorum gereklidir',
-  nickname_is_required: 'Nickname gereklidir',
 
   comment_has_been_sent:
     'Yorumunuz gönderildi. Lütfen onaylanmasını bekleyin.',

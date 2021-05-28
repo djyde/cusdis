@@ -12,8 +12,6 @@ window.CUSDIS_LOCALE = {
 
   // reply
   mod_badge: 'MOD',
-  content_is_required: 'Konten wajib diisi',
-  nickname_is_required: 'Nama wajib diisi',
 
   comment_has_been_sent:
     'Komentar berhasil terkirim. Mohon tunggu persetujuan.',
