@@ -6,8 +6,11 @@
   - [Vercel](/self-host/vercel.md)
   - [Manually Install](/self-host/manual.md)
 - **Integration**
+  - [React](https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis)
+  - [Vue](https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis)
   - [Docsify](/integration/docsify.md)
-  - [Hexo](https://blog.cusdis.com/integate-cusdis-in-hexo/)
+  - [Hugo](https://discourse.gohugo.io/t/free-and-open-source-comments-for-hugo/32940)
+  - [Hexo](https://blog.cusdis.com/integate-cusdis-in-hexo)
   - [Mkdocs](/integration/mkdocs.md)
 - **Features**
   - [Email Notification](/features/notification.md)
