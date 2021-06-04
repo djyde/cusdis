@@ -157,7 +157,7 @@ function CommentComponent(props: {
       <HStack mt={2} spacing={4}>
         <Button isLoading={approveCommentMutation.isLoading} disabled={comment.approved} type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
         <Button type="button" variant="link" size="sm" onClick={_ => setShowReplyForm(true)} >Reply</Button>
-        <Button isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="sm" onClick={_ => deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
+        <Button isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="sm" onClick={_ => confirm(`Are your sure?`) && deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
       </HStack>
 
       <Box mt={4}>

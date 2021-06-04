@@ -58,7 +58,6 @@
     "redaxios": "^0.4.1",
     "reflect-metadata": "^0.1.13",
     "rollup-plugin-svelte": "^7.1.0",
-    "sqlite3": "^5.0.2",
     "svelte": "^3.37.0",
     "svelte-preprocess": "^4.7.0",
     "tailwindcss": "^2.1.1",
