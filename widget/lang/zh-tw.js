@@ -16,5 +16,5 @@ window.CUSDIS_LOCALE = {
     nickname_is_required: '暱稱不能為空白',
   
     comment_has_been_sent:
-      '评評論已發送，待管理員審核通過後將會展示',
+      '評論已發送，待管理員審核通過後將會展示',
   }
