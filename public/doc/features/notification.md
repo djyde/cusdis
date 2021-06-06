@@ -8,9 +8,9 @@ Our [hosted service](https://cusdis.com/dashboard) comes with Email notification
 
 As you can see in the mail content, you can even approve the comment without login.
 
-### Disable notificaton by project
+### Disable notification by project
 
-You can disable notification for specific project in `Webistes` -> `Project` -> `Settings`:
+You can disable notification for specific project in `Websites` -> `Project` -> `Settings`:
 
 ![](../images/disable-notification-in-project.png ':size=400')
 
