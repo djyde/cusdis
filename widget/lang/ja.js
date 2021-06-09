@@ -1,4 +1,4 @@
-export default {
+window.CUSDIS_LOCALE = {
   powered_by: 'Powered by Cusdis',
   post_comment: 'コメントを送信',
   loading: '読み込み中...',
