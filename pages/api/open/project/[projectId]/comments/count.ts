@@ -26,6 +26,7 @@ export default apiHandler()
         pageIds.split(',').map((id) => {
           return prisma.comment.count({
             where: {
+              deletedAt: null,
               page: {
                 slug: id,
                 projectId,
