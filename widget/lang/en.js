@@ -12,8 +12,6 @@ export default {
 
   // reply
   mod_badge: 'MOD',
-  content_is_required: 'Content is required',
-  nickname_is_required: 'Nickname is required',
 
   comment_has_been_sent:
     'Your comment has been sent. Please wait for approval.',

@@ -12,8 +12,6 @@ window.CUSDIS_LOCALE = {
 
   // reply
   mod_badge: 'MOD',
-  content_is_required: 'Commentaire requis',
-  nickname_is_required: 'Pseudonyme requis',
 
   comment_has_been_sent:
     'Votre commentaire a été publié. Attendez son approbation.',

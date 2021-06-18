@@ -12,8 +12,6 @@ window.CUSDIS_LOCALE = {
 
   // reply
   mod_badge: 'MOD',
-  content_is_required: 'Lo contengut es requerit',
-  nickname_is_required: 'L’escais es requerit',
 
   comment_has_been_sent:
     'Comentari enviat. Esperatz sa validacion.',

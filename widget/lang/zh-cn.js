@@ -12,9 +12,7 @@ window.CUSDIS_LOCALE = {
 
   // reply
   mod_badge: '管理员',
-  content_is_required: '内容不能为空',
-  nickname_is_required: '昵称不能为空',
-
+  
   comment_has_been_sent:
     '评论已发送，管理员审核通过后会展示',
 }
