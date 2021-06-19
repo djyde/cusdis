@@ -101,7 +101,7 @@
 
     <div class="mt-4">
       {#if loadingComments}
-        <div>
+        <div class="text-gray-900 dark:text-gray-100">
           {t('loading')}...
         </div>
       {:else}
