@@ -1,6 +1,6 @@
 export default {
   powered_by: 'Powered by Cusdis',
-  post_comment: 'Post Comment',
+  post_comment: 'Comment',
   loading: 'Loading',
 
   // comment

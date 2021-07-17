@@ -1,4 +1,4 @@
-# Integrate with Docsify
+# Integrate Cusdis into Docsify
 
 [Docsify](https://docsify.js.org) is a powerful document site generator, which also powers this Cusdis document. Cusdis has a built-in Docsify plugin.
 

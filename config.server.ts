@@ -11,7 +11,7 @@ const providers: AppProviders = []
 if (resolvedConfig.useLocalAuth) {
   providers.push(
     Providers.Credentials({
-      name: 'Userename',
+      name: 'Username',
       credentials: {
         username: {
           label: 'Username',

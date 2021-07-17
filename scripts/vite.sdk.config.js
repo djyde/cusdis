@@ -4,10 +4,10 @@ module.exports = {
   root: 'widget',
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'widget', 'index.js'),
+      entry: path.resolve(__dirname, '..', 'widget', 'sdk.js'),
       name: 'cusdis',
     },
-    outDir: path.resolve(__dirname, 'public', 'js'),
+    outDir: path.resolve(__dirname, '..', 'widget', 'dist'),
   },
   plugins: [
     require('rollup-plugin-svelte')({

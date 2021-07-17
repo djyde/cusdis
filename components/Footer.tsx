@@ -1,4 +1,4 @@
-import { Box, Container, HStack, Link, List, ListItem, Text, VStack } from '@chakra-ui/react'
+import { Box, Container, HStack, Image, Link, LinkBox, LinkOverlay, List, ListItem, Text, VStack } from '@chakra-ui/react'
 import * as React from 'react'
 import { VERSION } from '../utils.client'
 
@@ -50,11 +50,12 @@ export function Footer(props: {
             </Box>
           </HStack>
 
-          <Box>
+          <VStack spacing={2} mt={12} alignItems="center">
+            <Image w={8} src="/images/artworks/logo-gray-256.png" />
             <Text fontSize="sm" textAlign="right" color="gray.500">
               v{VERSION}
             </Text>
-          </Box>
+          </VStack>
 
         </Container>
       </Box>

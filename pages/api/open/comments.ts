@@ -3,29 +3,87 @@ import {
   CommentService,
   CommentWrapper,
 } from '../../../service/comment.service'
-import { initMiddleware, prisma, resolvedConfig } from '../../../utils.server'
+import { apiHandler } from '../../../utils.server'
 import Cors from 'cors'
 import { ProjectService } from '../../../service/project.service'
 import { statService } from '../../../service/stat.service'
 
-const cors = initMiddleware(
-  // You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
-  Cors({
-    // Only allow requests with GET, POST and OPTIONS
-    methods: ['GET', 'POST', 'OPTIONS'],
-  }),
-)
+export default apiHandler()
+  .use(
+    Cors({
+      // Only allow requests with GET, POST and OPTIONS
+      methods: ['GET', 'POST', 'OPTIONS'],
+    }),
+  )
+  .get(async (req, res) => {
+    const commentService = new CommentService(req)
+    const projectService = new ProjectService(req)
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  await cors(req, res)
+    // get all comments
+    const query = req.query as {
+      page?: string
+      appId: string
+      pageId: string
+    }
 
-  const commentService = new CommentService(req)
-  const projectService = new ProjectService(req)
+    const timezoneOffsetInHour = req.headers['x-timezone-offset']
 
-  if (req.method === 'POST') {
+    const isDeleted = await projectService.isDeleted(query.appId)
+
+    if (isDeleted) {
+      res.status(404)
+      res.json({
+        data: {
+          commentCount: 0,
+          data: [],
+          pageCount: 0,
+          pageSize: 10,
+        } as CommentWrapper,
+      })
+      return
+    }
+
+    statService.capture('get_comments', {
+      identity: query.appId,
+      properties: {
+        from: 'open_api',
+      },
+    })
+
+    const queryCommentStat = statService.start(
+      'query_comments',
+      'Query Comments',
+      {
+        tags: {
+          project_id: query.appId,
+          from: 'open_api',
+        },
+      },
+    )
+
+    const comments = await commentService.getComments(
+      query.appId,
+      Number(timezoneOffsetInHour),
+      {
+        approved: true,
+        parentId: null,
+        pageSlug: query.pageId,
+        page: Number(query.page) || 1,
+        select: {
+          by_nickname: true,
+        },
+      },
+    )
+
+    queryCommentStat.end()
+
+    res.json({
+      data: comments,
+    })
+  })
+  .post(async (req, res) => {
+    const commentService = new CommentService(req)
+    const projectService = new ProjectService(req)
     // add comment
     const body = req.body as {
       parentId?: string
@@ -80,61 +138,4 @@ export default async function handler(
     res.json({
       data: comment,
     })
-  } else if (req.method === 'GET') {
-    // get all comments
-    const query = req.query as {
-      page?: string
-      appId: string
-      pageId: string
-    }
-
-    const isDeleted = await projectService.isDeleted(query.appId)
-
-    if (isDeleted) {
-      res.status(404)
-      res.json({
-        data: {
-          commentCount: 0,
-          data: [],
-          pageCount: 0,
-          pageSize: 10,
-        } as CommentWrapper,
-      })
-      return
-    }
-
-    statService.capture('get_comments', {
-      properties: {
-        project_id: query.appId,
-        from: 'open_api',
-      },
-    })
-
-    const queryCommentStat = statService.start(
-      'query_comments',
-      'Query Comments',
-      {
-        tags: {
-          project_id: query.appId,
-          from: 'open_api',
-        },
-      },
-    )
-
-    const comments = await commentService.getComments(query.appId, {
-      approved: true,
-      parentId: null,
-      pageSlug: query.pageId,
-      page: Number(query.page) || 1,
-      select: {
-        by_nickname: true,
-      },
-    })
-
-    queryCommentStat.end()
-
-    res.json({
-      data: comments,
-    })
-  }
-}
+  })

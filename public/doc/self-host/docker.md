@@ -25,6 +25,7 @@ Then visit `http://IP_ADDRESS_OR_DOMAIN`
   - If you use SQLite, must have a `file:` prefix, like `file:/data/db.sqlite`
   - If you use pgsql, set it to your pgsql connection url
 - `NEXTAUTH_URL` (required) your machine host (IP address or domain like `https://foo.com`)
+- `HOST` your machine host (IP address or domain like `https://foo.com`), default will be `https://cusdis.com`. It affects the redirect address of the approval link.
 - `JWT_SECRET` jwt secret
 - `DB_TYPE`
   - `sqlite` (default)

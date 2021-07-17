@@ -27,32 +27,26 @@ To embed the comment widget to your web page, you need to put **the element and 
 
 - `data-host` **(required)** API server host.
 - `data-app-id` **(required)** The website ID.
-- `data-page-id` **(required)** Current page ID. Should be unique in a website. 
-- `data-page-url` Current page URL.
-- `data-page-title` Current page title.
+- `data-page-id` **(required)** Current page ID. Used to identity your page. Should be unique in a website. Such as page slug, permalink.
+- `data-page-url` Current page URL. Used to display on dashboard.
+- `data-page-title` Current page title. Used to display on dashboard.
 - `data-theme`
   - `light` (default)
   - `auto` Automatically set theme by `prefers-color-scheme`
   - `dark`
 
-## Style customization
+## API
 
-We use css variables to define our style. Here is the available variables you can override:
+Cusdis exposes some global APIs on `window.CUSDIS`:
 
-```css
-:root {
-  --cusdis--color-text-default: rgba(0, 0, 0, 0.8);
-  --cusdis--color-input-border: #ddd;
-  --cusdis--color-btn-text: rgba(0, 0, 0, 0.8);
-  --cusdis--color-btn-bg-default: #ddd;
-  --cusdis--color-btn-bg-disabled: rgba(0, 0, 0, 0.5);
-  --cusdis--color-btn-border: none;
-  --cusdis--color-message-text: #fff;
-  --cusdis--color-message-bg: #046582;
-  --cusdis--color-pagination-bg-selected: #ddd;
-  --cusdis--color-comment-indicator-border: #ddd;
-  --cusdis--color-comment-username-text: #000;
-  --cusdis--color-mod-text: rgba(0, 0, 0, 0.8);
-  --cusdis--color-mod-bg: #ddd;
-}
-```
+#### window.CUSDIS.initial()
+
+Initialize widget.
+
+#### window.CUSDIS.renderTo(target: HTMLElement)
+
+Render widget to specific DOM element.
+
+#### window.CUSDIS.setTheme(theme: 'dark' | 'light' | 'auto')
+
+Manually set theme. 

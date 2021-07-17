@@ -2,8 +2,9 @@ import { PrismaClient } from '@prisma/client'
 import { UserSession } from './service'
 import { getSession as nextAuthGetSession } from 'next-auth/client'
 import * as Sentry from '@sentry/node'
-import * as Tracing from '@sentry/tracing'
-
+import { NextApiRequest, NextApiResponse } from 'next'
+import nc from 'next-connect'
+import Boom from '@hapi/boom'
 
 type EnvVariable = string | undefined
 export const resolvedConfig = {
@@ -35,11 +36,11 @@ export const resolvedConfig = {
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY as EnvVariable,
   },
-  posthog: {
-    apiKey: process.env.POSTHOG_API_KEY as EnvVariable,
-  },
   sentry: {
     dsn: process.env.SENTRY_DSN as EnvVariable,
+  },
+  minicapture: {
+    apiKey: process.env.MINICAPTURE_API_KEY as EnvVariable,
   },
 }
 
@@ -89,6 +90,28 @@ export function initMiddleware(middleware) {
         return resolve(result)
       })
     })
+}
+
+export const HTTPException = Boom
+export const apiHandler = () => {
+  return nc<NextApiRequest, NextApiResponse>({
+    onError(e, req, res, next) {
+      if (Boom.isBoom(e)) {
+        res.status(e.output.payload.statusCode)
+        res.json({
+          error: e.output.payload.error,
+          message: e.output.payload.message,
+        })
+      } else {
+        res.status(500)
+        res.json({
+          message: 'Unexpected error',
+        })
+        console.error(e)
+        // unexcepted error
+      }
+    },
+  })
 }
 
 export const getSession = async (req) => {
