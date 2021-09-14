@@ -7,6 +7,8 @@ https://cusdis.com
 
 ![](/public/images/landing.png)
 
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2Fdjyde%2Fcusdis&plugins=postgresql&envs=NEXTAUTH_URL%2CDB_TYPE%2CDB_URL%2CUSERNAME%2CPASSWORD%2CHOST%2CJWT_SECRET%2CPORT&NEXTAUTH_URLDesc=Don%27t+modify+it&DB_TYPEDesc=Don%27t+modify+it&DB_URLDesc=Don%27t+modify+it&USERNAMEDesc=Username+to+sign+in&PASSWORDDesc=Password+to+sign+in&HOSTDesc=Don%27t+modify+it&JWT_SECRETDesc=A+secret+key+to+encrypt+JWT+token&PORTDesc=Don%27t+modify+it&NEXTAUTH_URLDefault=%24%7B%7B+RAILWAY_STATIC_URL+%7D%7D&DB_TYPEDefault=pgsql&DB_URLDefault=%24%7B%7B+DATABASE_URL+%7D%7D&HOSTDefault=https%3A%2F%2F%24%7B%7B+RAILWAY_STATIC_URL+%7D%7D&PORTDefault=3000&referralCode=randyloop)
+
 ## 💝 Sponsor this project
 
 If you like Cusdis, please consider sponsoring us to help us be sustainable.
