@@ -20,12 +20,6 @@ export class UserService extends RequestScopeService {
   }
 
   async delete(userId: string) {
-    await prisma.project.deleteMany({
-      where: {
-        ownerId: userId
-      }
-    })
-
     await prisma.user.delete({
       where: {
         id: userId
