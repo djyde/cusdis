@@ -1,4 +1,4 @@
-export default {
+window.CUSDIS_LOCALE = {
   powered_by: 'Cusdis 제공',
   post_comment: '등록',
   loading: '로딩중...',
