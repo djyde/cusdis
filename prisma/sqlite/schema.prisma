@@ -92,6 +92,7 @@ model Project {
   fetchLatestCommentsAt DateTime? @map(name: "fetch_latest_comments_at")
 
   enableNotification Boolean? @default(true) @map(name: "enable_notification")
+  notificationEmail  String?  @map(name: "notification_email")
 
   webhook String?
   enableWebhook Boolean?

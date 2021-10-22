@@ -26,6 +26,7 @@ export class NotificationService extends RequestScopeService {
       },
       select: {
         enableNotification: true,
+        notificationEmail: true,
         owner: {
           select: {
             id: true,
@@ -62,9 +63,9 @@ export class NotificationService extends RequestScopeService {
     })
 
     const notificationEmail =
-      project.owner.notificationEmail || project.owner.email
+      project.notificationEmail || project.owner.notificationEmail || project.owner.email
 
-    if (project.owner.enableNewCommentNotification) {
+    if (project.owner.enableNewCommentNotification || project.notificationEmail) {
       let unsubscribeToken = this.tokenService.genUnsubscribeNewCommentToken(
         project.owner.id,
       )

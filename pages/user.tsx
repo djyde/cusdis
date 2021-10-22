@@ -5,19 +5,9 @@ import { useMutation } from "react-query"
 import { Footer } from "../components/Footer"
 import { Navbar } from "../components/Navbar"
 import { UserSession } from "../service"
-import { apiClient } from "../utils.client"
+import { apiClient, validateEmail } from "../utils.client"
 import { getSession, prisma } from "../utils.server"
 import { Head } from "../components/Head"
-
-
-// From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-function validateEmail(email) {
-  if (email === '') {
-    return true
-  }
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-}
 
 const updateUserSettings = async (params: {
   notificationEmail?: string,
