@@ -62,6 +62,18 @@ function UserPage(props: {
     }
   })
 
+  const [isDisableDeleteAccount, setIsDisableDeleteAccount] = React.useState(true)
+
+  const [confirmUsername, setConfirmUsername] = React.useState("")
+  const onChangeConfirmUsername = (event) => {
+    setConfirmUsername(event.target.value)
+    if (event.target.value === props.session.user.name) {
+        setIsDisableDeleteAccount(false)
+    } else {
+        setIsDisableDeleteAccount(true)
+    }
+  }
+
   const [isOpenDeleteAccountModal, setIsOpenDeleteAccountModal] = React.useState(false)
   const cancelDeleteAccountRef = React.useRef()
   const onCloseDeleteAccountModal = () => {
@@ -138,17 +150,23 @@ function UserPage(props: {
             </AlertDialogHeader>
 
           <AlertDialogBody>
-            <Text>
+            <Text mb="8px">
               Are you sure?
             </Text>
-            
+            <Text mb="8px">
+              This action cannot be undone. This will permanently delete your account, projects and comments.
+            </Text>
+            <Text mb="8px">
+              Please type <strong>{props.session.user.name}</strong> to confirm.
+            </Text>
+            <Input value={confirmUsername} onChange={onChangeConfirmUsername} type="text" />
           </AlertDialogBody>
 
           <AlertDialogFooter>
             <Button ref={cancelDeleteAccountRef} onClick={onCloseDeleteAccountModal}>
               Cancel
               </Button>
-            <Button ml={4} colorScheme="red"  onClick={_ => deleteAccountMutation.mutate()} isLoading={deleteAccountMutation.isLoading}>Delete</Button>
+            <Button ml={4} colorScheme="red" isDisabled={isDisableDeleteAccount}  onClick={_ => deleteAccountMutation.mutate()} isLoading={deleteAccountMutation.isLoading}>Delete</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>
