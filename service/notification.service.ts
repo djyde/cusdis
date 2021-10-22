@@ -86,9 +86,9 @@ export class NotificationService extends RequestScopeService {
       }
 
       try {
-        this.emailService.send(msg)
+        await this.emailService.send(msg)
       } catch (e) {
-        // TODO:
+        console.log("unable to send email:", e)
       }
     }
   }
