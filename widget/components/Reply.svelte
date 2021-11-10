@@ -58,19 +58,19 @@
 
 <div style="margin-top: 1em;">
   <div class="cusdis-reply-info cusdis-field">
-    <div>
+    <div class="px-1">
       <input type="text" placeholder={t('nickname')} bind:value={nickname} />
     </div>
-    <div>
+    <div class="px-1">
       <input type="text" placeholder={t('email')} bind:value={email} />
     </div>
   </div>
 
-  <div class="cusdis-field">
+  <div class="cusdis-field px-1">
     <textarea bind:value={content} placeholder={t('reply_placeholder')} />
   </div>
 
-  <div class="cusdis-field">
+  <div class="cusdis-field px-1">
     <button
       class="submit-btn"
       class:cusdis-disabled={loading}
