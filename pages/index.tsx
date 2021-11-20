@@ -114,7 +114,7 @@ function IndexPage({ session, contributers }: Props) {
               <Heading as="h1" size="4xl" fontSize={['5xl', '7xl']}><Text color="#014f86" as="span">Lightweight</Text>, <Text color="#2c7da0" as="span">privacy-first</Text>,  <Text color="#1b263b" as="span">open-source</Text> comment system</Heading>
             </Box>
             <Text fontSize="lg" mt={8} color="gray.700" className="font">
-              <strong>Cusdis</strong> is an open-source, lightweight (~5kb gzipped), privacy-first <strong>alternative to Disqus</strong>. It's super easy to use and integrate with your existed website. We don't track you and your user.
+              <strong>Cusdis</strong> is an open-source, lightweight (~5kb gzipped), privacy-first <strong>alternative to Disqus</strong>. It's super easy to use and integrate with your existing website. We don't track you and your users.
             </Text>
 
             <HStack mt={12} spacing={4}>
@@ -185,7 +185,7 @@ function IndexPage({ session, contributers }: Props) {
                 <VStack alignItems="start">
                   <Heading size="sm">Open source</Heading>
                   <Box color="gray.500" fontSize="sm">
-                    Cusdis is an open-source project. Everyone can sure <strong>we don't track you and your user</strong>. Also, you can deploy your own Cusdis service with ease, to make sure you own your data.
+                    Cusdis is an open-source project. You can be sure that <strong>you and your users are not tracked</strong>. If you'd prefer to own your data, you can also self-host Cusdis easily.
               </Box>
                   <Box pt={2}>
                     <Link href="https://github.com/djyde/cusdis" isExternal>
