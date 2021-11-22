@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "DB_TYPE=sqlite npm run dev:general",
     "dev:pg": "DB_TYPE=pgsql npm run dev:general",
+    "dev:mysql": "DB_TYPE=mysql npm run dev:general",
     "dev:general": "npm run db:deploy && npm run db:generate && next dev",
     "build": "DB_TYPE=pgsql npm run db:generate && DB_TYPE=pgsql npm run db:deploy && next build && npm run build:widget",
     "build:without-migrate": "npm run db:generate && next build && npm run build:widget",
@@ -10,6 +11,7 @@
     "db:generate": "prisma generate --schema ./prisma/$DB_TYPE/schema.prisma",
     "db:push": "DB_TYPE=sqlite npm run db:push:general",
     "db:push:pg": "DB_TYPE=pgsql npm run db:push:general",
+    "db:push:mysql": "DB_TYPE=mysql npm run db:push:general",
     "db:push:general": "prisma db push --schema ./prisma/$DB_TYPE/schema.prisma --preview-feature",
     "db:migrate": "prisma migrate dev --schema ./prisma/$DB_TYPE/schema.prisma",
     "admin": "prisma studio",
