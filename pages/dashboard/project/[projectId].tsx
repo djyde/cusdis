@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -6,7 +6,7 @@ import React, { useRef } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { ProjectService } from '../../../service/project.service'
 import { CommentItem, CommentWrapper } from '../../../service/comment.service'
-import { apiClient } from '../../../utils.client'
+import { apiClient, validateEmail } from '../../../utils.client'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { UserSession } from '../../../service'
@@ -259,6 +259,7 @@ function Settings(props: {
   const enableNotificationMutation = useMutation(updateProjectSettings)
   const enableWebhookMutation = useMutation(updateProjectSettings)
   const updateWebhookUrlMutation = useMutation(updateProjectSettings)
+  const updateNotificationEmailMutation = useMutation(updateProjectSettings)
   const deleteProjectMutation = useMutation(deleteProject, {
     onSuccess() {
       toast({
@@ -284,6 +285,7 @@ function Settings(props: {
   }
 
   const webhookInputRef = useRef<HTMLInputElement>(null)
+  const notificationEmailInputRef = useRef<HTMLInputElement>(null)
 
   const uploadMutation = useMutation(upload, {
     onSuccess(data) {
@@ -322,6 +324,41 @@ function Settings(props: {
       }
     })
     return res.data.data
+  }
+
+  const onSaveNotificationEmail = async _ => {
+    const value = notificationEmailInputRef.current.value
+
+    if(!validateEmail(value)) {
+      toast({
+        title: 'Email address is not valid',
+        status: 'error',
+        position: 'top'
+      })
+      return
+    }
+
+    updateNotificationEmailMutation.mutate({
+      projectId: props.project.id,
+      body: {
+        notificationEmail: value
+      }
+    }, {
+      onSuccess() {
+        toast({
+          title: 'Updated',
+          status: 'success',
+          position: 'top'
+        })
+      },
+      onError() {
+        toast({
+          title: 'Something went wrong',
+          status: 'error',
+          position: 'top'
+        })
+      }
+    })
   }
 
   const onSaveWebhookUrl = async _ => {
@@ -472,11 +509,18 @@ function Settings(props: {
             <Heading as="h1" size="md">Email Notification</Heading>
 
           </HStack>
-          <Box>
-            <Link href="/user" fontSize="sm">
-              Advanced Notification Settings
-            </Link>
-          </Box>
+          <FormControl>
+            <FormLabel>Project Notification Email</FormLabel>
+            <InputGroup>
+              <Input defaultValue={props.project.notificationEmail} type="email" ref={notificationEmailInputRef}></Input>
+              <InputRightElement width='16'>
+                <Button size="sm" isLoading={updateNotificationEmailMutation.isLoading} onClick={onSaveNotificationEmail}>Save</Button>
+              </InputRightElement>
+            </InputGroup>
+            <FormHelperText>
+              This overrides the user's <Link href="/user" color="gray.900">notification settings</Link>.
+            </FormHelperText>
+          </FormControl>
         </VStack>
 
         <VStack alignItems="start">
@@ -524,7 +568,7 @@ function Settings(props: {
   )
 }
 
-type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token' | 'enableNotification' | 'webhook' | 'enableWebhook'>
+type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 'token' | 'enableNotification' | 'webhook' | 'enableWebhook' | 'notificationEmail'>
 
 export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
@@ -559,7 +603,8 @@ export async function getServerSideProps(ctx) {
         token: project.token,
         enableNotification: project.enableNotification,
         enableWebhook: project.enableWebhook,
-        webhook: project.webhook
+        webhook: project.webhook,
+        notificationEmail: project.notificationEmail
       } as ProjectServerSideProps
     }
 
