@@ -1,6 +1,7 @@
 import { User } from "@prisma/client"
-import { Box, Button, Checkbox, Container, FormControl, FormLabel, Heading, HStack, Input, InputGroup, InputRightAddon, Switch, useToast, VStack } from "@chakra-ui/react"
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Text, Box, Button, Checkbox, Container, FormControl, FormLabel, Heading, HStack, Input, InputGroup, InputRightAddon, Switch, useToast, VStack } from "@chakra-ui/react"
 import React from "react"
+import { signOut } from "next-auth/client"
 import { useMutation } from "react-query"
 import { Footer } from "../components/Footer"
 import { Navbar } from "../components/Navbar"
@@ -30,6 +31,11 @@ const updateUserSettings = async (params: {
   return res.data
 }
 
+const deleteAccount = async () => {
+  const res = await apiClient.delete(`/user`)
+  return res.data
+}
+
 function UserPage(props: {
   session: UserSession,
   defaultUserInfo: DefaultUserInfo
@@ -37,6 +43,42 @@ function UserPage(props: {
 
   const updateNotificationEmailMutation = useMutation(updateUserSettings)
   const updatePreferenceMutation = useMutation(updateUserSettings)
+  const deleteAccountMutation = useMutation(deleteAccount, {
+    onSuccess() {
+      toast({
+        title: 'Deleted',
+        status: 'success',
+        position: 'top'
+      })
+      signOut()
+    },
+    onError() {
+      toast({
+        title: 'Something went wrong',
+        status: 'error',
+        position: 'top'
+      })
+      setIsOpenDeleteAccountModal(false)
+    }
+  })
+
+  const [isDisableDeleteAccount, setIsDisableDeleteAccount] = React.useState(true)
+
+  const [confirmUsername, setConfirmUsername] = React.useState("")
+  const onChangeConfirmUsername = (event) => {
+    setConfirmUsername(event.target.value)
+    if (event.target.value === props.session.user.name) {
+        setIsDisableDeleteAccount(false)
+    } else {
+        setIsDisableDeleteAccount(true)
+    }
+  }
+
+  const [isOpenDeleteAccountModal, setIsOpenDeleteAccountModal] = React.useState(false)
+  const cancelDeleteAccountRef = React.useRef()
+  const onCloseDeleteAccountModal = () => {
+    setIsOpenDeleteAccountModal(false)
+  }
 
   const toast = useToast()
 
@@ -59,6 +101,7 @@ function UserPage(props: {
       notificationEmail: value
     }, {
       onSuccess() {
+        signOut()
         toast({
           title: 'Updated',
           status: 'success',
@@ -93,6 +136,42 @@ function UserPage(props: {
       }
     })
   }
+
+  const DeleteAccountDialog = (
+    <AlertDialog
+      isOpen={isOpenDeleteAccountModal}
+      leastDestructiveRef={cancelDeleteAccountRef}
+      onClose={onCloseDeleteAccountModal}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Delete Account
+            </AlertDialogHeader>
+
+          <AlertDialogBody>
+            <Text mb="8px">
+              Are you sure?
+            </Text>
+            <Text mb="8px">
+              This action cannot be undone. This will permanently delete your account, projects and comments.
+            </Text>
+            <Text mb="8px">
+              Please type <strong>{props.session.user.name}</strong> to confirm.
+            </Text>
+            <Input value={confirmUsername} onChange={onChangeConfirmUsername} type="text" />
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <Button ref={cancelDeleteAccountRef} onClick={onCloseDeleteAccountModal}>
+              Cancel
+              </Button>
+            <Button ml={4} colorScheme="red" isDisabled={isDisableDeleteAccount}  onClick={_ => deleteAccountMutation.mutate()} isLoading={deleteAccountMutation.isLoading}>Delete</Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+  )
 
   return (
     <>
@@ -139,6 +218,14 @@ function UserPage(props: {
                   })
                 }} defaultChecked={props.defaultUserInfo.enableNewCommentNotification}>New comment notification</Checkbox>
               </FormControl>
+            </VStack>
+          </VStack>
+              
+          <VStack alignItems="flex-start" spacing={4}>
+            <Heading size="md">Danger Zone</Heading>
+            <VStack spacing={4}>
+              <Button colorScheme="red" onClick={_ => setIsOpenDeleteAccountModal(true)} isLoading={deleteAccountMutation.isLoading}>Delete Account</Button>
+              {DeleteAccountDialog}
             </VStack>
           </VStack>
 

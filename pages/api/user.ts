@@ -30,5 +30,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.json({
       message: 'success'
     })
+  } else if (req.method === 'DELETE') {
+    const user = await authService.authGuard()
+
+    if (!user) {
+      return
+    }
+
+    await userService.delete(user.uid)
+
+    res.json({
+      message: 'success'
+    })
   }
 }
