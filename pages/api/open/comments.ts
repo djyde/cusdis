@@ -71,6 +71,11 @@ export default apiHandler()
         page: Number(query.page) || 1,
         select: {
           by_nickname: true,
+          moderator: {
+            select: {
+              displayName: true
+            }
+          }
         },
       },
     )

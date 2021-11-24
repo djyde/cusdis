@@ -20,7 +20,7 @@
 >
   <div class="flex items-center">
     <div class="mr-2 font-medium dark:text-gray-100">
-      {comment.by_nickname}
+      {comment.moderator && comment.moderator.displayName ? comment.moderator.displayName : comment.by_nickname}
     </div>
 
     {#if comment.moderatorId}
