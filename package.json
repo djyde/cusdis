@@ -14,6 +14,7 @@
     "db:push:mysql": "DB_TYPE=mysql npm run db:push:general",
     "db:push:general": "prisma db push --schema ./prisma/$DB_TYPE/schema.prisma --preview-feature",
     "db:migrate": "prisma migrate dev --schema ./prisma/$DB_TYPE/schema.prisma",
+    "db:migrateAll": "prisma migrate dev --schema ./prisma/sqlite/schema.prisma && prisma migrate dev --schema ./prisma/pgsql/schema.prisma && prisma migrate dev --schema ./prisma/mysql/schema.prisma",
     "admin": "prisma studio",
     "widget": "vite --config scripts/vite.config.js",
     "start": "next start -p 3000",
