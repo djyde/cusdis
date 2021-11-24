@@ -10,10 +10,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'PUT') {
     const {
       notificationEmail,
-      enableNewCommentNotification
+      enableNewCommentNotification,
+      displayName
     } = req.body as {
       notificationEmail?: string
-      enableNewCommentNotification?: boolean
+      enableNewCommentNotification?: boolean,
+      displayName?: string
     }
 
     const user = await authService.authGuard()
@@ -24,7 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     await userService.update(user.uid, {
       enableNewCommentNotification,
-      notificationEmail
+      notificationEmail,
+      displayName
     })
 
     res.json({

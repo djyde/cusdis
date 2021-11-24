@@ -4,6 +4,7 @@ import { prisma } from "../utils.server";
 
 export class UserService extends RequestScopeService {
   async update(userId: string, options: {
+    displayName?: string,
     notificationEmail?: string,
     enableNewCommentNotification?: boolean
   }) {
@@ -12,6 +13,7 @@ export class UserService extends RequestScopeService {
         id: userId
       },
       data: {
+        displayName: options.displayName,
         notificationEmail: options.notificationEmail,
         enableNewCommentNotification: options.enableNewCommentNotification
       }
