@@ -1,5 +1,5 @@
 window.CUSDIS_LOCALE = {
-  powered_by: 'Propulsé par Cusdis',
+  powered_by: 'Commentaires propulsés par Cusdis',
   post_comment: 'Publier un commentaire',
   loading: 'Chargement',
 
