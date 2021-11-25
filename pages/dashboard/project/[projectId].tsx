@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -153,7 +153,7 @@ function CommentComponent(props: {
         </>
       )}
       <Box key={comment.id} pl={!props.isRoot ? 4 : 0} fontSize="xs">
-        <VStack align="strech" borderTopWidth={ props.isRoot ? "1px" : "0" } spacing="2" px="4" py="4" borderLeftWidth="4px" {...approveStyle[String(comment.approved)]} mb="0" >
+        <VStack align="strech" borderTopWidth={props.isRoot ? "1px" : "0"} spacing="2" px="4" py="4" borderLeftWidth="4px" {...approveStyle[String(comment.approved)]} mb="0" >
           <Flex align="">
             <Text fontWeight="medium">
               {comment.by_nickname} {comment.by_email && <>({comment.by_email})</>}
@@ -211,33 +211,73 @@ function ProjectPage(props: {
   return (
     <>
       <MainLayout session={props.session}>
-        <Box mb="12">
-          <Text fontSize="lg" fontWeight="bold">
-            {props.project.title}
-          </Text>
-        </Box>
-
-        <Box>
-          <Text fontWeight="medium" mb="8">Comments</Text>
+        <VStack align="stretch" spacing="8">
           <Box>
-            {getCommentsQuery.data?.data.map(comment => <Box mb="8">
-              <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />
-            </Box>)}
+            <Text fontSize="lg" fontWeight="bold">
+              {props.project.title}
+            </Text>
           </Box>
-        </Box>
 
-        <Flex>
-          <Spacer />
-          <VStack alignItems="stretch" spacing={4}>
-            <HStack spacing={2} fontSize="xs">
-              {new Array(pageCount).fill(0).map((_, index) => {
-                return (
-                  <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
-                )
-              })}
+          <Box borderTopWidth="1px" borderBottomWidth="1px" borderColor="gray.100" py="4">
+            <StatGroup>
+              <Stat>
+                <StatLabel>
+                  Comments
+                </StatLabel>
+                <StatNumber>
+                  1000
+                </StatNumber>
+              </Stat>
+
+              <Stat>
+                <StatLabel>
+                  Pages
+                </StatLabel>
+                <StatNumber>
+                  1000
+                </StatNumber>
+              </Stat>
+            </StatGroup>
+          </Box>
+
+          <Box>
+            <HStack align="start" spacing="8">
+              <Text fontWeight="bold" mb="2" fontSize="sm">Comments</Text>
+              <HStack spacing="4" pt="0.5">
+                <HStack>
+                  <Box width="5px" height="5px" borderRadius="50%" bgColor="green.100"></Box>
+                  <Text fontSize="xs">Approved</Text>
+                </HStack>
+                <HStack>
+                  <Box width="5px" height="5px" borderRadius="50%" bgColor="orange.100"></Box>
+                  <Text fontSize="xs">Pending</Text>
+                </HStack>
+              </HStack>
             </HStack>
-          </VStack>
-        </Flex>
+            <Box>
+              {getCommentsQuery.data?.data.map(comment => <Box mb="2">
+                <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />
+              </Box>)}
+            </Box>
+
+
+            <Flex>
+              <Spacer />
+              <VStack alignItems="stretch" spacing={4}>
+                <HStack spacing={2} fontSize="xs">
+                  {new Array(pageCount).fill(0).map((_, index) => {
+                    return (
+                      <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
+                    )
+                  })}
+                </HStack>
+              </VStack>
+            </Flex>
+          </Box>
+
+        </VStack>
+
+
       </MainLayout>
     </>
   )

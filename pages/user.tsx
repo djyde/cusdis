@@ -111,12 +111,12 @@ function UserPage(props: {
             <HStack spacing={4}>
 
               <FormControl>
-                <FormLabel>Username</FormLabel>
+                <FormLabel fontSize="sm">Username</FormLabel>
                 <Input disabled value={props.session.user.name} />
               </FormControl>
 
               <FormControl>
-                <FormLabel>Email</FormLabel>
+                <FormLabel fontSize="sm">Email</FormLabel>
                 <Input disabled value={props.session.user.email} />
               </FormControl>
             </HStack>
@@ -124,7 +124,7 @@ function UserPage(props: {
             <HStack spacing={4}>
 
               <FormControl>
-                <FormLabel>Display Name</FormLabel>
+                <FormLabel fontSize="sm">Display Name</FormLabel>
                 <InputGroup size="md">
                   <Input ref={displayNameInputRef} defaultValue={props.defaultUserInfo.displayName || props.session.user.name} />
 
@@ -158,7 +158,7 @@ function UserPage(props: {
 
           <VStack alignItems="flex-start" spacing={4}>
             <Heading size="md">Notification</Heading>
-            <VStack spacing={4}>
+            <VStack spacing={8}>
 
               <FormControl>
                 <FormLabel>Preferences</FormLabel>
@@ -170,7 +170,7 @@ function UserPage(props: {
               </FormControl>
 
               <FormControl>
-                <FormLabel>Notification email</FormLabel>
+                <FormLabel fontSize="sm"> Notification email</FormLabel>
                 <HStack spacing={2}>
                   <InputGroup size="md">
                     <Input defaultValue={props.defaultUserInfo.notificationEmail || props.defaultUserInfo.email} ref={notificationEmailInputRef} type="email" />
