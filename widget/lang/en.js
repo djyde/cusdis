@@ -1,5 +1,5 @@
 export default {
-  powered_by: 'Powered by Cusdis',
+  powered_by: 'Comments powered by Cusdis',
   post_comment: 'Comment',
   loading: 'Loading',
 
