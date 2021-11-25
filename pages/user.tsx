@@ -8,6 +8,7 @@ import { UserSession } from "../service"
 import { apiClient } from "../utils.client"
 import { getSession, prisma } from "../utils.server"
 import { Head } from "../components/Head"
+import { MainLayout } from "../components/Layout"
 
 
 // From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
@@ -100,12 +101,10 @@ function UserPage(props: {
 
   return (
     <>
-      <Head title="User Settings" />
-      <Navbar session={props.session} />
-      <Container maxWidth="5xl" mt={24}>
+      <MainLayout session={props.session}>
 
         <VStack alignItems="flex-start" spacing={12}>
-          <Heading>Hi, {props.session.user.name}</Heading>
+          <Heading size="md">Settings</Heading>
 
           <VStack alignItems="flex-start" spacing={4}>
             <Heading size="md">Account</Heading>
@@ -160,6 +159,16 @@ function UserPage(props: {
           <VStack alignItems="flex-start" spacing={4}>
             <Heading size="md">Notification</Heading>
             <VStack spacing={4}>
+
+              <FormControl>
+                <FormLabel>Preferences</FormLabel>
+                <Checkbox onChange={e => {
+                  onCheckNotificationPreference({
+                    enableNewCommentNotification: e.target.checked
+                  })
+                }} defaultChecked={props.defaultUserInfo.enableNewCommentNotification}>Enable new comment notification</Checkbox>
+              </FormControl>
+
               <FormControl>
                 <FormLabel>Notification email</FormLabel>
                 <HStack spacing={2}>
@@ -172,21 +181,14 @@ function UserPage(props: {
                 </HStack>
               </FormControl>
 
-              <FormControl>
-                <FormLabel>Preferences</FormLabel>
-                <Checkbox onChange={e => {
-                  onCheckNotificationPreference({
-                    enableNewCommentNotification: e.target.checked
-                  })
-                }} defaultChecked={props.defaultUserInfo.enableNewCommentNotification}>New comment notification</Checkbox>
-              </FormControl>
             </VStack>
           </VStack>
 
         </VStack>
-      </Container>
 
-      <Footer maxWidth="5xl" />
+        {/* <Footer maxWidth="5xl" /> */}
+      </MainLayout>
+
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -14,6 +14,7 @@ import { Head } from '../../../components/Head'
 import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
+import { MainLayout } from '../../../components/Layout'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -113,59 +114,74 @@ function CommentComponent(props: {
       <>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormControl>
-            <Textarea {...form.register('content')} placeholder="Reply as moderator" />
+            <Textarea fontSize="xs" {...form.register('content')} placeholder="Reply as moderator" />
           </FormControl>
-          <FormControl>
-            <Button isLoading={replyMutation.isLoading} type="submit">Send</Button>
+          <FormControl mt="2">
+            <Button size="xs" isLoading={replyMutation.isLoading} type="submit">Send</Button>
           </FormControl>
         </form>
       </>
     )
   }
 
+  const approveStyle: { [key: string]: CSSObject } = {
+    "true": {
+      borderBottomWidth: "1px",
+      borderRightWidth: "1px",
+      borderRightColor: "gray.100",
+      borderLeftColor: "green.100"
+    },
+    "false": {
+      borderBottomWidth: "1px",
+      borderRightWidth: "1px",
+      borderRightColor: "gray.100",
+      borderLeftColor: "orange.100"
+    }
+  }
+
   return (
-    <Box key={comment.id} pl={!props.isRoot ? 4 : 0}>
-      <HStack spacing={2}>
-        {props.isRoot && <Tooltip label={comment.page.slug}>
-          <Link color="gray.500" href={comment.page.url}>{comment.page.title}</Link>
-        </Tooltip> }
-        <Spacer />
+    <>
+      {props.isRoot && (
+        <>
+          <Box mb="2" fontSize="sm" pl="0">
+            <Text as="div">
+              <Link href={props.comment.page.url} isExternal fontWeight="medium">
+                {props.comment.page.title}
+              </Link>
+            </Text>
+          </Box>
+        </>
+      )}
+      <Box key={comment.id} pl={!props.isRoot ? 4 : 0} fontSize="xs">
+        <VStack align="strech" borderTopWidth={ props.isRoot ? "1px" : "0" } spacing="2" px="4" py="4" borderLeftWidth="4px" {...approveStyle[String(comment.approved)]} mb="0" >
+          <Flex align="">
+            <Text fontWeight="medium">
+              {comment.by_nickname} {comment.by_email && <>({comment.by_email})</>}
+            </Text>
+            <Spacer />
+            <Text color="gray.400">
+              {comment.parsedCreatedAt}
+            </Text>
+          </Flex>
 
-        {comment.moderatorId && <Tag colorScheme="cyan" size="sm">MOD</Tag>}
-        {!comment.moderatorId && (comment.approved ? <Tag colorScheme="green" size="sm">Approved</Tag> : <Tag colorScheme="orange" size="sm">Pending</Tag>)}
+          <Box>
+            <div dangerouslySetInnerHTML={{ __html: comment.parsedContent }}></div>
+          </Box>
 
-      </HStack>
-      <HStack spacing={2}>
-        <Text fontWeight="medium">
-          {comment.by_nickname}
-        </Text>
+          <HStack spacing={4} pt="2">
+            <Button isLoading={approveCommentMutation.isLoading} disabled={comment.approved} type="button" variant="link" size="xs" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
+            <Button type="button" variant="link" size="xs" onClick={_ => setShowReplyForm(true)} >Reply</Button>
+            <Button isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="xs" onClick={_ => confirm(`Are your sure?`) && deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
+          </HStack>
+        </VStack>
 
-        <Text color="gray.500">
-          {dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm')}
-        </Text>
-        <Spacer />
-        <Text mt={2} color="gray.500" fontSize="sm">
-          {comment.by_email}
-        </Text>
 
-      </HStack>
+        {showReplyForm && <Box py="2" pb="4"> <ReplyForm parentId={comment.id} /> </Box>}
 
-      <Box>
-        <div dangerouslySetInnerHTML={{ __html: comment.parsedContent }}></div>
+        {comment.replies.data.length > 0 && comment.replies.data.map(reply => <CommentComponent key={reply.id} {...props} comment={reply} isRoot={false} />)}
+
       </Box>
-
-      <HStack mt={2} spacing={4}>
-        <Button isLoading={approveCommentMutation.isLoading} disabled={comment.approved} type="button" variant="link" size="sm" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
-        <Button type="button" variant="link" size="sm" onClick={_ => setShowReplyForm(true)} >Reply</Button>
-        <Button isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="sm" onClick={_ => confirm(`Are your sure?`) && deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
-      </HStack>
-
-      <Box mt={4}>
-        {showReplyForm && <ReplyForm parentId={comment.id} />}
-      </Box>
-
-      { comment.replies.data.length > 0 && comment.replies.data.map(reply => <CommentComponent key={reply.id} {...props} comment={reply} isRoot={false} />)}
-    </Box>
+    </>
   )
 }
 
@@ -194,57 +210,35 @@ function ProjectPage(props: {
 
   return (
     <>
-      <Head title={props.project.title} />
-      <Navbar session={props.session} />
+      <MainLayout session={props.session}>
+        <Box mb="12">
+          <Text fontSize="lg" fontWeight="bold">
+            {props.project.title}
+          </Text>
+        </Box>
 
-      <Container maxWidth="5xl" mt={24}>
-        <VStack alignItems="stretch" spacing={4}>
-          <VStack spacing={2} alignItems="start">
-            <Heading>
-              {props.project.title}
-            </Heading>
-            <Text color="gray.500" fontSize="sm">
-              {props.project.id}
-            </Text>
-          </VStack>
-
+        <Box>
+          <Text fontWeight="medium" mb="8">Comments</Text>
           <Box>
-            <Tabs size="md" >
-              <TabList>
-                <Tab>Comments</Tab>
-                <Tab>Settings</Tab>
-              </TabList>
-
-              <TabPanels>
-                <TabPanel px={0} py={8}>
-                  {getCommentsQuery.isLoading && <Center p={8}><Spinner /></Center>}
-                  <VStack alignItems="stretch" spacing={4}>
-                    <VStack align="stretch" spacing={4} divider={<StackDivider borderColor="gray.200" />}>
-                      {commentCount === 0 && !getCommentsQuery.isLoading ? <Text py={12} textAlign="center" color="gray.500">No Comments</Text> : null}
-                      {getCommentsQuery.data?.data.map(comment => <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />)}
-                    </VStack>
-                    <HStack spacing={2} mt={8}>
-                      {new Array(pageCount).fill(0).map((_, index) => {
-                        return (
-                          <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
-                        )
-                      })}
-                    </HStack>
-                  </VStack>
-                </TabPanel>
-                <TabPanel px={0} py={8}>
-                  <Settings project={props.project} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-
+            {getCommentsQuery.data?.data.map(comment => <Box mb="8">
+              <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />
+            </Box>)}
           </Box>
-        </VStack>
+        </Box>
 
-
-      </Container>
-
-      <Footer maxWidth="5xl" />
+        <Flex>
+          <Spacer />
+          <VStack alignItems="stretch" spacing={4}>
+            <HStack spacing={2} fontSize="xs">
+              {new Array(pageCount).fill(0).map((_, index) => {
+                return (
+                  <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
+                )
+              })}
+            </HStack>
+          </VStack>
+        </Flex>
+      </MainLayout>
     </>
   )
 }
@@ -397,7 +391,7 @@ function Settings(props: {
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
             Delete Project
-            </AlertDialogHeader>
+          </AlertDialogHeader>
 
           <AlertDialogBody>
             <Text>
@@ -411,7 +405,7 @@ function Settings(props: {
           <AlertDialogFooter>
             <Button ref={cancelDeleteProjectRef} onClick={onCloseDeleteProjectModal}>
               Cancel
-              </Button>
+            </Button>
             <Button ml={4} colorScheme="red" onClick={_ => deleteProjectMutation.mutate({ projectId: props.project.id })} isLoading={deleteProjectMutation.isLoading}>Delete</Button>
           </AlertDialogFooter>
         </AlertDialogContent>

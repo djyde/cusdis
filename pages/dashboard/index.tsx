@@ -9,6 +9,7 @@ import {
 import {
   Box,
   Button,
+  Image,
   Container,
   Flex,
   FormControl,
@@ -43,6 +44,7 @@ import {
   useDisclosure,
   useToast,
   VStack,
+  CSSObject,
 } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { Project } from "@prisma/client"
@@ -52,6 +54,7 @@ import { Head } from "../../components/Head"
 import { Footer } from "../../components/Footer"
 import { Navbar } from "../../components/Navbar"
 import { getSession } from "../../utils.server"
+import { MainLayout } from "../../components/Layout"
 
 export const createProject = async (body: { title: string }) => {
   const res = await apiClient.post("/projects", {
@@ -110,6 +113,13 @@ function Dashboard(props: { session: UserSession }) {
   if (!props.session) {
     return <div>Redirecting to signin..</div>
   }
+
+  return (
+    <>
+      <MainLayout session={props.session}>
+      </MainLayout>
+    </>
+  )
 
   return (
     <>
