@@ -59,7 +59,7 @@
 
 <div class="grid grid-cols-1 gap-4">
   <div class="grid grid-cols-2 gap-4">
-    <div>
+    <div class="px-1">
       <label class="mb-2 block dark:text-gray-200" for="nickname">{t('nickname')}</label>
       <input
         name="nickname"
@@ -68,7 +68,7 @@
         bind:value={nickname}
       />
     </div>
-    <div>
+    <div class="px-1">
       <label class="mb-2 block dark:text-gray-200" for="email">{t('email')}</label>
       <input
         name="email"
@@ -79,7 +79,7 @@
     </div>
   </div>
 
-  <div>
+  <div class="px-1">
     <label class="mb-2 block dark:text-gray-200" for="reply_content">{t('reply_placeholder')}</label>
     <textarea
       name="reply_content"
@@ -88,9 +88,9 @@
     />
   </div>
 
-  <div>
+  <div class="px-1">
     <button
-      
+
       class="text-sm bg-gray-200 p-2 px-4 font-bold"
       class:cusdis-disabled={loading}
       on:click={addComment}>{loading ? t('sending') : t('post_comment')}</button
