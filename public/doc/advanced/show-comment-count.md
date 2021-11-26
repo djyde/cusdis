@@ -6,9 +6,9 @@ Sometimes you want to show the comments count of a page. You can put `js/cusdis-
 <body>
   <div>
     <h1>Post Title</h1>
-    <span data-cusdis-count-page-id="{{ PAGE ID }}">0</span> comments
+    <span data-cusdis-count-page-id="{{ PAGE_ID }}">0</span> comments
   </div>
-  <script defer data-host="https://cusdis.com" data-app-id="{{ APP ID }}" src="https://cusdis.com/js/cusdis-count.umd.js"></script>
+  <script defer data-host="https://cusdis.com" data-app-id="{{ APP_ID }}" src="https://cusdis.com/js/cusdis-count.umd.js"></script>
 </body>
 ```
 
