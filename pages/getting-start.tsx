@@ -88,7 +88,7 @@ export async function getServerSideProps(ctx) {
 
   const projectService = new ProjectService(ctx.req)
 
-  const defaultProject = await projectService.getFirstProject({
+  const defaultProject = await projectService.getFirstProject(session.uid, {
     select: {
       id: true
     }

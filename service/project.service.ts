@@ -67,11 +67,12 @@ export class ProjectService extends RequestScopeService {
     return id
   }
 
-  async getFirstProject(options?: {
+  async getFirstProject(ownerId: string, options?: {
     select?: Prisma.ProjectSelect
   }) {
     const project = await prisma.project.findFirst({
       where: {
+        ownerId,
         deletedAt: null
       },
       orderBy: {

@@ -2,6 +2,7 @@ import * as React from "react"
 import { apiClient } from "../../utils.client"
 import { Project } from "@prisma/client"
 import { ProjectService } from "../../service/project.service"
+import { getSession } from "../../utils.server"
 
 
 export const getAllProjects = async () => {
@@ -21,11 +22,11 @@ function Dashboard() {
 
 export async function getServerSideProps(ctx) {
 
-  console.log('hhhhhhh')
+  const session = await getSession(ctx.req)
 
   const projectService = new ProjectService(ctx.req)
 
-  const defaultProject = await projectService.getFirstProject({
+  const defaultProject = await projectService.getFirstProject(session.uid, {
     select: {
       id: true
     }
