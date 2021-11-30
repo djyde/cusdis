@@ -125,7 +125,7 @@ function CommentComponent(props: {
     )
   }
 
-  const approveStyle: { [key: string]: CSSObject } = {
+  const approveStyle: { [key: string]: any } = {
     "true": {
       borderBottomWidth: "1px",
       borderRightWidth: "1px",
