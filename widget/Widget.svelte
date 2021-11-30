@@ -99,7 +99,7 @@
 
     <div class="my-8" />
 
-    <div class="mt-4">
+    <div class="mt-4 px-1">
       {#if loadingComments}
         <div class="text-gray-900 dark:text-gray-100">
           {t('loading')}...
