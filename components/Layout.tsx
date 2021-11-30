@@ -6,7 +6,7 @@ import { UserSession } from "../service"
 import NextLink from 'next/link'
 import { useRouter } from "next/router"
 import { SettingsIcon } from '@chakra-ui/icons'
-
+import { AiOutlineLogout, AiOutlineSetting } from 'react-icons/ai'
 export function MainLayout(props: { session: UserSession, children?: any }) {
 
   const router = useRouter()
@@ -61,10 +61,15 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
               <VStack align="stretch" px="6">
                 <NextLink href="/user" passHref>
                   <Link fontSize="sm" color="gray.500" fontWeight="medium">
-                    <Icon as={SettingsIcon} mr="2" />
+                    <Icon as={AiOutlineSetting} mr="2" />
                     Settings
                   </Link>
                 </NextLink>
+
+                <Link fontSize="sm" color="gray.500" fontWeight="medium">
+                  <Icon as={AiOutlineLogout} mr="2" />
+                  Logout
+                </Link>
               </VStack>
             </VStack>
           </Box>

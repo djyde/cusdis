@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack } from '@chakra-ui/react'
+import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -15,6 +15,7 @@ import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
+import { AiOutlineCode} from 'react-icons/ai'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -208,17 +209,56 @@ function ProjectPage(props: {
 
   const { commentCount = 0, pageCount = 0 } = getCommentsQuery.data || {}
 
+  const embedCodeModal = useDisclosure()
+
   return (
     <>
       <MainLayout session={props.session}>
-        <VStack align="stretch" spacing="8">
-          <Box>
+        <VStack align="stretch" spacing="24">
+          <VStack align="stretch">
             <Text fontSize="lg" fontWeight="bold">
               {props.project.title}
             </Text>
-          </Box>
 
-          <Box borderTopWidth="1px" borderBottomWidth="1px" borderColor="gray.100" py="4">
+            <Box>
+              <Button onClick={_ => void embedCodeModal.onOpen()} leftIcon={<Icon as={AiOutlineCode}></Icon>} size="xs">Embed Code</Button>
+            </Box>
+
+            <Modal onClose={embedCodeModal.onClose} isOpen={embedCodeModal.isOpen} size="xl">
+              <ModalOverlay /> 
+              <ModalContent>
+                <ModalHeader>
+                  Embed Code
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Box>
+                    {typeof window !== 'undefined' && <Box w="full" as="pre" whiteSpace="pre-wrap" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
+                      <code>
+                        {`<div id="cusdis_thread"
+  data-host="${location.origin}"
+  data-app-id="${props.project.id}"
+  data-page-id="{{ PAGE_ID }}"
+  data-page-url="{{ PAGE_URL }}"
+  data-page-title="{{ PAGE_TITLE }}"
+></div>
+<script async defer src="${location.origin}/js/cusdis.es.js"></script>
+`}
+                      </code>
+                    </Box>
+                    }
+                    <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/sdk">SDK reference</Link>
+                  </Box>
+
+                </ModalBody>
+                <ModalFooter>
+                  <Button onClick={embedCodeModal.onClose}>Close</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </VStack>
+
+          <Box borderTopWidth="1px" borderBottomWidth="1px" borderColor="gray.100" py="8">
             <StatGroup>
               <Stat>
                 <StatLabel>
