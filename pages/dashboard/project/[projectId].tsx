@@ -1,4 +1,4 @@
-import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@chakra-ui/react'
+import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Drawer, DrawerOverlay, DrawerContent, DrawerBody, DrawerCloseButton } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -15,7 +15,7 @@ import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
-import { AiOutlineCode} from 'react-icons/ai'
+import { AiOutlineCode, AiOutlineUnorderedList} from 'react-icons/ai'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -210,9 +210,20 @@ function ProjectPage(props: {
   const { commentCount = 0, pageCount = 0 } = getCommentsQuery.data || {}
 
   const embedCodeModal = useDisclosure()
+  const preferencesModal = useDisclosure()
 
   return (
     <>
+      <Head title={props.project.title}></Head>
+      <Drawer isOpen={preferencesModal.isOpen} onClose={preferencesModal.onClose} placement="right" size="lg">
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerBody>
+            <Settings project={props.project} />
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
       <MainLayout session={props.session}>
         <VStack align="stretch" spacing="24">
           <VStack align="stretch">
@@ -220,9 +231,10 @@ function ProjectPage(props: {
               {props.project.title}
             </Text>
 
-            <Box>
+            <HStack align="stretch" spacing="4">
               <Button onClick={_ => void embedCodeModal.onOpen()} leftIcon={<Icon as={AiOutlineCode}></Icon>} size="xs">Embed Code</Button>
-            </Box>
+              <Button onClick={_ => void preferencesModal.onOpen()} leftIcon={<Icon as={AiOutlineUnorderedList}></Icon>} size="xs">Preferences</Button>
+            </HStack>
 
             <Modal onClose={embedCodeModal.onClose} isOpen={embedCodeModal.isOpen} size="xl">
               <ModalOverlay /> 
@@ -257,7 +269,7 @@ function ProjectPage(props: {
               </ModalContent>
             </Modal>
           </VStack>
-
+{/* 
           <Box borderTopWidth="1px" borderBottomWidth="1px" borderColor="gray.100" py="8">
             <StatGroup>
               <Stat>
@@ -278,7 +290,7 @@ function ProjectPage(props: {
                 </StatNumber>
               </Stat>
             </StatGroup>
-          </Box>
+          </Box> */}
 
           <Box>
             <HStack align="start" spacing="8">
@@ -295,6 +307,9 @@ function ProjectPage(props: {
               </HStack>
             </HStack>
             <Box>
+              {getCommentsQuery.data?.data.length === 0 && <Box textAlign="center" p="8" fontSize="sm" textColor="gray.400">
+                  No comment yet
+                </Box>}
               {getCommentsQuery.data?.data.map(comment => <Box mb="2">
                 <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />
               </Box>)}
@@ -499,25 +514,6 @@ function Settings(props: {
         spacing={8}
         alignItems="stretch"
       >
-        <VStack alignItems="start">
-          <Heading as="h1" size="md" mb={4} >Embed Code</Heading>
-          {typeof window !== 'undefined' && <Box w="full" as="pre" whiteSpace="pre-wrap" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
-            <code>
-              {`<div id="cusdis_thread"
-  data-host="${location.origin}"
-  data-app-id="${props.project.id}"
-  data-page-id="{{ PAGE_ID }}"
-  data-page-url="{{ PAGE_URL }}"
-  data-page-title="{{ PAGE_TITLE }}"
-></div>
-<script async defer src="${location.origin}/js/cusdis.es.js"></script>
-`}
-            </code>
-          </Box>
-          }
-          <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/sdk">SDK reference</Link>
-        </VStack>
-
         <VStack alignItems="start">
           <HStack mt={4}>
             <Switch onChange={e => {
