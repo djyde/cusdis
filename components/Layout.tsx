@@ -7,6 +7,8 @@ import NextLink from 'next/link'
 import { useRouter } from "next/router"
 import { SettingsIcon } from '@chakra-ui/icons'
 import { AiOutlineLogout, AiOutlineSetting } from 'react-icons/ai'
+import { signout, signOut } from "next-auth/client"
+
 export function MainLayout(props: { session: UserSession, children?: any }) {
 
   const router = useRouter()
@@ -66,7 +68,7 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
                   </Link>
                 </NextLink>
 
-                <Link fontSize="sm" color="gray.500" fontWeight="medium">
+                <Link onClick={_ => signOut()} fontSize="sm" color="gray.500" fontWeight="medium">
                   <Icon as={AiOutlineLogout} mr="2" />
                   Logout
                 </Link>

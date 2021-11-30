@@ -74,6 +74,9 @@ export class ProjectService extends RequestScopeService {
       where: {
         deletedAt: null
       },
+      orderBy: {
+        createdAt: 'asc'
+      },
       select:  options?.select
     })
 
