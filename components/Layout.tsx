@@ -6,8 +6,9 @@ import { UserSession } from "../service"
 import NextLink from 'next/link'
 import { useRouter } from "next/router"
 import { SettingsIcon } from '@chakra-ui/icons'
-import { AiOutlineLogout, AiOutlineSetting } from 'react-icons/ai'
+import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
+import { Footer } from "./Footer"
 
 export function MainLayout(props: { session: UserSession, children?: any }) {
 
@@ -68,10 +69,16 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
                   </Link>
                 </NextLink>
 
+                <Link href="/doc" isExternal fontSize="sm" color="gray.500" fontWeight="medium">
+                  <Icon as={AiOutlineFileText} mr="2" />
+                  Documentation
+                </Link>
+
                 <Link onClick={_ => signOut()} fontSize="sm" color="gray.500" fontWeight="medium">
                   <Icon as={AiOutlineLogout} mr="2" />
                   Logout
                 </Link>
+                
               </VStack>
             </VStack>
           </Box>
@@ -79,7 +86,11 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
           <Box flex="1" p="8">
             {props.children}
           </Box>
+
         </Flex>
+
+        <Footer />
+
       </Container>
 
     </>

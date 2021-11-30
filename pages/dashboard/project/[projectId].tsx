@@ -15,7 +15,7 @@ import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
-import { AiOutlineCode, AiOutlineUnorderedList} from 'react-icons/ai'
+import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl} from 'react-icons/ai'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -233,7 +233,7 @@ function ProjectPage(props: {
 
             <HStack align="stretch" spacing="4">
               <Button onClick={_ => void embedCodeModal.onOpen()} leftIcon={<Icon as={AiOutlineCode}></Icon>} size="xs">Embed Code</Button>
-              <Button onClick={_ => void preferencesModal.onOpen()} leftIcon={<Icon as={AiOutlineUnorderedList}></Icon>} size="xs">Preferences</Button>
+              <Button onClick={_ => void preferencesModal.onOpen()} leftIcon={<Icon as={AiOutlineControl}></Icon>} size="xs">Preferences</Button>
             </HStack>
 
             <Modal onClose={embedCodeModal.onClose} isOpen={embedCodeModal.isOpen} size="xl">
