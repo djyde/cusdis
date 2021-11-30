@@ -10,6 +10,9 @@ import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert } 
 import { signout, signOut } from "next-auth/client"
 import { Footer } from "./Footer"
 
+// just for type
+const LinkBox2 = LinkBox as any
+
 export function MainLayout(props: { session: UserSession, children?: any }) {
 
   const router = useRouter()
@@ -46,7 +49,7 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
 
                     return (
                       <>
-                        <LinkBox {...styles} transition="all .2s" rounded="md" px="2" py="1"  _hover={selectedMenuItemStyle}>
+                        <LinkBox2 {...styles} transition="all .2s" rounded="md" px="2" py="1"  _hover={selectedMenuItemStyle}>
                           <NextLink passHref href={`/dashboard/project/${project.id}`}>
                             <LinkOverlay>
                               <HStack align="center" >
@@ -59,7 +62,7 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
                               </HStack>
                             </LinkOverlay>
                           </NextLink>
-                        </LinkBox>
+                        </LinkBox2>
                       </>
                     )
                   })}
