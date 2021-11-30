@@ -94,7 +94,7 @@ export async function getServerSideProps(ctx) {
     }
   })
 
-  if (!defaultProject) {
+  if (defaultProject) {
     // redirect to project dashboard
     return {
       redirect: {
