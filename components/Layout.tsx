@@ -1,4 +1,4 @@
-import { Box, Container, CSSObject, Flex, HStack, LinkBox, LinkOverlay, VStack, Text, Image, Link, Spacer, Button, Icon } from "@chakra-ui/react"
+import { Box, Container, CSSObject, Flex, HStack, LinkBox, LinkOverlay, VStack, Text, Image, Link, Spacer, Button, Icon, Tooltip } from "@chakra-ui/react"
 import React from "react"
 import { useQuery } from "react-query"
 import { getAllProjects } from "../pages/dashboard"
@@ -6,7 +6,7 @@ import { UserSession } from "../service"
 import NextLink from 'next/link'
 import { useRouter } from "next/router"
 import { SettingsIcon } from '@chakra-ui/icons'
-import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText } from 'react-icons/ai'
+import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
 import { Footer } from "./Footer"
 
@@ -29,7 +29,7 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
           <Box borderRight="0" borderColor="gray.200" w="64">
             <HStack align="center" p={6} spacing="2" mb="12">
               <Image w={12} src="/images/artworks/logo-256.png" />
-              <Text fontSize="md" fontWeight="bold" color="gray.700">Cusdis</Text>
+              <Link  href="/" fontSize="md" fontWeight="bold" color="gray.700">Cusdis</Link>
             </HStack>
 
             <VStack align="stretch" spacing="48">
@@ -49,9 +49,14 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
                         <LinkBox {...styles} transition="all .2s" rounded="md" px="2" py="1"  _hover={selectedMenuItemStyle}>
                           <NextLink passHref href={`/dashboard/project/${project.id}`}>
                             <LinkOverlay>
-                              <Text color="gray.700" fontSize="sm">
-                                {project.title}
-                              </Text>
+                              <HStack align="center" >
+                                {/* <Box width="5px" height="5px" borderRadius="50%" bgColor="green.400">
+                                </Box> */}
+                                <Text color="gray.700" fontSize="sm">
+                                  {project.title}
+                                </Text>
+                                <Spacer />
+                              </HStack>
                             </LinkOverlay>
                           </NextLink>
                         </LinkBox>
