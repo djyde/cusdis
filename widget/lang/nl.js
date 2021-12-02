@@ -11,7 +11,7 @@ export default {
   sending: 'versturen...',
 
   // reply
-  mod_badge: 'BEHEERDER',
+  mod_badge: 'MOD',
   content_is_required: 'Tekst is verplicht',
   nickname_is_required: 'Gebruikersnaam is verplicht',
 
