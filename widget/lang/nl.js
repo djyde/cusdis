@@ -1,4 +1,4 @@
-export default {
+window.CUSDIS_LOCALE = {
   powered_by: 'Reacties mogelijk gemaakt door Cusdis',
   post_comment: 'Reageer',
   loading: 'Laden',
