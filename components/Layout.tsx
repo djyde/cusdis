@@ -1,14 +1,15 @@
-import { Box, Container, CSSObject, Flex, HStack, LinkBox, LinkOverlay, VStack, Text, Image, Link, Spacer, Button, Icon, Tooltip } from "@chakra-ui/react"
+import { Box, Container, CSSObject, Flex, HStack, LinkBox, LinkOverlay, VStack, Text, Image, Link, Spacer, Button, Icon, Tooltip, Modal, ModalOverlay, ModalBody, useDisclosure, ModalHeader, FormControl, Input, ModalContent, FormLabel, ModalFooter, ModalCloseButton, useToast } from "@chakra-ui/react"
 import React from "react"
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 import { getAllProjects } from "../pages/dashboard"
 import { UserSession } from "../service"
 import NextLink from 'next/link'
 import { useRouter } from "next/router"
 import { SettingsIcon } from '@chakra-ui/icons'
-import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert } from 'react-icons/ai'
+import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
 import { Footer } from "./Footer"
+import { createProject } from "../pages/getting-start"
 
 // just for type
 const LinkBox2 = LinkBox as any
@@ -16,6 +17,11 @@ const LinkBox2 = LinkBox as any
 export function MainLayout(props: { session: UserSession, children?: any }) {
 
   const router = useRouter()
+
+  const createProjectMutation = useMutation(createProject)
+  const createProjectModal = useDisclosure()
+  const toast = useToast()
+  const titleInputRef = React.useRef<HTMLInputElement>(null)
 
   const getProjects = useQuery("getProjects", getAllProjects, {
     enabled: !!props.session,
@@ -25,6 +31,27 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
     bgColor: 'gray.50',
   }
 
+  async function onClickCreateProject() {
+    if (!titleInputRef.current.value) {
+      return
+    }
+
+    await createProjectMutation.mutate(
+      {
+        title: titleInputRef.current.value,
+      },
+      {
+        onSuccess(data) {
+          toast({
+            status: "success",
+            title: "Project created",
+          })
+          location.href = `/dashboard/project/${data.data.id}`
+        },
+      }
+    )
+  }
+
   return (
     <>
       <Container maxW="container.xl">
@@ -32,7 +59,7 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
           <Box borderRight="0" borderColor="gray.200" w="64">
             <HStack align="center" p={6} spacing="2" mb="12">
               <Image w={12} src="/images/artworks/logo-256.png" />
-              <Link  href="/" fontSize="md" fontWeight="bold" color="gray.700">Cusdis</Link>
+              <Link href="/" fontSize="md" fontWeight="bold" color="gray.700">Cusdis</Link>
             </HStack>
 
             <VStack align="stretch" spacing="48">
@@ -49,7 +76,7 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
 
                     return (
                       <>
-                        <LinkBox2 {...styles} transition="all .2s" rounded="md" px="2" py="1"  _hover={selectedMenuItemStyle}>
+                        <LinkBox2 {...styles} transition="all .2s" rounded="md" px="2" py="1" _hover={selectedMenuItemStyle}>
                           <NextLink passHref href={`/dashboard/project/${project.id}`}>
                             <LinkOverlay>
                               <HStack align="center" >
@@ -66,6 +93,34 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
                       </>
                     )
                   })}
+                </Box>
+
+                <Box p={4}>
+                  <Modal isOpen={createProjectModal.isOpen} onClose={createProjectModal.onClose}>
+                    <ModalOverlay />
+
+                    <ModalContent>
+                      <ModalHeader>
+                        New website
+                      </ModalHeader>
+                      <ModalCloseButton />
+
+                      <ModalBody>
+                        <FormControl>
+                          <FormLabel>
+                            Website name
+                          </FormLabel>
+                          <Input ref={titleInputRef}></Input>
+                        </FormControl>
+                      </ModalBody>
+                      <ModalFooter>
+                        <Button onClick={_ => void onClickCreateProject()} isLoading={createProjectMutation.isLoading} >Create</Button>
+                      </ModalFooter>
+                    </ModalContent>
+                  </Modal>
+                  <Button onClick={createProjectModal.onOpen} leftIcon={<Icon as={AiOutlinePlus} />} size="xs" w="full">
+                    New website
+                  </Button>
                 </Box>
               </Box>
 
@@ -86,7 +141,7 @@ export function MainLayout(props: { session: UserSession, children?: any }) {
                   <Icon as={AiOutlineLogout} mr="2" />
                   Logout
                 </Link>
-                
+
               </VStack>
             </VStack>
           </Box>
