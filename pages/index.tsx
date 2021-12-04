@@ -360,6 +360,15 @@ function IndexPage({ session, contributers }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> | Redirect = async (ctx) => {
   const session = await getSession(ctx.req)
 
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/api/auth/signin',
+        permanent: false
+      }
+    }
+  }
+
   if (!resolvedConfig.isHosted) {
     return {
       redirect: {
