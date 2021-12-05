@@ -7,7 +7,7 @@ window.CUSDIS_LOCALE = {
   email: 'Email (optioneel)',
   nickname: 'Gebruikersnaam',
   reply_placeholder: 'Reactie',
-  reply_btn: 'Plaats',
+  reply_btn: 'Reageer',
   sending: 'versturen...',
 
   // reply
