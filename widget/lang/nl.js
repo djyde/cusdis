@@ -1,20 +1,20 @@
 window.CUSDIS_LOCALE = {
-  powered_by: 'Reacties mogelijk gemaakt door Cusdis',
+  powered_by: 'Mogelijk gemaakt door Cusdis',
   post_comment: 'Reageer',
   loading: 'Laden',
 
   // comment
   email: 'Email (optioneel)',
   nickname: 'Gebruikersnaam',
-  reply_placeholder: 'Reageer...',
-  reply_btn: 'Reageer',
+  reply_placeholder: 'Reactie',
+  reply_btn: 'Plaats',
   sending: 'versturen...',
 
   // reply
   mod_badge: 'MOD',
-  content_is_required: 'Tekst is verplicht',
+  content_is_required: 'Reactie is verplicht',
   nickname_is_required: 'Gebruikersnaam is verplicht',
 
   comment_has_been_sent:
-    'Je reactie is verstuurd. Wacht op goedkeuring',
+    'Je reactie is verstuurd wacht op goedkeuring om hem te zien',
 }
