@@ -1,4 +1,4 @@
-export default {
+window.CUSDIS_LOCALE = {
   powered_by: 'Предоставено от Cusdis',
   post_comment: 'Коментирай',
   loading: 'Зареждане',
