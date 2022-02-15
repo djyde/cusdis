@@ -24,9 +24,9 @@ Publii > sites > *NAME-OF-SITE* > input > themes > *THEME-NAME* > partials
 ├─ Publii/
 │  └─ sites/
 |     └─ NAME-OF-SITE/
-│        └─ input
-|           └─ themes
-|              └─ THEME-NAME
+│        └─ input/
+|           └─ themes/
+|              └─ THEME-NAME/
 |                 └─ partials
 .
 ```
@@ -49,7 +49,7 @@ Paste the following code inside your cusdis partial:
 <script async defer src="https://cusdis-comments-candidexmedia.vercel.app/js/cusdis.es.js"></script>
 ```
 
-You should can find the `data-app-id` link on your Cusdis dashboard by clicking on the site and clicking on "Settings":
+You can find the `data-app-id` link on your Cusdis dashboard by clicking on the site and clicking on "Settings":
 
 ![image](https://user-images.githubusercontent.com/55474996/143308433-e17d5131-aa90-4bac-9352-fb7ca28cd8cf.png)
 
@@ -67,8 +67,8 @@ Publii > sites > *NAME-OF-SITE* > input > themes > *THEME-NAME*
 ├─ Publii/
 │  └─ sites/
 |     └─ NAME-OF-SITE/
-│        └─ input
-|           └─ themes
+│        └─ input/
+|           └─ themes/
 |              └─ THEME-NAME
 .
 ```
@@ -122,8 +122,8 @@ Publii > sites > *NAME-OF-SITE* > input > themes > *THEME-NAME*
 ├─ Publii/
 │  └─ sites/
 |     └─ NAME-OF-SITE/
-│        └─ input
-|           └─ themes
+│        └─ input/
+|           └─ themes/
 |              └─ THEME-NAME
 .
 ```
