@@ -27,6 +27,7 @@ export default apiHandler()
           return prisma.comment.count({
             where: {
               deletedAt: null,
+              approved: true,
               page: {
                 slug: id,
                 projectId,
