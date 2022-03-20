@@ -24,6 +24,15 @@ export async function getServerSideProps(ctx) {
 
   const session = await getSession(ctx.req)
 
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/api/auth/signin',
+        permanent: false,
+      }
+    }
+  }
+
   const projectService = new ProjectService(ctx.req)
 
   const defaultProject = await projectService.getFirstProject(session.uid, {
