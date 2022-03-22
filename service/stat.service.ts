@@ -12,19 +12,19 @@ export class StatService {
       properties: any
     },
   ) {
-    if (this.client) {
-      try {
-        this.client.capture(event, {
-          identity: options?.identity,
-          properties: options?.properties || {},
-        })
-      } catch (e) {
-        console.error(e)
-        // TODO: log error
-      }
-    } else {
-      return null
-    }
+    // if (this.client) {
+    //   try {
+    //     this.client.capture(event, {
+    //       identity: options?.identity,
+    //       properties: options?.properties || {},
+    //     })
+    //   } catch (e) {
+    //     console.error(e)
+    //     // TODO: log error
+    //   }
+    // } else {
+    //   return null
+    // }
   }
 
   start(
