@@ -61,6 +61,15 @@ if (resolvedConfig.useGithub) {
   )
 }
 
+if (resolvedConfig.useGitlab) {
+  providers.push(
+    Providers.GitLab({
+      clientId: process.env.GITLAB_ID,
+      clientSecret: process.env.GITLAB_SECRET,
+    })
+  )
+}
+
 if (resolvedConfig.google.id) {
   providers.push(
     Providers.Google({

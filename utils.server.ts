@@ -10,6 +10,7 @@ type EnvVariable = string | undefined
 export const resolvedConfig = {
   useLocalAuth: process.env.USERNAME && process.env.PASSWORD,
   useGithub: process.env.GITHUB_ID && process.env.GITHUB_SECRET,
+  useGitlab: process.env.GITLAB_ID && process.env.GITLAB_SECRET,
   jwtSecret: process.env.JWT_SECRET,
   isHosted: process.env.IS_HOSTED === 'true',
   host: process.env.HOST || 'https://cusdis.com',
