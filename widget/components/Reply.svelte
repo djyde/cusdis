@@ -58,7 +58,7 @@
 </script>
 
 <div class="grid grid-cols-1 gap-4">
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid sm:grid-cols-2 gap-4">
     <div class="px-1">
       <label class="mb-2 block dark:text-gray-200" for="nickname">{t('nickname')}</label>
       <input
