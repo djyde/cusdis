@@ -34,7 +34,7 @@
     {comment.parsedCreatedAt}
   </div>
 
-  <div class="text-gray-500 my-2 dark:text-gray-200">
+  <div class="comment text-gray-500 my-2 dark:text-gray-200">
     {@html comment.parsedContent}
   </div>
 
