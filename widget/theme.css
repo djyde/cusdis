@@ -6,3 +6,7 @@
 blockquote {
   @apply px-4 py-2 bg-gray-100 my-4 dark:bg-gray-900;
 }
+
+.comment>p + p {
+  margin-top: 0.75rem;
+}
