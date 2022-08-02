@@ -6,9 +6,9 @@ window.CUSDIS_LOCALE = {
     // comment
     email: '電郵地址 (可選)',
     nickname: '暱稱',
-    reply_placeholder: '回覆內容...',
+    reply_placeholder: '回覆內容…',
     reply_btn: '回覆',
-    sending: '發送中...',
+    sending: '發送中…',
   
     // reply
     mod_badge: '管理員',
