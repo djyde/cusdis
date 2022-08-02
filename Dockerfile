@@ -1,4 +1,4 @@
-FROM node:15.14.0-alpine3.10
+FROM node:16.13.0-alpine3.14
 
 VOLUME [ "/data" ]
 
