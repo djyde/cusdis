@@ -12,6 +12,7 @@ jobs:
   image-test:
     name: Image Test
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - uses: actions/checkout@v3
       - name: Lower case for ghcr
