@@ -2,10 +2,24 @@
 
 [Publii](https://getpublii.com/) is a free and open source static site generator and Content Management System (CMS) designed to create a personal blog, portfolio, or corporate website. Publii sites are built using handlebars.js, HTML, CSS, json, and Javascript.
 
-Once you have Publii [downloaded](https://getpublii.com/download/) installed on your system, as well as a [theme installed](https://getpublii.com/docs/installing-and-updating-publii-themes.html), you can easily get started building your own site. For more detail, follow the documentation for [Users](https://getpublii.com/docs/) and [Developpers](https://getpublii.com/dev/).
+Once you have Publii [downloaded](https://getpublii.com/download/) on your system, as well as a [theme installed](https://getpublii.com/docs/installing-and-updating-publii-themes.html), you can easily get started building your own site. For more details, follow the documentation for [Users](https://getpublii.com/docs/) and [Developpers](https://getpublii.com/dev/).
 
-## Usage
-Here's the tutorial for integrating Cusdis into most themes to replace Disqus. Granted, you could copy paste your custom Cusdis code directly into your Publii post editor using the WYSIWYG HTML source code view, but this method is more efficient in the long run.
+## Simple Method: Plugin
+
+Publii has created a [free plugin](https://marketplace.getpublii.com/plugins/cusdis-comments/) to easily intergrate Cusdis on any site. To do so, follow these steps:
+
+1. Open Publii’s App Menu by clicking on the three dots icon in the top-right of the app UI; this icon is always visible except when creating or editing a new post, tag or menu.
+2. In the menu that appears, click on Plugins. This will take you to the Plugins page where you can see any plugins that you have installed.
+3. Click on the Get More Plugins box to open the Publii Plugins Marketplace in our browser.
+4. Select the [Cusdis Comments plugin](https://marketplace.getpublii.com/plugins/cusdis-comments/) and click on the Download button under the description to download the zipped install package.
+5. Once the download has finished, in the Plugins screen of the Publii app, click on the Install Plugin button at the top of the page. This will open your file explorer; browse to the folder where you downloaded your plugin, and select it. Publii will automatically install the plugin and add it to the list of available plugins in both the Plugins and Tools & Plugins pages in Publii.
+
+For more details on activating and using the plugin, [consult Publii's plugin page](https://getpublii.com/docs/cusdis-comments.html).
+
+## Manual Method: Edit Theme Files (Advanced)
+Here's the older method for integrating Cusdis into Publii by manually editing the theme files.
+
+Granted, you could copy paste your custom Cusdis code directly into your Publii post editor using the WYSIWYG HTML source code view. That said, this method is more efficient in the long run for multiple posts.
 
 In terms of customizing themes, you can edit the theme files directly, but Publii recommends creating an override folder. For more info, consult the [Theme overrides article](https://getpublii.com/dev/theme-overrides/) and [this forum post](https://forum.getpublii.com/topic/post-template-adress-templates/#post-6310)
 
@@ -13,7 +27,6 @@ In terms of customizing themes, you can edit the theme files directly, but Publi
 ### Create a `cusdis.hbs` partial
 
 Go to the file directory for your Publii websites. If you cannot find this file directory: In Publii, click on the three vertical dots at the top right and click on "App Settings". Scroll to "Files location" > "Sites location".
-
 
 Head to the the partials folder of your site's theme: 
 
@@ -31,7 +44,7 @@ Publii > sites > *NAME-OF-SITE* > input > themes > *THEME-NAME* > partials
 .
 ```
 
-Create a partial where you will store the Cusdis code. For this tutorial, let's call it `cusdis.hbs`. You could also rename the Disqus partial and delete the code inside the file. Make sure that the file you name has the `.hbs` file extension.
+Create a partial where you will store the Cusdis code. For this tutorial, let's call it `cusdis.hbs`. Make sure that the file you name has the `.hbs` file extension.
 
 
 ### Add the code
@@ -46,7 +59,7 @@ Paste the following code inside your cusdis partial:
   data-page-title="{{title}}"
 ></div>
 
-<script async defer src="https://cusdis-comments-candidexmedia.vercel.app/js/cusdis.es.js"></script>
+<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
 ```
 
 You can find the `data-app-id` link on your Cusdis dashboard by clicking on the site and clicking on "Settings":
@@ -80,11 +93,10 @@ Here's an example of what you would replace in `post.hbs`:
 Old code:
 ```html
 {{#if postViewConfig.displayComments}}
-  <div class="comments">
-    <h3>
-      {{ translate 'post.comments' }}
-    </h3>
-    {{> disqus}} <! -- change this line -->
+  <div class="post__comments">
+    <div class="wrapper">
+      {{{@commentsCustomCode}}} <! -- can remove this line if you don't want other comment plugins-->
+    </div>
   </div>
 {{/if}}
 ```
@@ -93,11 +105,11 @@ Replaced with:
 
 ```html
 {{#if postViewConfig.displayComments}}
-  <div class="comments">
-    <h3>
-      {{ translate 'post.comments' }}
-    </h3>
-    {{> cusdis}} <! -- modified line -->
+  <div class="post__comments">
+    <div class="wrapper">
+    <h2 class="h5">{{ translate 'post.comments' }}</h2> <! -- added this line -->
+      {{> cusdis}} <! -- added this line -->
+    </div>
   </div>
 {{/if}}
 ```
