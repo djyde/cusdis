@@ -20,7 +20,7 @@
     "start": "next start -p 3000",
     "start:with-migrate": "npm run db:generate && npm run db:deploy && next start -p 3000",
     "cp-widget-lang": "mkdir -p public/js/widget/lang && cp -r widget/lang public/js/widget",
-    "build:widget": "vite build --config scripts/vite.widget.config.js && npm run cp-widget-lang && npm run build:iframe && npm run build:count",
+    "build:widget": "npm run cp-widget-lang && vite build --config scripts/vite.widget.config.js && npm run build:sdk && npm run build:iframe && npm run build:count",
     "build:sdk": "vite build --config scripts/vite.sdk.config.js",
     "build:iframe": "vite build --config scripts/vite.iframe.config.js",
     "build:count": "vite build --config scripts/vite.count.config.js"

@@ -27,6 +27,10 @@
     message = msg
   }
 
+  $: {
+    document.documentElement.style.setProperty('color-scheme', theme)
+  }
+
   onMount(() => {
 
     function onMessage(e) {

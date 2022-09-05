@@ -94,7 +94,7 @@
   <div class="px-1">
     <button
 
-      class="text-sm bg-gray-200 p-2 px-4 font-bold"
+      class="text-sm bg-gray-200 p-2 px-4 font-bold dark:bg-transparent dark:border dark:border-gray-100"
       class:cusdis-disabled={loading}
       on:click={addComment}>{loading ? t('sending') : t('post_comment')}</button
     >

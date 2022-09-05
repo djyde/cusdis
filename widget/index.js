@@ -14,6 +14,11 @@ const makeIframeContent = (target) => {
       window.CUSDIS_LOCALE = ${JSON.stringify(window.CUSDIS_LOCALE)}
       window.__DATA__ = ${JSON.stringify(target.dataset)}
     </script>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
