@@ -4,9 +4,9 @@ window.CUSDIS_LOCALE = {
     loading: '... جارى التحميل',
   
     // comment
-    email: 'البريد الالكترونى (اختيارى)',
-    nickname: 'أسمك',
-    reply_placeholder: '... رد',
+    email: '<p style="text-align: right;">البريد (اختياري)</p>',
+    nickname: '<p style="text-align: right;">الإسم</p>',
+    reply_placeholder: '<p style="text-align: right;">أكتب تعليقك</p>',
     reply_btn: 'رد',
     sending: '... جارى الارسال',
   
