@@ -13,6 +13,7 @@ COPY package.json yarn.lock /app/
 
 WORKDIR /app
 
+RUN npm install -g pnpm
 RUN yarn install --frozen-lockfile && npx browserslist@latest --update-db
 RUN npm run build:without-migrate
 
