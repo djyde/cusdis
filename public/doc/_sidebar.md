@@ -3,21 +3,24 @@
   - [Awesome Cusdis](awesome.md)
 - **Self-host Guide**
   - [Docker](/self-host/docker.md)
+  - [Railway](/self-host/railway.md)
   - [Vercel](/self-host/vercel.md)
   - [Manually Install](/self-host/manual.md)
 - **Integration**
+  - [JS SDK Reference](/advanced/sdk.md)
   - [React](https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis)
   - [Vue](https://github.com/2nthony/vue-cusdis)
   - [Docsify](/integration/docsify.md)
+  - [Jekyll](/integration/jekyll.md)
   - [Hugo](https://discourse.gohugo.io/t/free-and-open-source-comments-for-hugo/32940)
   - [Hexo](https://blog.cusdis.com/integate-cusdis-in-hexo)
   - [Mkdocs](/integration/mkdocs.md)
   - [Publii](/integration/publii.md)
 - **Features**
+  - [Moderation](/features/moderation.md)
   - [Email Notification](/features/notification.md)
-  - [Webhook](/advanced/webhook.md)
 - **Advanced**
-  - [JS SDK Reference](/advanced/sdk.md)
+  - [Webhook](/advanced/webhook.md)
   - [Show comment count](/advanced/show-comment-count.md)
   - [i18n](/advanced/i18n.md)
 - [**Contributing Guide**](/contributing.md)
