@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// next-auth BEGIN
+
+model Account {
+  id                 Int       @id @default(autoincrement())
+  compoundId         String    @unique @map(name: "compound_id")
+  userId             String    @map(name: "user_id")
+  providerType       String    @map(name: "provider_type")
+  providerId         String    @map(name: "provider_id")
+  providerAccountId  String    @map(name: "provider_account_id")
+  refreshToken       String?   @map(name: "refresh_token")
+  accessToken        String?   @map(name: "access_token")
+  accessTokenExpires DateTime? @map(name: "access_token_expires")
+  createdAt          DateTime  @default(now()) @map(name: "created_at")
+  updatedAt          DateTime  @default(now()) @map(name: "updated_at")
+
+
+  @@index([providerAccountId], name: "providerAccountId")
+  @@index([providerId], name: "providerId")
+  @@index([userId], name: "userId")
+  @@map(name: "accounts")
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       String   @map(name: "user_id")
+  expires      DateTime
+  sessionToken String   @unique @map(name: "session_token")
+  accessToken  String   @unique @map(name: "access_token")
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "sessions")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String?
+  displayName String?
+  email         String?   @unique
+  emailVerified DateTime? @map(name: "email_verified")
+  image         String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+
+  projects Project[]
+
+  Comment Comment[]
+
+  enableNewCommentNotification Boolean? @default(true) @map(name: "enable_new_comment_notification")
+  notificationEmail            String? @map(name: "notification_email")
+
+  @@map(name: "users")
+}
+
+model VerificationRequest {
+  id         Int      @id @default(autoincrement())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now()) @map(name: "created_at")
+  updatedAt  DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "verification_requests")
+}
+
+// next-auth END
+
+model Project {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  deletedAt DateTime? @map(name: "deleted_at")
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  pages Page[]
+
+  token                 String?
+  fetchLatestCommentsAt DateTime? @map(name: "fetch_latest_comments_at")
+
+  enableNotification Boolean? @default(true) @map(name: "enable_notification")
+
+  webhook String?
+  enableWebhook Boolean?
+
+  @@map(name: "projects")
+}
+
+model Page {
+  id String @id @default(uuid())
+
+  slug  String
+  url   String?
+  title String?
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  comments Comment[]
+
+
+  @@index([projectId], name: "projectId")
+  @@map("pages")
+}
+
+model Comment {
+  id String @id @default(uuid())
+
+  pageId String
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+  deletedAt DateTime?
+
+  moderatorId String?
+  moderator   User?   @relation(fields: [moderatorId], references: [id])
+  by_email    String?
+  by_nickname String
+  content     String
+
+  approved Boolean @default(false)
+
+  parentId String?
+  parent   Comment?  @relation("replies", fields: [parentId], references: [id])
+  replies  Comment[] @relation("replies")
+
+  @@map("comments")
+}
