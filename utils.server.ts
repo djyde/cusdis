@@ -1,3 +1,4 @@
+import 'server-only'
 import { PrismaClient } from '@prisma/client'
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
@@ -55,3 +56,39 @@ export const resolvedConfig = {
     apiKey: process.env.MINICAPTURE_API_KEY as EnvVariable,
   },
 };
+
+
+const __NEXTAUTH = {
+  baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
+  basePath: parseUrl(process.env.NEXTAUTH_URL).basePath,
+  baseUrlServer: parseUrl(
+    process.env.NEXTAUTH_URL_INTERNAL ||
+      process.env.NEXTAUTH_URL ||
+      process.env.VERCEL_URL
+  ).baseUrl,
+  basePathServer: parseUrl(
+    process.env.NEXTAUTH_URL_INTERNAL || process.env.NEXTAUTH_URL
+  ).basePath,
+  keepAlive: 0,
+  clientMaxAge: 0,
+  // Properties starting with _ are used for tracking internal app state
+  _clientLastSync: 0,
+  _clientSyncTimer: null,
+  _eventListenersAdded: false,
+  _clientSession: undefined,
+  _getSession: () => {},
+};
+function _apiBaseUrl() {
+  if (typeof window === "undefined") {
+    // NEXTAUTH_URL should always be set explicitly to support server side calls - log warning if not set
+    if (!process.env.NEXTAUTH_URL) {
+    }
+
+    // Return absolute path when called server side
+    return `${__NEXTAUTH.baseUrlServer}${__NEXTAUTH.basePathServer}`;
+  }
+  // Return relative path when called client side
+  return __NEXTAUTH.basePath;
+}
+export const getSession = () => {
+}
