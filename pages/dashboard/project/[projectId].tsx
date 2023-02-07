@@ -342,6 +342,8 @@ function Settings(props: {
   project: ProjectServerSideProps
 }) {
 
+  console.log(props.project)
+
   const importFile = React.useRef(null)
   const toast = useToast()
 
