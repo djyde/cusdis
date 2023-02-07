@@ -20,6 +20,10 @@ export default async function Page(props) {
     <div>
       {commentCount} comments
 
+      <div>
+        <a href={`/c/${props.params.projectId}?slug=__preview`} target="_blank">Preview</a>
+      </div>
+
       {pages.map(page => {
         return (
           <div key={page.id}>

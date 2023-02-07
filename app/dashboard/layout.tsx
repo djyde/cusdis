@@ -1,4 +1,5 @@
 import { getSession } from '../utils/next-auth'
+import '../style.css'
 import Navbar from './Navbar'
 
 export default async function Layout(props) {
