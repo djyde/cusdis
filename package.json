@@ -5,6 +5,9 @@
 		"generate:sqlite": "prisma generate --schema ./prisma/sqlite/schema.prisma",
 		"migrate:sqlite": "prisma migrate dev --schema ./prisma/sqlite/schema.prisma"
 	},
+	"engines": {
+		"node": ">=16"
+	},
 	"dependencies": {
 		"@next-auth/prisma-adapter": "^1.0.5",
 		"@prisma/client": "^4.9.0",
