@@ -1,4 +1,7 @@
 module.exports = {
+  experimental: {
+    appDir: true
+  },
   rewrites() {
     return [
       {
