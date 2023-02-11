@@ -3,16 +3,17 @@ import 'server-only'
 import { CommentComponent } from './Comment'
 
 export async function CommentList(props: {
-  comments: Comment[]
+  comments: Comment[],
+  locale: any
 }) {
   return (
-    <div>
+    <div className="flex flex-col gap-2" >
       {props.comments.map(comment => {
         return (
-          <>
+          <div key={comment.id}>
             {/* @ts-expect-error Server Component */}
-            <CommentComponent comment={comment} />
-          </>
+            <CommentComponent locale={props.locale} comment={comment} />
+          </div>
         )
       })}
     </div>

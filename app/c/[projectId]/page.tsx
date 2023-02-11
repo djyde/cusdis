@@ -2,8 +2,15 @@ import { prisma } from "../../utils/prisma"
 import { en } from "../lang/en"
 import { CommentList } from "./CommentList"
 import { ReplyForm } from "./ReplyForm"
+import { Inter } from '@next/font/google'
+import classNames from "classnames"
 
-export async function getComments (projectId: string, pageSlug: string, page: number, options?: {
+const inter = Inter({
+  subsets: ["latin"],
+})
+
+
+export async function getComments(projectId: string, pageSlug: string, page: number, options?: {
   parentId?: string
 }) {
   const comments = await prisma.comment.findMany({
@@ -37,12 +44,13 @@ export default async function Page(props) {
   const locale = en
 
   const comments = await getComments(props.params.projectId, slug, 1)
-  console.log(comments)
   return (
-    <div className="p-2">
-      <ReplyForm locale={locale} projectId={projectId} pageSlug={slug} />
+    <div className={classNames('p-48', inter.className)}>
+      <div className="mb-12">
+        <ReplyForm isEditing locale={locale} projectId={projectId} pageSlug={slug} />
+      </div>
       {/* @ts-expect-error Server Component */}
-      <CommentList comments={comments} />
+      <CommentList locale={locale} comments={comments} />
     </div>
   )
 }
