@@ -21,14 +21,20 @@ function useFormField<T>(initialValue: T) {
 export function ReplyForm(props: {
   locale: any,
   projectId: string
+  pageSlug: string
 }) {
   const usernameField = useFormField("")
   const emailField = useFormField("")
   const commentField = useFormField("")
 
   async function onClickReply() {
-    await axios.post('/api/v2/comments', {})
-    console.log(usernameField.value, commentField.value)
+    await axios.post('/api/v2/comments', {
+      projectId: props.projectId,
+      pageId: props.pageSlug,
+      comment: commentField.value,
+      username: usernameField.value,
+      email: emailField.value,
+    })
     // const res = await axios.post('/api/open/comments', {
     //   appId: props.projectId,
     //   pageId,
@@ -48,7 +54,7 @@ export function ReplyForm(props: {
         <input value={usernameField.value} onChange={usernameField.onChange} type="text" className="border-2 rounded p-1" />
       </div>
       <textarea value={commentField.value} onChange={commentField.onChange} placeholder={props.locale.reply_placeholder} className="w-full border-gray-200 border-2 rounded p-1"></textarea>
-      <button onClick={onClickReply}>{props.locale.reply_btn}</button>
+      <button type="button" onClick={onClickReply}>{props.locale.reply_btn}</button>
     </div>
   )
 }

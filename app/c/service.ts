@@ -95,7 +95,7 @@ export async function getComments(
   const allComments = await Promise.all(
     comments.map(async (comment: Comment) => {
       // get replies
-      const replies = await this.getComments(projectId, timezoneOffset, {
+      const replies = await getComments(projectId, timezoneOffset, {
         ...options,
         page: 1,
         // hard code 100 because we havent implement pagination in nested comment
