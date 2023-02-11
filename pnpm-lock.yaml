@@ -9,6 +9,7 @@ specifiers:
   '@emotion/react': ^11.1.4
   '@emotion/styled': ^11.0.0
   '@hapi/boom': ^9.1.2
+  '@next/font': ^13.1.6
   '@prisma/client': ^4.9.0
   '@sendgrid/mail': ^7.4.2
   '@sentry/node': ^6.3.1
@@ -63,6 +64,7 @@ dependencies:
   '@emotion/react': 11.10.4_z7hifwta6ulvsv7iwvxf3ule7q
   '@emotion/styled': 11.10.4_geya6r4y43fhiup4l5jw7dlez4
   '@hapi/boom': 9.1.4
+  '@next/font': 13.1.6
   '@prisma/client': 4.9.0_prisma@4.9.0
   '@sendgrid/mail': 7.7.0
   '@sentry/node': 6.19.7
@@ -1413,6 +1415,10 @@ packages:
 
   /@next/env/13.1.6:
     resolution: {integrity: sha512-s+W9Fdqh5MFk6ECrbnVmmAOwxKQuhGMT7xXHrkYIBMBcTiOqNWhv5KbJIboKR5STXxNXl32hllnvKaffzFaWQg==}
+    dev: false
+
+  /@next/font/13.1.6:
+    resolution: {integrity: sha512-AITjmeb1RgX1HKMCiA39ztx2mxeAyxl4ljv2UoSBUGAbFFMg8MO7YAvjHCgFhD39hL7YTbFjol04e/BPBH5RzQ==}
     dev: false
 
   /@next/swc-android-arm-eabi/13.1.6:
