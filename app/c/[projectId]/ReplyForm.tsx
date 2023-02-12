@@ -23,13 +23,18 @@ export function ReplyForm(props: {
   locale: any,
   projectId: string
   pageSlug: string
-  isEditing?: boolean
+  isEditing?: boolean,
+  cancelable?: boolean
+  parentId?: string
+  session?: any
+  isModerate?: boolean
 }) {
   const usernameField = useFormField("")
   const emailField = useFormField("")
   const commentField = useFormField("")
   const [isEditing, setIsEditing] = useState(!!props.isEditing)
   const $commentBox = useRef<HTMLTextAreaElement>(null)
+  const cancelable = props.cancelable !== undefined ? props.cancelable : true
 
   async function onClickReply() {
     await axios.post('/api/v2/comments', {
@@ -37,6 +42,7 @@ export function ReplyForm(props: {
       pageId: props.pageSlug,
       comment: commentField.value,
       username: usernameField.value,
+      parentId: props.parentId,
       email: emailField.value,
     })
     // const res = await axios.post('/api/open/comments', {
@@ -68,9 +74,21 @@ export function ReplyForm(props: {
       }
       {isEditing && (
         <div className="flex flex-col gap-4">
-          <textarea ref={$commentBox} className="border rounded w-full p-4"></textarea>
-          <div>
-            <button type="button" className="border text-sm px-3 py-1 rounded">Send</button>
+          {props.session && <>
+            <div>
+              {props.session.user.name}
+            </div>
+          </>}
+          <div className="flex flex-col md:flex-row gap-2">
+            <input value={emailField.value} onChange={emailField.onChange} className="border rounded px-2 py-1" type="email" placeholder={'email'} />
+            <input value={usernameField.value} onChange={usernameField.onChange} className="border rounded px-2 py-1" type="text" placeholder="Name" />
+          </div>
+          <textarea value={commentField.value} onChange={commentField.onChange} ref={$commentBox} className="border rounded w-full p-4"></textarea>
+          <div className="flex gap-2">
+            <button onClick={onClickReply} type="button" className="border text-sm px-3 py-1 rounded">Send</button>
+            {cancelable && <button onClick={_ => {
+              setIsEditing(false)
+            }} type="button" className="border text-sm px-3 py-1 rounded">Cancel</button>}
           </div>
         </div>
       )}

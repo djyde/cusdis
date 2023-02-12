@@ -25,6 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       pageUrl?: string,
       pageTitle?: string,
       email?: string,
+      parentId?: string
     }
 
     if (Object.keys(body).length === 0) {
@@ -32,14 +33,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return
     }
 
-    console.log('body', body)
     const comment = commentService.addComment(body.projectId, body.pageId, {
       content: body.comment,
       email: body.email,
       nickname: body.username,
       pageUrl: body.pageUrl,
-      pageTitle: body.pageTitle
-    })
+      pageTitle: body.pageTitle,
+    }, body.parentId)
     
     res.json({})
   }

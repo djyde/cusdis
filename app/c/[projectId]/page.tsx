@@ -4,6 +4,7 @@ import { CommentList } from "./CommentList"
 import { ReplyForm } from "./ReplyForm"
 import { Inter } from '@next/font/google'
 import classNames from "classnames"
+import { getSession } from "../../utils/next-auth"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -11,7 +12,8 @@ const inter = Inter({
 
 
 export async function getComments(projectId: string, pageSlug: string, page: number, options?: {
-  parentId?: string
+  parentId?: string,
+  onlyApproved?: boolean
 }) {
   const comments = await prisma.comment.findMany({
     orderBy: {
@@ -22,6 +24,7 @@ export async function getComments(projectId: string, pageSlug: string, page: num
         projectId: projectId,
         slug: pageSlug,
       },
+      approved: options?.onlyApproved ? true : undefined,
       parentId: options?.parentId
     },
     select: {
@@ -30,6 +33,7 @@ export async function getComments(projectId: string, pageSlug: string, page: num
       content: true,
       page: {
         select: {
+          slug: true,
           projectId: true
         }
       }
@@ -42,15 +46,28 @@ export default async function Page(props) {
   const slug = props.searchParams.slug
   const projectId = props.params.projectId
   const locale = en
+  const project = await prisma.project.findUnique({
+    where: {
+      id: projectId
+    },
+    select: {
+      ownerId: true
+    }
+  })
 
-  const comments = await getComments(props.params.projectId, slug, 1)
+  const session = await getSession()
+  const isModerate = project.ownerId === session?.uid
+  const comments = await getComments(props.params.projectId, slug, 1, {
+    onlyApproved: !isModerate,
+    parentId: null
+  })
   return (
     <div className={classNames('p-48', inter.className)}>
       <div className="mb-12">
-        <ReplyForm isEditing locale={locale} projectId={projectId} pageSlug={slug} />
+        <ReplyForm session={session} locale={locale} projectId={projectId} pageSlug={slug} />
       </div>
       {/* @ts-expect-error Server Component */}
-      <CommentList locale={locale} comments={comments} />
+      <CommentList session={session} locale={locale} comments={comments} />
     </div>
   )
 }
