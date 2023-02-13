@@ -14,7 +14,7 @@ export default function Navbar() {
       <div className={classnames('px-8 flex gap-4 text-gray-700 font-light border-b')}>
         <Link className={classnames({
           'border-b-2 border-black -mb-[1.5px]': segment === null
-        })} href="/dashboard">Pages</Link>
+        })} href="/dashboard">Overview</Link>
         <Link className={classnames({
           'border-b-2 border-black -mb-[1.5px]': segment === 'settings'
         })} href={`/dashboard/projects/${projectId}/settings`}>Settings</Link>

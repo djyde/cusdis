@@ -34,7 +34,7 @@ export async function CommentComponent(props: {
         <div>
           <CommentAction comment={props.comment} />
         </div>}
-      <ReplyForm parentId={props.comment.id} locale={props.locale} projectId={props.comment.page.projectId} pageSlug={props.comment.page.slug} />
+      <ReplyForm session={props.session} parentId={props.comment.id} locale={props.locale} projectId={props.comment.page.projectId} pageSlug={props.comment.page.slug} />
       {/* children comments */}
       <div className='pl-8'>
         {/* @ts-expect-error Server Component */}

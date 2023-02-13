@@ -13,7 +13,6 @@ const inter = Inter({
 
 export default async function Layout(props) {
   const session = await getSession()
-  console.log(session)
 
   if (!session) {
     redirect('/api/auth/signin')

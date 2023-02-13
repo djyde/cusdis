@@ -1,3 +1,5 @@
+'use client'
+
 import classnames from 'classnames'
 import { noop } from '../../utils'
 export const Button = (props: {
@@ -10,7 +12,7 @@ export const Button = (props: {
 }) => {
   const variant = props.variant || 'default'
 
-  const classNames = classnames("rounded-full px-4 py-1 font-medium cursor-pointer hover:bg-gray-100 hover:text-gray-900 transition-colors", {
+  const classNames = classnames("rounded-full text-sm px-4 py-1 font-medium cursor-pointer hover:bg-gray-100 hover:text-gray-900 transition-colors", {
     'text-gray-900 border-black border-2 hover:bg-black hover:text-gray-100 transition-colors': variant === 'default',
     'border-black border-2 bg-black text-gray-100': variant === 'primary'
   }, props.className)
