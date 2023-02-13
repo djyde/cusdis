@@ -31,12 +31,24 @@ export async function getComments(projectId: string, pageSlug: string, page: num
     select: {
       id: true,
       by_nickname: true,
+      moderator: {
+        select: {
+          displayName: true,
+          name: true,
+          id: true,
+        }
+      },
       content: true,
       approved: true,
       page: {
         select: {
           slug: true,
-          projectId: true
+          projectId: true,
+          project: {
+            select: {
+              ownerId: true
+            }
+          }
         }
       }
     }

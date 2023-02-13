@@ -77,7 +77,9 @@ export class CommentService extends RequestScopeService {
             equals: null,
           },
           ownerId: options?.onlyOwn
-            ? await (await this.getSession()).uid
+            ? await (
+                await this.getSession()
+              ).uid
             : undefined,
         },
       },
@@ -118,9 +120,10 @@ export class CommentService extends RequestScopeService {
           select,
         })
 
-        const parsedCreatedAt = dayjs.utc(comment.createdAt).utcOffset(timezoneOffset).format(
-          'YYYY-MM-DD HH:mm',
-        )
+        const parsedCreatedAt = dayjs
+          .utc(comment.createdAt)
+          .utcOffset(timezoneOffset)
+          .format('YYYY-MM-DD HH:mm')
         const parsedContent = markdown.render(comment.content) as string
         return {
           ...comment,
@@ -172,7 +175,28 @@ export class CommentService extends RequestScopeService {
       pageTitle?: string
     },
     parentId?: string,
+    posterId?: string,
   ) {
+    // check posterId
+    let poster: User = null
+    if (posterId) {
+      poster = await prisma.user.findUnique({
+        where: {
+          id: posterId
+        }
+      })
+    }
+
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId
+      },
+      select: {
+        ownerId: true
+      }
+    })
+    const isModerator = poster?.id && project.ownerId === poster?.id
+
     // touch page
     const page = await this.pageService.upsertPage(pageSlug, projectId, {
       pageTitle: body.pageTitle,
@@ -185,6 +209,8 @@ export class CommentService extends RequestScopeService {
         by_email: body.email,
         by_nickname: body.nickname,
         pageId: page.id,
+        moderatorId: poster?.id ? poster.id : undefined,
+        approved: isModerator ? true : false,
         parentId,
       },
     })
@@ -194,13 +220,19 @@ export class CommentService extends RequestScopeService {
     return created
   }
 
-  async addCommentAsModerator(parentId: string, content: string, options?: {
-    owner?: User
-  }) {
-    const session = options?.owner ? {
-      user: options.owner,
-      uid: options.owner.id
-    } : await this.getSession()
+  async addCommentAsModerator(
+    parentId: string,
+    content: string,
+    options?: {
+      owner?: User
+    },
+  ) {
+    const session = options?.owner
+      ? {
+          user: options.owner,
+          uid: options.owner.id,
+        }
+      : await this.getSession()
     const parent = await prisma.comment.findUnique({
       where: {
         id: parentId,
