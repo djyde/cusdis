@@ -1,8 +1,11 @@
 FROM node:16-alpine
 
 ARG DATABASE_URL
+ARG PORT
 
 ARG EnvironmentVariable
+
+ENV PORT=${PORT}
 
 ADD . /app
 WORKDIR /app
