@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { cookies } from "next/headers"
+import { cookies } from 'next/headers'
 
 const __NEXTAUTH = {
   baseUrl: parseUrl(process.env.NEXTAUTH_URL || process.env.VERCEL_URL).baseUrl,
@@ -79,10 +79,21 @@ export async function getSession() {
     ctx: {
       req: {
         headers: {
-          cookie: cookies().getAll().map(c => `${c.name}=${c.value}`).join(';'),
+          cookie: cookies()
+            .getAll()
+            .map((c) => `${c.name}=${c.value}`)
+            .join(';'),
         },
       },
     },
   })
-  return session
+  if (session) {
+    return {
+      uid: session.uid as string,
+      user: {
+        name: session.user.name,
+        image: session.user.image
+      },
+    }
+  }
 }
