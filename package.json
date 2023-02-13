@@ -27,11 +27,6 @@
   },
   "prettier": "@egoist/prettier-config",
   "dependencies": {
-    "@chakra-ui/icons": "^1.0.10",
-    "@chakra-ui/react": "^1.1.4",
-    "@emotion/react": "^11.1.4",
-    "@emotion/styled": "^11.0.0",
-    "@hapi/boom": "^9.1.2",
     "@next/font": "^13.1.6",
     "@prisma/client": "^4.9.0",
     "@sendgrid/mail": "^7.4.2",
@@ -58,18 +53,13 @@
     "postcss": "^8.2.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.1.1",
-    "react-icons": "^4.3.1",
-    "react-query": "^3.39.3",
-    "redaxios": "^0.4.1",
     "reflect-metadata": "^0.1.13",
     "rollup-plugin-svelte": "^7.1.0",
     "server-only": "^0.0.1",
-    "svelte": "^3.37.0",
-    "svelte-preprocess": "^4.7.0",
     "tailwindcss": "^3.2.4",
     "turndown": "^7.0.0",
     "vite": "^2.1.5",
+    "prisma": "^4.9.0",
     "xml2json": "^0.12.0"
   },
   "devDependencies": {
@@ -82,9 +72,7 @@
     "babel-plugin-transform-typescript-metadata": "^0.3.1",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
-    "prisma": "^4.9.0",
     "tailwind-variants": "^0.0.29",
-    "typegraphql-prisma": "^0.9.4",
     "typescript": "^4.1.3"
   }
 }
