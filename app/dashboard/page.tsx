@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation"
 import { getSession } from "../utils/next-auth"
 import { prisma } from "../utils/prisma"
-import Navbar from "./Navbar"
-import { ProjectActions } from "./ProjectActions"
 import { ProjectList } from "./ProjectList"
 
 export default async function Page() {
