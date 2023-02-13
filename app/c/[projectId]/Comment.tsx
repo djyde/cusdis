@@ -20,12 +20,19 @@ export async function CommentComponent(props: {
     <div className={classNames('flex flex-col gap-4 py-4 border-b-gray-100', {
     })}>
       <div className='flex flex-col gap-1'>
-        <div className='font-medium'>
-          {props.comment.by_nickname}
+        <div className='flex gap-2 items-center'>
+          <div className='font-medium'>
+            {props.comment.by_nickname}
+          </div>
+          <div className='text-gray-500 text-sm'>
+            2023/12/12 12:12
+          </div>
         </div>
-        <div className='text-gray-500 text-sm'>
-          2023/12/12 12:12
-        </div>
+        {!props.comment.approved && (
+          <div>
+            <span className='bg-yellow-500 text-yellow-50 rounded-md px-2 py-1 text-xs font-bold'>Unapproved</span>
+          </div>
+        )}
       </div>
       <div className='text-gray-500'>
         {props.comment.content}

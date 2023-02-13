@@ -24,6 +24,7 @@ export async function getComments(projectId: string, pageSlug: string, page: num
         projectId: projectId,
         slug: pageSlug,
       },
+      deletedAt: null,
       approved: options?.onlyApproved ? true : undefined,
       parentId: options?.parentId
     },
@@ -31,6 +32,7 @@ export async function getComments(projectId: string, pageSlug: string, page: num
       id: true,
       by_nickname: true,
       content: true,
+      approved: true,
       page: {
         select: {
           slug: true,
