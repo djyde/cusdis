@@ -4,6 +4,7 @@ specifiers:
   '@babel/core': ^7.12.10
   '@babel/plugin-proposal-decorators': ^7.12.12
   '@egoist/prettier-config': ^0.1.0
+  '@hapi/boom': ^10.0.1
   '@next/font': ^13.1.6
   '@prisma/client': ^4.9.0
   '@sendgrid/mail': ^7.4.2
@@ -48,6 +49,7 @@ specifiers:
   xml2json: ^0.12.0
 
 dependencies:
+  '@hapi/boom': 10.0.1
   '@next/font': 13.1.6
   '@prisma/client': 4.9.0_prisma@4.9.0
   '@sendgrid/mail': 7.7.0
@@ -385,6 +387,16 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /@hapi/boom/10.0.1:
+    resolution: {integrity: sha512-ERcCZaEjdH3OgSJlyjVk8pHIFeus91CjKP3v+MpgBNp5IvGzP2l/bRiD78nqYcKPaZdbKkK5vDBVPd2ohHBlsA==}
+    dependencies:
+      '@hapi/hoek': 11.0.2
+    dev: false
+
+  /@hapi/hoek/11.0.2:
+    resolution: {integrity: sha512-aKmlCO57XFZ26wso4rJsW4oTUnrgTFw2jh3io7CAtO9w4UltBNwRXvXIVzzyfkaaLRo3nluP/19msA8vDUUuKw==}
+    dev: false
 
   /@jridgewell/gen-mapping/0.1.1:
     resolution: {integrity: sha512-sQXCasFk+U8lWYEe66WxRDOE9PjVz4vSM51fTu3Hw+ClTpUSQb718772vH3pyS5pShp6lvQM7SxgIDXXXmOX7w==}

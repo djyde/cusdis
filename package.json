@@ -30,6 +30,7 @@
   },
   "prettier": "@egoist/prettier-config",
   "dependencies": {
+    "@hapi/boom": "^10.0.1",
     "@next/font": "^13.1.6",
     "@prisma/client": "^4.9.0",
     "@sendgrid/mail": "^7.4.2",
@@ -54,6 +55,7 @@
     "next-connect": "^0.10.1",
     "nodemailer": "^6.5.0",
     "postcss": "^8.2.10",
+    "prisma": "^4.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "reflect-metadata": "^0.1.13",
@@ -62,7 +64,6 @@
     "tailwindcss": "^3.2.4",
     "turndown": "^7.0.0",
     "vite": "^2.1.5",
-    "prisma": "^4.9.0",
     "xml2json": "^0.12.0"
   },
   "devDependencies": {
