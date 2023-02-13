@@ -16,5 +16,5 @@ RUN npm i -g pnpm
 RUN pnpm i
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE ${PORT}
 CMD ["npm", "start"]
