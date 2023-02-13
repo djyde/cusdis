@@ -1,5 +1,8 @@
 {
   "name": "cusdis",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "dev": "DB_TYPE=sqlite npm run dev:general",
     "dev:pg": "DB_TYPE=pgsql npm run dev:general",
