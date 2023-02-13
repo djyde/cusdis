@@ -4,7 +4,7 @@ ADD . /app
 WORKDIR /app
 
 RUN apk update
-RUN apk add python3
+RUN apk add python3 make g++
 RUN npm i -g pnpm
 RUN pnpm i
 RUN npm run build
