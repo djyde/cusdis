@@ -1,6 +1,5 @@
 FROM node:16-alpine
 
-ENV DATABASE_URL ""
 ARG EnvironmentVariable
 
 ADD . /app
