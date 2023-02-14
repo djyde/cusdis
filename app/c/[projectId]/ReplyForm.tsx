@@ -1,6 +1,9 @@
 'use client'
 
+import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
+import { useRouter } from "next/navigation"
+
 import React, { useLayoutEffect, useRef, useState } from "react"
 import { Button } from "../../components/ui/Button"
 
@@ -32,11 +35,11 @@ export function ReplyForm(props: {
   const usernameField = useFormField("")
   const emailField = useFormField("")
   const commentField = useFormField("")
+  const router = useRouter()
   const [isEditing, setIsEditing] = useState(!!props.isEditing)
   const $commentBox = useRef<HTMLTextAreaElement>(null)
   const cancelable = props.cancelable !== undefined ? props.cancelable : true
-
-  async function onClickReply() {
+  const replyMutation = useMutation(async () => {
     await axios.post('/api/v2/comments', {
       projectId: props.projectId,
       pageId: props.pageSlug,
@@ -45,16 +48,15 @@ export function ReplyForm(props: {
       parentId: props.parentId,
       email: emailField.value,
     })
-    // const res = await axios.post('/api/open/comments', {
-    //   appId: props.projectId,
-    //   pageId,
-    //   content,
-    //   nickname,
-    //   email,
-    //   parentId,
-    //   pageUrl,
-    //   pageTitle,
-    // })
+  }, {
+    onSuccess() {
+      router.refresh()
+      setIsEditing(false)
+    }
+  })
+
+  async function onClickReply() {
+    replyMutation.mutate()
   }
 
   useLayoutEffect(() => {
