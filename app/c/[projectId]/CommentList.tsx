@@ -9,7 +9,7 @@ export async function CommentList(props: {
   session?: any
 }) {
   return (
-    <div className="flex flex-col gap-2" >
+    <div className="flex flex-col" >
       {props.comments.map(comment => {
         return (
           <div key={comment.id}>

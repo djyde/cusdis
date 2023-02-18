@@ -19,7 +19,7 @@ export async function CommentComponent(props: {
   const isModerator = props.comment.moderator?.id === props.comment.page.project.ownerId
 
   return (
-    <div className={classNames('flex flex-col gap-4 py-4 border-b-gray-100', {
+    <div className={classNames('flex flex-col gap-4 pt-2 border-b-gray-100', {
     })}>
       <div className='flex flex-col gap-1'>
         <div className='flex gap-2 items-center'>

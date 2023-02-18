@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
+import classNames from "classnames"
 import { useRouter } from "next/navigation"
 
 import React, { useLayoutEffect, useRef, useState } from "react"
@@ -30,6 +31,7 @@ export function ReplyForm(props: {
   cancelable?: boolean
   parentId?: string
   session?: any
+  variant?: 'default' | 'expanded'
   isModerate?: boolean
 }) {
   const usernameField = useFormField("")
@@ -70,7 +72,9 @@ export function ReplyForm(props: {
       {!isEditing &&
         <div onClick={_ => {
           setIsEditing(true)
-        }} className="border border-gray-100 bg-gray-50 hover:bg-white hover:text-gray-300 transition-colors rounded px-3 py-2 text-gray-400 cursor-text text-sm">
+        }} className={classNames("border border-gray-100 bg-gray-50 hover:bg-white hover:text-gray-300 transition-colors rounded px-3 py-2 text-gray-400 cursor-text text-sm", {
+          'h-[96px]': props.variant === 'expanded'
+        })}>
           {props.locale.reply_placeholder}
         </div>
       }
