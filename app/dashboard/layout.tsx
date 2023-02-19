@@ -70,7 +70,7 @@ export default async function Layout(props) {
               </div>
             </div>
           </aside>
-          <div className='col-span-4 lg:col-span-5'>
+          <div className='col-span-4 lg:col-span-5 overflow-scroll'>
             {props.children}
           </div>
         </div>

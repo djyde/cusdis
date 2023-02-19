@@ -3,6 +3,7 @@ import { ActionPannel } from "../../../components/ui/ActionPanel"
 import { Button } from "../../../components/ui/Button"
 import { Container } from "../../../components/ui/Container"
 import { prisma } from "../../../utils/prisma"
+import { LatestCommentList } from "./LatestCommentList"
 import { WebhookSettingsActions, WebhookSettingsBody } from "./WebhookSettings"
 
 export default async function Page(props) {
@@ -92,7 +93,7 @@ export default async function Page(props) {
         </Container>
       </div>
 
-      <div className="py-12 border-b">
+      <div className="py-12 border-b border-b-slate-100">
         <Container className="">
           <h2 className="mb-4 text-lg font-medium">Notifaction</h2>
           <ActionPannel
@@ -101,6 +102,12 @@ export default async function Page(props) {
             actions={<WebhookSettingsActions />}
             body={<WebhookSettingsBody />}
           />
+        </Container>
+      </div>
+
+      <div>
+        <Container>
+          <LatestCommentList projectId={projectId} />
         </Container>
       </div>
 

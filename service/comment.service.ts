@@ -39,6 +39,55 @@ export class CommentService extends RequestScopeService {
   emailService = new EmailService()
   tokenService = new TokenService()
 
+  async getLatestComments(projectId: string, page: number = 1, pageSize: number = 10) {
+    const project = await prisma.project.findUnique({
+      where: {
+        id: projectId
+      },
+      select: {
+        ownerId: true
+      }
+    })
+    // TODO: project not found
+
+    const result = await prisma.comment.findMany({
+      where: {
+        page: {
+          projectId,
+        },
+      },
+      select: {
+        id: true,
+        moderator: {
+          select: {
+            id: true,
+            displayName: true,
+            name: true
+          }
+        },
+        page: {
+          select: {
+            id: true,
+            slug: true,
+            url: true,
+            title: true,
+          }
+        },
+        by_nickname: true,
+        by_email: true,
+        content: true,
+        approved: true,
+        createdAt: true,
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: {
+        createdAt: 'desc'
+      },
+    })
+    return result
+  }
+
   async getComments(
     projectId: string,
     timezoneOffset: number,
