@@ -18,12 +18,14 @@ specifiers:
   axios: ^0.21.1
   babel-plugin-transform-typescript-metadata: ^0.3.1
   class-validator: ^0.13.1
+  class-variance-authority: ^0.4.0
   classnames: ^2.3.2
   cors: ^2.8.5
   dayjs: ^1.10.4
   formidable: ^1.2.2
   framer-motion: ^3.2.1
   jsonwebtoken: ^8.5.1
+  lucide-react: ^0.115.0
   markdown-it: ^12.0.6
   milligram: ^1.4.1
   mini-capture: ^0.1.1
@@ -61,12 +63,14 @@ dependencies:
   autoprefixer: 10.4.8_postcss@8.4.16
   axios: 0.21.4
   class-validator: 0.13.2
+  class-variance-authority: 0.4.0_typescript@4.8.2
   classnames: 2.3.2
   cors: 2.8.5
   dayjs: 1.11.5
   formidable: 1.2.6
   framer-motion: 3.10.6_biqbaboplfbrettd7655fr4n2y
   jsonwebtoken: 8.5.1
+  lucide-react: 0.115.0_react@18.2.0
   markdown-it: 12.3.2
   milligram: 1.4.1
   mini-capture: 0.1.1
@@ -1203,6 +1207,17 @@ packages:
       validator: 13.7.0
     dev: false
 
+  /class-variance-authority/0.4.0_typescript@4.8.2:
+    resolution: {integrity: sha512-74enNN8O9ZNieycac/y8FxqgyzZhZbxmCitAtAeUrLPlxjSd5zA7LfpprmxEcOmQBnaGs5hYhiSGnJ0mqrtBLQ==}
+    peerDependencies:
+      typescript: '>= 4.5.5 < 5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 4.8.2
+    dev: false
+
   /classnames/2.3.2:
     resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
     dev: false
@@ -2083,6 +2098,14 @@ packages:
 
   /lru_map/0.3.3:
     resolution: {integrity: sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==}
+    dev: false
+
+  /lucide-react/0.115.0_react@18.2.0:
+    resolution: {integrity: sha512-VGL7jBKN6pEXi6peXoyn9t9O7olvinaAonnoe+iFi/F2q7/yQzAFM5KR1OY15u9PlrB3scI9HvcTFoOrIjUaVQ==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /markdown-it/12.3.2:

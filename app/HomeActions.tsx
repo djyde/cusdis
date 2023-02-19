@@ -1,6 +1,7 @@
 'use client'
 
 import { useSession } from "next-auth/client"
+import Link from "next/link"
 import { Button } from "./components/ui/Button"
 
 export const HomeActions = () => {
@@ -8,9 +9,11 @@ export const HomeActions = () => {
 
   return (
     <div className="flex gap-4 mt-4">
-      {!session && <Button variant="primary" href="/api/auth/signin">Sign in</Button>}
-      {!isLoadingSession && session && <Button href="/dashboard">Dashboard</Button>}
-      <Button variant="primary" href="/doc">Documentation</Button>
+      {!session && <Button>Sign in</Button>}
+      {!isLoadingSession && session && <a target={"_blank"} href="/dashboard"><Button>Dashboard</Button></a>}
+      <a href="/doc" target="_blank">
+        <Button variant="outline">Documentation</Button>
+        </a>
     </div>
   )
 }

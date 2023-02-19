@@ -1,3 +1,4 @@
+import { Globe } from "lucide-react"
 import { ActionPannel } from "../../../components/ui/ActionPanel"
 import { Button } from "../../../components/ui/Button"
 import { Container } from "../../../components/ui/Container"
@@ -48,7 +49,13 @@ export default async function Page(props) {
 
   return (
     <div>
-      <div className="py-8 border-b">
+      <div className="border-b border-b-slate-100 p-4">
+        <div className="flex gap-2 items-center">
+          <Globe className="w-4 h-4" />
+          <h2 className="font-bold">{project.title}</h2>
+        </div>
+      </div>
+      {/* <div className="py-8 border-b">
         <Container>
           <div className="flex justify-between">
             <h2 className="font-medium text-2xl ">{project.title}</h2>
@@ -57,9 +64,9 @@ export default async function Page(props) {
             </div>
           </div>
         </Container>
-      </div>
+      </div> */}
 
-      <div className="py-12 bg-gray-50 border-b">
+      <div className="py-12 bg-gray-50 border-b border-b-slate-100">
         <Container className="flex flex-col">
           <h2 className="font-medium text-xl mb-4">Overview</h2>
           <div className="bg-white shadow-sm rounded border">
