@@ -4,20 +4,11 @@ import { Button } from "../../../components/ui/Button"
 import { Container } from "../../../components/ui/Container"
 import { prisma } from "../../../utils/prisma"
 import { LatestCommentList } from "./LatestCommentList"
+import { Toggle } from "./Toggle"
 import { WebhookSettingsActions, WebhookSettingsBody } from "./WebhookSettings"
 
 export default async function Page(props) {
   const projectId: string = props.params.projectId
-
-  const project = await prisma.project.findUnique({
-    where: {
-      id: projectId
-    }
-  })
-
-  if (!project) {
-    // TODO: 404
-  }
 
   const [allCommentCount, approvedCommentCount, unapprovedCommentCount] = await prisma.$transaction([
     prisma.comment.count({
@@ -47,26 +38,8 @@ export default async function Page(props) {
     }),
 
   ])
-
   return (
     <div>
-      <div className="border-b border-b-slate-100 p-4">
-        <div className="flex gap-2 items-center">
-          <Globe className="w-4 h-4" />
-          <h2 className="font-bold">{project.title}</h2>
-        </div>
-      </div>
-      {/* <div className="py-8 border-b">
-        <Container>
-          <div className="flex justify-between">
-            <h2 className="font-medium text-2xl ">{project.title}</h2>
-            <div>
-              <Button className="rounded-md">View embeded code</Button>
-            </div>
-          </div>
-        </Container>
-      </div> */}
-
       <div className="py-12 bg-gray-50 border-b border-b-slate-100">
         <Container className="flex flex-col">
           <h2 className="font-medium text-xl mb-4">Overview</h2>
@@ -104,13 +77,6 @@ export default async function Page(props) {
           />
         </Container>
       </div>
-
-      <div>
-        <Container>
-          <LatestCommentList projectId={projectId} />
-        </Container>
-      </div>
-
       {/* <div>
         <a href={`/c/${props.params.projectId}?slug=__preview`} target="_blank">Preview</a>
       </div> */}
