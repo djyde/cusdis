@@ -8,6 +8,7 @@ specifiers:
   '@next/font': ^13.1.6
   '@prisma/client': ^4.9.0
   '@radix-ui/react-select': ^1.2.0
+  '@radix-ui/react-toast': ^1.1.2
   '@radix-ui/react-toggle-group': ^1.0.2
   '@sendgrid/mail': ^7.4.2
   '@sentry/node': ^6.3.1
@@ -22,6 +23,7 @@ specifiers:
   class-validator: ^0.13.1
   class-variance-authority: ^0.4.0
   classnames: ^2.3.2
+  clsx: ^1.2.1
   cors: ^2.8.5
   dayjs: ^1.10.4
   formidable: ^1.2.2
@@ -46,6 +48,7 @@ specifiers:
   reflect-metadata: ^0.1.13
   rollup-plugin-svelte: ^7.1.0
   server-only: ^0.0.1
+  tailwind-merge: ^1.10.0
   tailwind-variants: ^0.0.29
   tailwindcss: ^3.2.4
   tsup: ^6.6.2
@@ -59,6 +62,7 @@ dependencies:
   '@next/font': 13.1.6
   '@prisma/client': 4.9.0_prisma@4.9.0
   '@radix-ui/react-select': 1.2.0_5ndqzdd6t4rivxsukjv3i3ak2q
+  '@radix-ui/react-toast': 1.1.2_biqbaboplfbrettd7655fr4n2y
   '@radix-ui/react-toggle-group': 1.0.2_biqbaboplfbrettd7655fr4n2y
   '@sendgrid/mail': 7.7.0
   '@sentry/node': 6.19.7
@@ -69,6 +73,7 @@ dependencies:
   class-validator: 0.13.2
   class-variance-authority: 0.4.0_typescript@4.8.2
   classnames: 2.3.2
+  clsx: 1.2.1
   cors: 2.8.5
   dayjs: 1.11.5
   formidable: 1.2.6
@@ -91,6 +96,7 @@ dependencies:
   reflect-metadata: 0.1.13
   rollup-plugin-svelte: 7.1.0
   server-only: 0.0.1
+  tailwind-merge: 1.10.0
   tailwindcss: 3.2.4_postcss@8.4.16
   tsup: 6.6.2_lluugpswbu4parudwrjubsxgua
   turndown: 7.1.1
@@ -992,6 +998,19 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
+  /@radix-ui/react-presence/1.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-A+6XEvN01NfVWiKu38ybawfHsBjWum42MRPnEuqPsBZ4eV7e/7K321B5VgYMPv3Xx5An6o1/l9ZuDBgmcmWK3w==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
+      '@radix-ui/react-use-layout-effect': 1.0.0_react@18.2.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /@radix-ui/react-primitive/1.0.1_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-fHbmislWVkZaIdeF6GZxF0A/NH/3BjrGIYj+Ae6eTmTCr7EB0RQAAVEiqsXK6p3/JcRqVSBQoceZroj30Jj3XA==}
     peerDependencies:
@@ -1066,6 +1085,29 @@ packages:
       '@babel/runtime': 7.20.13
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
       react: 18.2.0
+    dev: false
+
+  /@radix-ui/react-toast/1.1.2_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-Kpr4BBYoP0O5A1UeDBmao87UnCMNdAKGNioQH5JzEm6OYTUVGhuDRbOwoZxPwOZ6vsjJHeIpdUrwbiHEB65CCw==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@radix-ui/primitive': 1.0.0
+      '@radix-ui/react-collection': 1.0.1_biqbaboplfbrettd7655fr4n2y
+      '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
+      '@radix-ui/react-context': 1.0.0_react@18.2.0
+      '@radix-ui/react-dismissable-layer': 1.0.2_biqbaboplfbrettd7655fr4n2y
+      '@radix-ui/react-portal': 1.0.1_biqbaboplfbrettd7655fr4n2y
+      '@radix-ui/react-presence': 1.0.0_biqbaboplfbrettd7655fr4n2y
+      '@radix-ui/react-primitive': 1.0.1_biqbaboplfbrettd7655fr4n2y
+      '@radix-ui/react-use-callback-ref': 1.0.0_react@18.2.0
+      '@radix-ui/react-use-controllable-state': 1.0.0_react@18.2.0
+      '@radix-ui/react-use-layout-effect': 1.0.0_react@18.2.0
+      '@radix-ui/react-visually-hidden': 1.0.1_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /@radix-ui/react-toggle-group/1.0.2_biqbaboplfbrettd7655fr4n2y:
@@ -1635,6 +1677,11 @@ packages:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
+    dev: false
+
+  /clsx/1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
     dev: false
 
   /color-convert/1.9.3:
@@ -3310,9 +3357,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /tailwind-merge/1.9.1:
-    resolution: {integrity: sha512-ED9MkiUHlmfh58EC1xHRqXcH1IQyRtmDP0AmXlugYkP2tvfu7ejtjFEHJLJt93mQ7ZJkcqSIgm9M394bq5vOJg==}
-    dev: true
+  /tailwind-merge/1.10.0:
+    resolution: {integrity: sha512-WFnDXSS4kFTZwjKg5/oZSGzBRU/l+qcbv5NVTzLUQvJ9yovDAP05h0F2+ZFW0Lw9EcgRoc2AfURUdZvnEFrXKg==}
 
   /tailwind-variants/0.0.29_tailwindcss@3.2.4:
     resolution: {integrity: sha512-sf78FcCf7ye4bvp6MaOdlYwfkOCLZ10xWU7v9bXLnkRXcFwqRKVOZ0RwwGavaQjLo/+F4FtytQLdhCI9nt+Nmw==}
@@ -3320,7 +3366,7 @@ packages:
     peerDependencies:
       tailwindcss: '*'
     dependencies:
-      tailwind-merge: 1.9.1
+      tailwind-merge: 1.10.0
       tailwindcss: 3.2.4_postcss@8.4.16
     dev: true
 

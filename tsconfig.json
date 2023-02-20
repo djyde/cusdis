@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "baseUrl": "./app",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "target": "esnext",
     "lib": [
       "dom",
@@ -35,5 +39,5 @@
   "exclude": [
     "node_modules",
     "widget"
-  ]
+  ],
 }

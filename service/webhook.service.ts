@@ -34,7 +34,6 @@ export class WebhookService extends RequestScopeService {
     })
 
     if (project.enableWebhook && !comment.moderatorId && project.webhook) {
-
       const fullComment = await prisma.comment.findUnique({
         where: {
           id: comment.id,
@@ -46,9 +45,9 @@ export class WebhookService extends RequestScopeService {
               slug: true,
               project: {
                 select: {
-                  title: true
-                }
-              }
+                  title: true,
+                },
+              },
             },
           },
         },
@@ -76,9 +75,20 @@ export class WebhookService extends RequestScopeService {
             approve_link: approveLink,
           },
         } as HookBody<NewCommentHookData>)
-      } catch (e) {
-        
-      }
+      } catch (e) {}
     }
+  }
+
+  async save(projectId: string, webhookUrl: string) {
+    const updated = await prisma.project.update({
+      where: { id: projectId },
+      data: {
+        webhook: webhookUrl,
+      },
+    })
+
+    statService.capture('webhook_save')
+
+    return updated
   }
 }

@@ -1,11 +1,10 @@
 import { Globe } from "lucide-react"
-import { ActionPannel } from "../../../components/ui/ActionPanel"
+import { ActionPannel } from "./ActionPanel"
 import { Button } from "../../../components/ui/Button"
 import { Container } from "../../../components/ui/Container"
 import { prisma } from "../../../utils/prisma"
 import { LatestCommentList } from "./LatestCommentList"
 import { Toggle } from "./Toggle"
-import { WebhookSettingsActions, WebhookSettingsBody } from "./WebhookSettings"
 
 export default async function Page(props) {
   const projectId: string = props.params.projectId
@@ -72,8 +71,7 @@ export default async function Page(props) {
           <ActionPannel
             title="Webhook"
             description="Configure a webhook to receive notifications when a new comment is posted."
-            actions={<WebhookSettingsActions />}
-            body={<WebhookSettingsBody />}
+            projectId={projectId}
           />
         </Container>
       </div>

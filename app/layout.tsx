@@ -1,4 +1,5 @@
 import './style.css'
+import { Toaster } from '@/components/ui/toaster'
 
 export default function RootLayout({
   children,
@@ -10,6 +11,7 @@ export default function RootLayout({
       <head />
       <body>
         {children}
+        <Toaster />
       </body>
     </html>
   )

@@ -1,3 +1,3 @@
 module.exports = {
-  content: ['./app/**/*.{tsx,css}']
+  content: ['./app/**/*.{tsx,css}'],
 }
