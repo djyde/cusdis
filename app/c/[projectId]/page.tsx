@@ -84,7 +84,7 @@ export default async function Page(props) {
       <Bridge />
       <div className={classNames(inter.className)}>
         <div className="mb-2">
-          <ReplyForm variant="expanded" session={session} locale={locale} projectId={projectId} pageSlug={pageId} />
+          <ReplyForm variant="expanded" session={session} locale={locale} projectId={projectId} />
         </div>
         {/* @ts-expect-error Server Component */}
         <CommentList session={session} locale={locale} comments={comments} />
