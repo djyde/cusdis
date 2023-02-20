@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     // get comments
-    const comments = await commentService.getLatestComments(req.query.projectId as string, Number(req.query.page as string), 10, req.query.filter)
+    const comments = await commentService.getLatestComments(req.query.projectId as string, Number(req.query.page as string), 10, req.query.filter as string)
     res.json({
       data: comments
     })
