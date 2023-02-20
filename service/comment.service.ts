@@ -39,53 +39,69 @@ export class CommentService extends RequestScopeService {
   emailService = new EmailService()
   tokenService = new TokenService()
 
-  async getLatestComments(projectId: string, page: number = 1, pageSize: number = 10) {
+  async getLatestComments(projectId: string, page: number = 1, pageSize: number = 10, filter: string = "all") {
+
     const project = await prisma.project.findUnique({
       where: {
         id: projectId
       },
       select: {
-        ownerId: true
-      }
+        ownerId: true,
+      },
     })
     // TODO: project not found
 
-    const result = await prisma.comment.findMany({
-      where: {
-        page: {
-          projectId,
+    const [result, commentCount] = await prisma.$transaction([
+      prisma.comment.findMany({
+        where: {
+          page: {
+            projectId,
+          },
+          approved: filter === 'all' ? undefined : filter === 'approved',
         },
-      },
-      select: {
-        id: true,
-        moderator: {
-          select: {
-            id: true,
-            displayName: true,
-            name: true
-          }
+        select: {
+          id: true,
+          moderator: {
+            select: {
+              id: true,
+              displayName: true,
+              name: true
+            }
+          },
+          page: {
+            select: {
+              id: true,
+              slug: true,
+              url: true,
+              title: true,
+            }
+          },
+          by_nickname: true,
+          by_email: true,
+          content: true,
+          approved: true,
+          createdAt: true,
         },
-        page: {
-          select: {
-            id: true,
-            slug: true,
-            url: true,
-            title: true,
-          }
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: {
+          createdAt: 'desc'
         },
-        by_nickname: true,
-        by_email: true,
-        content: true,
-        approved: true,
-        createdAt: true,
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: {
-        createdAt: 'desc'
-      },
-    })
-    return result
+      }),
+      prisma.comment.count({
+        where: {
+          approved: filter === 'all' ? undefined : filter === 'approved',
+          page: {
+            projectId,
+          },
+        },
+      })
+    ])
+
+    return {
+      comments: result,
+      pageCount: Math.ceil(commentCount / pageSize)
+    }
   }
 
   async getComments(
@@ -127,8 +143,8 @@ export class CommentService extends RequestScopeService {
           },
           ownerId: options?.onlyOwn
             ? await (
-                await this.getSession()
-              ).uid
+              await this.getSession()
+            ).uid
             : undefined,
         },
       },
@@ -278,9 +294,9 @@ export class CommentService extends RequestScopeService {
   ) {
     const session = options?.owner
       ? {
-          user: options.owner,
-          uid: options.owner.id,
-        }
+        user: options.owner,
+        uid: options.owner.id,
+      }
       : await this.getSession()
     const parent = await prisma.comment.findUnique({
       where: {
