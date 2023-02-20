@@ -3,7 +3,7 @@
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import classNames from "classnames"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 import React, { useLayoutEffect, useRef, useState } from "react"
 import { Button } from "../../components/ui/Button"
@@ -26,7 +26,6 @@ function useFormField<T>(initialValue: T) {
 export function ReplyForm(props: {
   locale: any,
   projectId: string
-  pageSlug: string
   isEditing?: boolean,
   cancelable?: boolean
   parentId?: string
@@ -38,15 +37,19 @@ export function ReplyForm(props: {
   const emailField = useFormField("")
   const commentField = useFormField("")
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [isEditing, setIsEditing] = useState(!!props.isEditing)
   const $commentBox = useRef<HTMLTextAreaElement>(null)
   const cancelable = props.cancelable !== undefined ? props.cancelable : true
   const replyMutation = useMutation(async () => {
     await axios.post('/api/v2/comments', {
       projectId: props.projectId,
-      pageId: props.pageSlug,
+      // TODO: check both are empty
+      pageId: searchParams.get('p_id') || searchParams.get('p_u'),
       comment: commentField.value,
       username: usernameField.value,
+      pageTitle: searchParams.get('p_t'),
+      pageUrl: searchParams.get('p_u'),
       parentId: props.parentId,
       email: emailField.value,
     })

@@ -22,7 +22,7 @@ export default async function handler(
     // create comment
     const body = req.body as {
       projectId: string
-      pageId: string
+      pageId?: string
       comment: string
       username?: string
       pageUrl?: string
@@ -31,6 +31,9 @@ export default async function handler(
       parentId?: string
     }
 
+    // TODO: check pageId, pageUrl
+    const pageId = body.pageId || body.pageUrl
+
     if (Object.keys(body).length === 0) {
       res.status(400).json({ error: 'Invalid body' })
       return
@@ -38,11 +41,10 @@ export default async function handler(
 
     const comment = commentService.addComment(
       body.projectId,
-      body.pageId,
+      pageId,
       {
         content: body.comment,
         email: body.email,
-
         nickname: body.username,
         pageUrl: body.pageUrl,
         pageTitle: body.pageTitle,
