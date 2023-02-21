@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prisma } from '../../../../app/utils/prisma'
 import { AuthService } from '../../../../service/auth.service'
+import { prisma } from '../../../../utils.server'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const projectId = req.query.projectId as string
