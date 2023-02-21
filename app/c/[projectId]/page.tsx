@@ -28,7 +28,7 @@ export async function getComments(projectId: string, pageSlug: string, page: num
       },
       deletedAt: null,
       approved: options?.onlyApproved ? true : undefined,
-      parentId: options?.parentId
+      parentId: options?.parentId || null
     },
     select: {
       id: true,
@@ -73,11 +73,16 @@ export default async function Page(props) {
     }
   })
 
+  if (!project) {
+    // TODO: 404
+    return null
+  }
+
   const session = await getSession()
   const isModerate = project.ownerId === session?.uid
   const comments = await getComments(props.params.projectId, pageId, 1, {
     onlyApproved: !isModerate,
-    parentId: null
+    parentId: undefined
   })
   return (
     <>
