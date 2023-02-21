@@ -65,6 +65,11 @@ export function LatestCommentList(props: {
         </div>
       </div>
       <div className="border border-slate-100 rounded-md">
+        {getLatestCommentQuery.data?.comments.length === 0 && (
+          <div className="text-center text-sm text-slate-500 p-24">
+            No result
+          </div>
+        )}
         {getLatestCommentQuery.data && (
           <div>
             {getLatestCommentQuery.data.comments.map((comment) => {
