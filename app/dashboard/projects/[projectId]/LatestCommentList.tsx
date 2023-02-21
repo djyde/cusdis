@@ -29,7 +29,7 @@ export function LatestCommentList(props: {
   })
 
   const paginator = React.useMemo(() => {
-    if (getLatestCommentQuery.data?.pageCount < 2) {
+    if (getLatestCommentQuery.data?.pageCount && getLatestCommentQuery.data.pageCount < 2) {
       return null
     }
     const buttonsGroup = (new Array(getLatestCommentQuery.data?.pageCount || 0).fill(0)).map((_, index) => {
