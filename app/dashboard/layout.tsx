@@ -35,7 +35,8 @@ export default async function Layout(props) {
       createdAt: 'desc'
     },
     where: {
-      ownerId: session.uid
+      ownerId: session.uid,
+      deletedAt: null
     }
   })
 
