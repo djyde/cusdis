@@ -4,17 +4,38 @@ import { Button } from "../../../components/ui/Button"
 import { Container } from "../../../components/ui/Container"
 import { prisma } from "../../../utils/prisma"
 import { LatestCommentList } from "./LatestCommentList"
+import { ProjectSettings } from "./ProjectSettings"
 import { Toggle } from "./Toggle"
 import { WebhookSettingsActions, WebhookSettingsBody } from "./WebhookSettings"
 
+export async function getProjectInfo(projectId: string) {
+
+  const project = await prisma.project.findUnique({
+    where: {
+      id: projectId
+    },
+    select: {
+      title: true,
+      id: true,
+      ownerId: true,
+      webhook: true
+    }
+  })
+
+  // we detected non-existed project on layout
+  return project!
+}
+
+
 export default async function Page(props) {
-  const projectId: string = props.params.projectId
+
+  const project = await getProjectInfo(props.params.projectId)
 
   const [allCommentCount, approvedCommentCount, unapprovedCommentCount] = await prisma.$transaction([
     prisma.comment.count({
       where: {
         page: {
-          projectId: projectId
+          projectId: project.id
         }
       }
     }),
@@ -22,7 +43,7 @@ export default async function Page(props) {
     prisma.comment.count({
       where: {
         page: {
-          projectId: projectId
+          projectId: project.id
         },
         approved: true
       }
@@ -31,7 +52,7 @@ export default async function Page(props) {
     prisma.comment.count({
       where: {
         page: {
-          projectId: projectId
+          projectId: project.id
         },
         approved: false
       }
@@ -77,6 +98,13 @@ export default async function Page(props) {
           />
         </Container>
       </div>
+
+      {/* <div className="py-12 border-b border-b-slate-50">
+        <Container className="bg-white border border-slate-50 rounded p-4">
+          <h2 className="mb-4 text-lg font-medium">Settings</h2>
+          <ProjectSettings project={project} />
+        </Container>
+      </div> */}
       {/* <div>
         <a href={`/c/${props.params.projectId}?slug=__preview`} target="_blank">Preview</a>
       </div> */}
