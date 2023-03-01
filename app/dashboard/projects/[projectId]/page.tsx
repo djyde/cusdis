@@ -3,7 +3,9 @@ import { ActionPannel } from "../../../components/ui/ActionPanel"
 import { Button } from "../../../components/ui/Button"
 import { Container } from "../../../components/ui/Container"
 import { prisma } from "../../../utils/prisma"
+import { DangerZone } from "./DangerZone"
 import { LatestCommentList } from "./LatestCommentList"
+import { NotificationSettings } from "./NotificationSettings"
 import { ProjectSettings } from "./ProjectSettings"
 import { Toggle } from "./Toggle"
 import { WebhookSettingsActions, WebhookSettingsBody } from "./WebhookSettings"
@@ -18,7 +20,8 @@ export async function getProjectInfo(projectId: string) {
       title: true,
       id: true,
       ownerId: true,
-      webhook: true
+      webhook: true,
+      enableNotification: true
     }
   })
 
@@ -89,13 +92,13 @@ export default async function Page(props) {
 
       <div className="py-12 border-b border-b-slate-100">
         <Container className="">
-          <h2 className="mb-4 text-lg font-medium">Notifaction</h2>
-          <ActionPannel
-            title="Webhook"
-            description="Configure a webhook to receive notifications when a new comment is posted."
-            actions={<WebhookSettingsActions />}
-            body={<WebhookSettingsBody />}
-          />
+          <NotificationSettings project={project} /> 
+        </Container>
+      </div>
+
+      <div className="py-12 border-b bg-gray-50 border-b-slate-100">
+        <Container>
+          <DangerZone projectId={project.id} />
         </Container>
       </div>
 
