@@ -8,26 +8,7 @@ import { LatestCommentList } from "./LatestCommentList"
 import { NotificationSettings } from "./NotificationSettings"
 import { ProjectSettings } from "./ProjectSettings"
 import { Toggle } from "./Toggle"
-import { WebhookSettingsActions, WebhookSettingsBody } from "./WebhookSettings"
-
-export async function getProjectInfo(projectId: string) {
-
-  const project = await prisma.project.findUnique({
-    where: {
-      id: projectId
-    },
-    select: {
-      title: true,
-      id: true,
-      ownerId: true,
-      webhook: true,
-      enableNotification: true
-    }
-  })
-
-  // we detected non-existed project on layout
-  return project!
-}
+import { getProjectInfo } from "./utils"
 
 
 export default async function Page(props) {

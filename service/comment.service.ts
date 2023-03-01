@@ -108,7 +108,7 @@ export class CommentService extends RequestScopeService {
     projectId: string,
     timezoneOffset: number,
     options?: {
-      parentId?: string
+      parentId?: string | null
       page?: number
       select?: Prisma.CommentSelect
       pageSlug?: string | Prisma.StringFilter

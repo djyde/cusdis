@@ -130,7 +130,7 @@ export default apiHandler()
       try {
         commentService.sendConfirmReplyNotificationEmail(
           body.email,
-          body.pageTitle,
+          body.pageTitle || 'Untitled',
           comment.id,
         )
       } catch (e) {

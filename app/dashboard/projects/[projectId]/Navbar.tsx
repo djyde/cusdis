@@ -7,7 +7,7 @@ import { usePathname, useSelectedLayoutSegment } from 'next/navigation'
 export default function Navbar() {
   const segment = useSelectedLayoutSegment()
   const pathname = usePathname()
-  const projectId = pathname.split('/').pop()
+  const projectId = pathname?.split('/').pop()
 
   return (
     <div>

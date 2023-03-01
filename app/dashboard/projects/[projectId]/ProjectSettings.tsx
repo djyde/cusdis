@@ -2,7 +2,7 @@
 
 import { Input } from "../../../components/ui/Input"
 import { StateButton } from "../../../components/ui/StateButton"
-import { getProjectInfo } from "./page"
+import { getProjectInfo } from "./utils"
 
 export function ProjectSettings(props: {
   project: Awaited<ReturnType<typeof getProjectInfo>>
