@@ -15,6 +15,6 @@ export default function RootLayout({
   )
 }
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata() {
   return { title: 'Cusdis - Open source comment system' };
 }

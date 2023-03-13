@@ -86,6 +86,6 @@ export default async function Layout(props) {
   )
 }
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata() {
   return { title: `Dashbaord - Cusdis` };
 }
