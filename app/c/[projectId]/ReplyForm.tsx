@@ -88,7 +88,7 @@ export function ReplyForm(props: {
           {props.session && <>
             <div>
               <a href="/me" target={"_blank"}>
-                {props.session.user.name}
+                {props.session.user.displayName || props.session.user.name}
               </a>
             </div>
           </>}

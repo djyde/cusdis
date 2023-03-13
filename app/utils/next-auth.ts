@@ -92,7 +92,8 @@ export async function getSession() {
       uid: session.uid as string,
       user: {
         name: session.user.name,
-        image: session.user.image
+        image: session.user.image,
+        displayName: session.user.displayName
       },
     }
   }
