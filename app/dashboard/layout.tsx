@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { AddWebsiteButton } from './AddWebsiteButton'
+import { Profile } from './Profile'
 const inter = Inter({
   subsets: ["latin"],
 })
@@ -44,7 +45,7 @@ export default async function Layout(props) {
     <Providers>
       <div className={classNames(inter.className, 'antialiased', 'flex h-[100vh]')}>
         <div className='grid grid-cols-6 flex-1'>
-          <aside className='col-span-2 lg:col-span-1 p-4 border-r border-r-slate-100'>
+          <aside className='relative col-span-2 lg:col-span-1 p-4 border-r border-r-slate-100'>
             <h1 className='font-bold text-2xl mb-8 ml-2'>
               Cusdis
             </h1>
@@ -69,6 +70,10 @@ export default async function Layout(props) {
                   <AddWebsiteButton className="w-full" />
                 </div>
               </div>
+            </div>
+
+            <div className='bottom-4 left-4 right-4 absolute'>
+              <Profile />
             </div>
           </aside>
           <div className='col-span-4 lg:col-span-5 overflow-scroll'>

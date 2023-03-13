@@ -13,6 +13,7 @@ declare module "next-auth" {
   }
   interface User {
     id: string
+    displayName?: string
   }
 }
 
@@ -37,8 +38,14 @@ export default NextAuth({
   },
 
   callbacks: {
-    session(session, user) {
+    async session(session, user) {
+      const userInDb = await prisma.user.findUnique({
+        where: {
+          id: user.id
+        }
+      })
       session.uid = user.id
+      session.user.displayName = userInDb?.displayName
       return session
     },
     jwt(token, user) {
