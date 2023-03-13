@@ -7,3 +7,8 @@ export default function Layout (props) {
     </Providers>
   )
 }
+
+
+export async function generateMetadata({ params, searchParams }) {
+  return { title: 'Profile - Cusdis' };
+}
