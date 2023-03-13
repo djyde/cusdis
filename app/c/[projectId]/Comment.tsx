@@ -25,11 +25,11 @@ export async function CommentComponent(props: {
     })}>
       <div className='flex flex-col gap-1'>
         <div className='flex gap-2 items-center'>
-          <div className='font-medium'>
+          <div className='font-medium dark:text-white'>
             {props.comment.moderator?.displayName || props.comment.moderator?.name || props.comment.by_nickname}
           </div>
           {isModerator && (
-            <span className='uppercase bg-gray-100 text-xs font-bold px-2 py-1 rounded-md'>
+            <span className='uppercase bg-gray-100 dark:bg-gray-700 text-xs font-bold px-2 py-1 rounded-md'>
               MOD
             </span>
           )}
@@ -43,7 +43,7 @@ export async function CommentComponent(props: {
           </div>
         </div>
       </div>
-      <div className='text-gray-500'>
+      <div className='text-gray-500 dark:text-gray-100'>
         {props.comment.content}
       </div>
       {props.session &&

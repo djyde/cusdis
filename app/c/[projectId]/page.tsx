@@ -89,7 +89,7 @@ export default async function Page(props) {
   return (
     <>
       <Bridge />
-      <div className={classNames(inter.className)}>
+      <div className={classNames(inter.className, 'dark:bg-black dark:text-gray-100')}>
         <div className="mb-2">
           <ReplyForm isSelfHost={isSelfHost} variant="expanded" session={session} locale={locale} projectId={projectId} />
         </div>

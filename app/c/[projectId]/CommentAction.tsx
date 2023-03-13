@@ -31,15 +31,15 @@ export function CommentAction(props: {
   })
 
   return (
-    <div className="flex gap-2 text-xs font-medium text-gray-500">
+    <div className="flex gap-2 text-xs font-medium text-gray-500 dark:text-gray-300">
       {!props.comment.approved && (
         <button disabled={approveMutation.isLoading} type="button" onClick={_ => {
           approveMutation.mutate()
-        }}>{approveMutation.isLoading ? 'Loading' : 'Approve'}</button>
+        }}>{approveMutation.isLoading ? 'Approving...' : 'Approve'}</button>
       )}
       <button disabled={deleteMutation.isLoading} type="button" onClick={_ => {
         deleteMutation.mutate()
-      }}>{deleteMutation.isLoading ? 'Loading' : 'Delete'}</button>
+      }}>{deleteMutation.isLoading ? 'Deleting...' : 'Delete'}</button>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 
 import React, { useLayoutEffect, useRef, useState } from "react"
 import { Button } from "../../components/ui/Button"
+import { Input } from "../../components/ui/Input"
 
 function useFormField<T>(initialValue: T) {
   const [value, setValue] = React.useState<T>(initialValue)
@@ -76,7 +77,7 @@ export function ReplyForm(props: {
       {!isEditing &&
         <div onClick={_ => {
           setIsEditing(true)
-        }} className={classNames("border border-gray-100 bg-gray-50 hover:bg-white hover:text-gray-300 transition-colors rounded px-3 py-2 text-gray-400 cursor-text text-sm", {
+        }} className={classNames("border border-gray-100 dark:border-gray-500 bg-gray-50 dark:bg-gray-900 hover:bg-white dark:hover:bg-gray-700 hover:text-gray-300 transition-colors rounded px-3 py-2 text-gray-400 cursor-text text-sm", {
           'h-[96px]': props.variant === 'expanded'
         })}>
           {props.locale.reply_placeholder}
@@ -94,8 +95,8 @@ export function ReplyForm(props: {
           {!props.session && (
             <div className="flex gap-2 items-center">
               <div className="flex flex-col md:flex-row gap-2">
-                <input value={emailField.value} onChange={emailField.onChange} className="border rounded px-2 py-1" type="email" placeholder={'Email'} />
-                <input value={usernameField.value} onChange={usernameField.onChange} className="border rounded px-2 py-1" type="text" placeholder="Display name" />
+                <Input value={emailField.value} onChange={emailField.onChange} className="border rounded px-2 py-1" type="email" placeholder={'Email'} />
+                <Input value={usernameField.value} onChange={usernameField.onChange} className="border rounded px-2 py-1" type="text" placeholder="Display name" />
               </div>
               {!props.isSelfHost && (
                 <div>
@@ -104,7 +105,7 @@ export function ReplyForm(props: {
               )}
             </div>
           )}
-          <textarea value={commentField.value} onChange={commentField.onChange} ref={$commentBox} className="border rounded w-full p-4"></textarea>
+          <textarea value={commentField.value} onChange={commentField.onChange} ref={$commentBox} className="border rounded w-full p-4 dark:bg-gray-900"></textarea>
           <div className="flex gap-2">
             <button onClick={onClickReply} type="button" className="border text-sm px-3 py-1 rounded">Send</button>
             {cancelable && <button onClick={_ => {
