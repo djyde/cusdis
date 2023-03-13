@@ -7,6 +7,7 @@ import classNames from "classnames"
 import { getSession } from "../../utils/next-auth"
 import Script from "next/script"
 import { Bridge } from "./Bridge"
+import { env } from "../../env"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -84,12 +85,13 @@ export default async function Page(props) {
     onlyApproved: !isModerate,
     parentId: undefined
   })
+  const isSelfHost = !env.isHosted
   return (
     <>
       <Bridge />
       <div className={classNames(inter.className)}>
         <div className="mb-2">
-          <ReplyForm variant="expanded" session={session} locale={locale} projectId={projectId} />
+          <ReplyForm isSelfHost={isSelfHost} variant="expanded" session={session} locale={locale} projectId={projectId} />
         </div>
         {/* @ts-expect-error Server Component */}
         <CommentList session={session} locale={locale} comments={comments} />

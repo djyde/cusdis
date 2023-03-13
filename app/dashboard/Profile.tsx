@@ -9,7 +9,7 @@ export function Profile() {
 
   if (session) {
     return (
-      <div className="flex flex-col">
+      <div className="flex items-center justify-between">
         <div className="flex gap-4 items-center">
           <div>
             <Avatar>
@@ -31,6 +31,11 @@ export function Profile() {
           </div>
         </div>
 
+        <div>
+          <div className="text-sm font-medium">
+            <a href="/api/auth/signout">Log out</a>
+          </div>
+        </div>
       </div>
     )
   }

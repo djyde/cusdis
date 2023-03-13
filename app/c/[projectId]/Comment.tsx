@@ -5,6 +5,7 @@ import { CommentList } from './CommentList'
 import { ReplyForm } from './ReplyForm'
 import { CommentAction } from './CommentAction'
 import classNames from 'classnames'
+import { env } from '../../env'
 
 export async function CommentComponent(props: {
   locale: any,
@@ -12,6 +13,7 @@ export async function CommentComponent(props: {
   isChild?: boolean
   comment: Awaited<ReturnType<typeof getComments>>[0]
 }) {
+  const isSelfhost = !env.isHosted
   // get child comments
   const comments = await getComments(props.comment.page.projectId, props.comment.page.slug, 1, {
     parentId: props.comment.id
@@ -48,7 +50,7 @@ export async function CommentComponent(props: {
         <div>
           <CommentAction comment={props.comment} />
         </div>}
-      <ReplyForm session={props.session} parentId={props.comment.id} locale={props.locale} projectId={props.comment.page.projectId} />
+      <ReplyForm isSelfHost={isSelfhost} session={props.session} parentId={props.comment.id} locale={props.locale} projectId={props.comment.page.projectId} />
       {/* children comments */}
       <div className='pl-8'>
         {/* @ts-expect-error Server Component */}
