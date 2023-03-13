@@ -4,7 +4,7 @@ import { Comment } from "@prisma/client"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { useRouter } from "next/navigation"
-import { getComments } from "./page"
+import type { getComments } from "./data"
 
 export function CommentAction(props: {
   comment: Awaited<ReturnType<typeof getComments>>[0]

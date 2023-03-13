@@ -5,59 +5,14 @@ import { ReplyForm } from "./ReplyForm"
 import { Inter } from '@next/font/google'
 import classNames from "classnames"
 import { getSession } from "../../utils/next-auth"
-import Script from "next/script"
 import { Bridge } from "./Bridge"
 import { env } from "../../env"
+import { getComments } from "./data"
 
 const inter = Inter({
   subsets: ["latin"],
 })
 
-
-export async function getComments(projectId: string, pageSlug: string, page: number, options?: {
-  parentId?: string,
-  onlyApproved?: boolean
-}) {
-  const comments = await prisma.comment.findMany({
-    orderBy: {
-      createdAt: 'desc'
-    },
-    where: {
-      page: {
-        projectId: projectId,
-        slug: pageSlug,
-      },
-      deletedAt: null,
-      approved: options?.onlyApproved ? true : undefined,
-      parentId: options?.parentId || null
-    },
-    select: {
-      id: true,
-      by_nickname: true,
-      moderator: {
-        select: {
-          displayName: true,
-          name: true,
-          id: true,
-        }
-      },
-      content: true,
-      approved: true,
-      page: {
-        select: {
-          slug: true,
-          projectId: true,
-          project: {
-            select: {
-              ownerId: true
-            }
-          }
-        }
-      }
-    }
-  })
-  return comments
-}
 
 export default async function Page(props) {
   const pageUrl = props.searchParams['p_u']

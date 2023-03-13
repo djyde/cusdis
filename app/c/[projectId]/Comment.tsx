@@ -1,11 +1,10 @@
 import 'server-only'
-import { Comment, Prisma } from "@prisma/client"
-import { getComments } from './page'
 import { CommentList } from './CommentList'
 import { ReplyForm } from './ReplyForm'
 import { CommentAction } from './CommentAction'
 import classNames from 'classnames'
 import { env } from '../../env'
+import { getComments } from './data'
 
 export async function CommentComponent(props: {
   locale: any,

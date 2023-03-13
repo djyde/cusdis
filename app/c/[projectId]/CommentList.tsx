@@ -1,7 +1,6 @@
-import type { Comment } from '@prisma/client'
 import 'server-only'
 import { CommentComponent } from './Comment'
-import { getComments } from './page'
+import type { getComments } from './data'
 
 export async function CommentList(props: {
   comments: Awaited<ReturnType<typeof getComments>>,
