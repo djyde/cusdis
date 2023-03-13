@@ -12,18 +12,20 @@ import { Providers } from "../utils/providers";
 
 export default function Page() {
   const [session, loading] = useSession()
+  const [displayName, setDisplayName] = useState("")
+  const [notificationEmail, setNotificationEmail] = useState("")
 
   const saveMutation = useMutation(async () => {
     await axios.put('/api/v2/profile', {
-      displayName: displayName.trim()
+      displayName: displayName?.trim(),
+      notificationEmail: notificationEmail?.trim(),
     })
   })
-
-  const [displayName, setDisplayName] = useState("")
 
   useEffect(() => {
     if (session) {
       setDisplayName(session.user.displayName)
+      setNotificationEmail(session.user.notificationEmail || "")
     }
   }, [session])
 
@@ -57,6 +59,12 @@ export default function Page() {
                 <Input disabled value={session.user?.email} />
               </div>
             )}
+            <div className="grid grid-cols-2 items-center border-b border-slate-50 py-4">
+              <span className="font-medium">Notification Email</span>
+              <Input value={notificationEmail} onChange={e => {
+                setNotificationEmail(e.target.value)
+              }} placeholder={session.user?.email} />
+            </div>
             <div className="grid grid-cols-2 items-center border-b border-slate-50 py-4">
               <span className="font-medium">Display name</span>
               <Input value={displayName} onChange={e => {

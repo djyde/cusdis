@@ -14,6 +14,7 @@ declare module "next-auth" {
   interface User {
     id: string
     displayName?: string
+    notificationEmail?: string
   }
 }
 
@@ -46,6 +47,7 @@ export default NextAuth({
       })
       session.uid = user.id
       session.user.displayName = userInDb?.displayName
+      session.user.notificationEmail = userInDb?.notificationEmail
       return session
     },
     jwt(token, user) {

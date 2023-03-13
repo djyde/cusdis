@@ -10,6 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       data: {
         displayName: req.body.displayName,
+        notificationEmail: req.body.notificationEmail
       }
     })
     console.log(session)
