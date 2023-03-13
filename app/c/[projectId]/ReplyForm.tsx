@@ -85,13 +85,20 @@ export function ReplyForm(props: {
         <div className="flex flex-col gap-4">
           {props.session && <>
             <div>
-              {props.session.user.name}
+              <a href="/me" target={"_blank"}>
+                {props.session.user.name}
+              </a>
             </div>
           </>}
           {!props.session && (
-            <div className="flex flex-col md:flex-row gap-2">
-              <input value={emailField.value} onChange={emailField.onChange} className="border rounded px-2 py-1" type="email" placeholder={'email'} />
-              <input value={usernameField.value} onChange={usernameField.onChange} className="border rounded px-2 py-1" type="text" placeholder="Name" />
+            <div className="flex gap-2 items-center">
+              <div className="flex flex-col md:flex-row gap-2">
+                <input value={emailField.value} onChange={emailField.onChange} className="border rounded px-2 py-1" type="email" placeholder={'Email'} />
+                <input value={usernameField.value} onChange={usernameField.onChange} className="border rounded px-2 py-1" type="text" placeholder="Display name" />
+              </div>
+              <div>
+                or <a target={"_blank"} href="/api/auth/signin" className="text-blue-500">sign in</a>
+              </div>
             </div>
           )}
           <textarea value={commentField.value} onChange={commentField.onChange} ref={$commentBox} className="border rounded w-full p-4"></textarea>

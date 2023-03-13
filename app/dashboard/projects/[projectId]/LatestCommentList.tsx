@@ -76,14 +76,15 @@ export function LatestCommentList(props: {
               return (
                 <div key={comment.id} className="flex flex-col gap-2 border-b p-4 border-b-slate-100 last:border-0 hover:bg-slate-50 cursor-pointer transition-colors">
                   <div className="flex items-center">
-                    <a target={"_blank"} href={`${comment.page.url}`} className={classNames("text-sm", {
+                    {comment.page.url ? <><a target={"_blank"} href={`${comment.page.url || ''}`} className={classNames("text-sm", {
                       "underline": comment.page.url
                     })}>
                       {comment.page.title || 'Untitled'}
                     </a>
-                    {comment.page.url &&
                       <ArrowUpRight className="w-4 h-4" />
-                    }
+                    </>
+                      : <span className="text-sm"></span>}
+
                   </div>
                   <div className="text-sm">
                     <div className="flex flex-col gap-2 font-medium text-sm">
