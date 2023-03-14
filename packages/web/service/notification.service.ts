@@ -37,6 +37,10 @@ export class NotificationService extends RequestScopeService {
       },
     })
 
+    if (!project) {
+      return
+    }
+
     // don't notify if disable in project settings
     if (!project.enableNotification) {
       return
@@ -64,6 +68,11 @@ export class NotificationService extends RequestScopeService {
     const notificationEmail =
       project.owner.notificationEmail || project.owner.email
 
+    if (!notificationEmail) {
+      // TODO: stat
+      return
+    }
+
     if (project.owner.enableNewCommentNotification) {
       let unsubscribeToken = this.tokenService.genUnsubscribeNewCommentToken(
         project.owner.id,
@@ -74,9 +83,9 @@ export class NotificationService extends RequestScopeService {
       const msg = {
         to: notificationEmail, // Change to your recipient
         from: resolvedConfig.smtp.senderAddress,
-        subject: `New comment on "${fullComment.page.project.title}"`,
+        subject: `New comment on "${fullComment!.page.project.title}"`,
         html: makeNewCommentEmailTemplate({
-          page_slug: fullComment.page.title || fullComment.page.slug,
+          page_slug: fullComment!.page.title || fullComment!.page.slug,
           by_nickname: comment.by_nickname,
           approve_link: `${resolvedConfig.host}/open/approve?token=${approveToken}`,
           unsubscribe_link: `${resolvedConfig.host}/api/open/unsubscribe?token=${unsubscribeToken}`,

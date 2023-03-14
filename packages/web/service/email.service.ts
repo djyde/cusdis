@@ -31,7 +31,7 @@ export class EmailService {
       })
       await transporter.sendMail(msg)
     } else if (this.isThirdpartyEnable()) {
-      sgMail.setApiKey(resolvedConfig.sendgrid.apiKey)
+      sgMail.setApiKey(resolvedConfig.sendgrid.apiKey as string)
       await sgMail.send(msg)
       statService.capture('notification_email')
     }

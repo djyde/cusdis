@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     })
 
-    if (project.token !== token) {
+    if (project?.token !== token) {
       res.status(403)
       res.json({
         message: 'Invalid token',
@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const comments = await projectService.fetchLatestComment(projectId, {
-      from: project.fetchLatestCommentsAt,
+      from: project.fetchLatestCommentsAt || undefined,
       markAsRead: true
     })
 

@@ -43,7 +43,7 @@ export class CommentService extends RequestScopeService {
     projectId: string,
     timezoneOffset: number,
     options?: {
-      parentId?: string
+      parentId?: string | null
       page?: number
       select?: Prisma.CommentSelect
       pageSlug?: string | Prisma.StringFilter
@@ -158,7 +158,8 @@ export class CommentService extends RequestScopeService {
       },
     })
 
-    return res.page.project
+    // TODO: fix this
+    return res!.page.project
   }
 
   async addComment(
@@ -211,9 +212,10 @@ export class CommentService extends RequestScopeService {
       data: {
         content: content,
         by_email: session.user.email,
+        // @ts-expect-error: TODO: fix this
         by_nickname: session.user.name,
         moderatorId: session.uid,
-        pageId: parent.pageId,
+        pageId: parent!.pageId,
         approved: true,
         parentId,
       },

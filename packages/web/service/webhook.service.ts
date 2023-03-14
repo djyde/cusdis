@@ -33,6 +33,10 @@ export class WebhookService extends RequestScopeService {
       },
     })
 
+    if (!project) {
+      return
+    }
+
     if (project.enableWebhook && !comment.moderatorId && project.webhook) {
 
       const fullComment = await prisma.comment.findUnique({
@@ -70,9 +74,9 @@ export class WebhookService extends RequestScopeService {
             by_nickname: comment.by_nickname,
             by_email: comment.by_email,
             content: comment.content,
-            page_id: fullComment.page.slug,
-            page_title: fullComment.page.title,
-            project_title: fullComment.page.project.title,
+            page_id: fullComment!.page.slug,
+            page_title: fullComment!.page.title,
+            project_title: fullComment!.page.project.title,
             approve_link: approveLink,
           },
         } as HookBody<NewCommentHookData>)

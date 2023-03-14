@@ -64,7 +64,7 @@ export class TokenService {
       SecretKey.ApproveComment,
       {
         commentId,
-        owner: comment.page.project.owner,
+        owner: comment!.page.project.owner,
       } as TokenBody.ApproveComment,
       '3 days',
     )

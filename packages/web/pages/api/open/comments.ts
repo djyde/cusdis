@@ -125,19 +125,6 @@ export default apiHandler()
       body.parentId,
     )
 
-    // send confirm email
-    if (body.acceptNotify === true && body.email) {
-      try {
-        commentService.sendConfirmReplyNotificationEmail(
-          body.email,
-          body.pageTitle,
-          comment.id,
-        )
-      } catch (e) {
-        // TODO: log error
-      }
-    }
-
     statService.capture('add_comment')
 
     res.json({
