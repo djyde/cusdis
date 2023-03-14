@@ -11,7 +11,7 @@ module.exports = {
   async headers() {
     return [
       {
-        source: '/js/iframe.umd',
+        source: '/js/iframe.umd.js',
         headers: staticFileHeaders 
       },
       {
