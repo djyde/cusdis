@@ -161,6 +161,6 @@ dist
 
 generated/*
 db.sqlite
-public/js
+packages/web/public/js
 widget/index.html
 db.sqlite-journal

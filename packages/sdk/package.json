@@ -1,0 +1,18 @@
+{
+  "name": "@cusdis/sdk",
+  "version": "3.0.0",
+  "scripts": {
+    "build": "npm run build:sdk && npm run build:count && npm run build:iframe",
+    "build:sdk": "vite build --config ./build-scripts/vite.sdk.config.js",
+    "build:count": "vite build --config ./build-scripts/vite.count.config.js",
+    "build:iframe": "vite build --config ./build-scripts/vite.iframe.config.js"
+  },
+  "dependencies": {
+    "@cusdis/widget": "workspace:*",
+    "redaxios": "^0.4.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3",
+    "vite": "^2.1.5"
+  }
+}

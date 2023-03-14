@@ -1,9 +1,0 @@
-{
-  "name": "cusdis",
-  "version": "1.1.2",
-  "main": "dist/cusdis.umd.js",
-  "module": "dist/cusdis.es.js",
-  "files": [
-    "dist"
-  ]
-}

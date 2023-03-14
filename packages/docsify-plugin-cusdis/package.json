@@ -1,0 +1,8 @@
+{
+  "name": "@cusdis/docsify-plugin-cusdis",
+  "main": "cusdis.docsify.js",
+  "scripts": {
+    "build": "cp cusdis.docsify.js ../web/public/js"
+  },
+  "version": "1.0.0"
+}
