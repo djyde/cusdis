@@ -1,6 +1,9 @@
 {
   "name": "@cusdis/docsify-plugin-cusdis",
   "main": "cusdis.docsify.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "cp cusdis.docsify.js ../web/public/js"
   },
