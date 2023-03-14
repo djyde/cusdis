@@ -1,0 +1,32 @@
+FROM node:16-alpine
+
+ARG DATABASE_URL
+ARG PORT
+
+ARG EnvironmentVariable
+
+ENV PORT=${PORT}
+
+ADD . /repo
+WORKDIR /repo
+
+RUN apk update
+RUN apk add python3 make g++
+
+RUN npm i -g pnpm
+RUN pnpm i
+
+# build widget
+WORKDIR /repo/packages/widget
+RUN npm run build
+
+# build sdk
+WORKDIR /repo/packages/widget
+RUN npm run build
+
+# build server
+WORKDIR /repo/packages/web
+RUN npm run build
+
+EXPOSE ${PORT}
+CMD ["npm", "start"]
