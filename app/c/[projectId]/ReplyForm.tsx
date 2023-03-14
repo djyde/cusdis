@@ -18,9 +18,14 @@ function useFormField<T>(initialValue: T) {
     }
   }
 
+  function reset(value: T) {
+    setValue(value)
+  }
+
   return {
     value,
-    onChange: onChangeHandler()
+    onChange: onChangeHandler(),
+    reset
   }
 }
 
@@ -59,10 +64,22 @@ export function ReplyForm(props: {
     onSuccess() {
       router.refresh()
       setIsEditing(false)
+      commentField.reset("")
+      if (!props.isModerate) {
+        alert(props.locale['comment_has_been_sent'])
+      }
     }
   })
 
   async function onClickReply() {
+    if (!usernameField.value) {
+      alert(props.locale['nickname_is_required'])
+      return
+    }
+    if (!commentField.value) {
+      alert(props.locale['content_is_required'])
+      return
+    }
     replyMutation.mutate()
   }
 
@@ -95,8 +112,8 @@ export function ReplyForm(props: {
           {!props.session && (
             <div className="flex gap-2 items-center">
               <div className="flex flex-col md:flex-row gap-2">
-                <Input value={emailField.value} onChange={emailField.onChange} className="border rounded px-2 py-1" type="email" placeholder={'Email'} />
-                <Input value={usernameField.value} onChange={usernameField.onChange} className="border rounded px-2 py-1" type="text" placeholder="Display name" />
+                <Input value={emailField.value} onChange={emailField.onChange} className="border rounded px-2 py-1" type="email" placeholder={props.locale['email']} />
+                <Input value={usernameField.value} onChange={usernameField.onChange} className="border rounded px-2 py-1" type="text" placeholder={props.locale['nickname']} />
               </div>
               {!props.isSelfHost && (
                 <div>
@@ -107,7 +124,7 @@ export function ReplyForm(props: {
           )}
           <textarea value={commentField.value} onChange={commentField.onChange} ref={$commentBox} className="border rounded w-full p-4 dark:bg-gray-900"></textarea>
           <div className="flex gap-2">
-            <button onClick={onClickReply} type="button" className="border text-sm px-3 py-1 rounded">Send</button>
+            <button disabled={replyMutation.isLoading} onClick={onClickReply} type="button" className="border text-sm px-3 py-1 rounded">{replyMutation.isLoading ? 'Sending...' : 'Send'}</button>
             {cancelable && <button onClick={_ => {
               setIsEditing(false)
             }} type="button" className="border text-sm px-3 py-1 rounded">Cancel</button>}

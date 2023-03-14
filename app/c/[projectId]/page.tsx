@@ -49,7 +49,7 @@ export default async function Page(props) {
           <ReplyForm isSelfHost={isSelfHost} variant="expanded" session={session} locale={locale} projectId={projectId} />
         </div>
         {/* @ts-expect-error Server Component */}
-        <CommentList session={session} locale={locale} comments={comments} />
+        <CommentList isModerator={isModerate} session={session} locale={locale} comments={comments} />
       </div>
 
     </>

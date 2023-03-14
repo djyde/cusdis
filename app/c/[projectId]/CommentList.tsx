@@ -5,7 +5,8 @@ import type { getComments } from './data'
 export async function CommentList(props: {
   comments: Awaited<ReturnType<typeof getComments>>,
   locale: any,
-  session?: any
+  session?: any,
+  isModerator: boolean
 }) {
   return (
     <div className="flex flex-col" >
@@ -13,7 +14,7 @@ export async function CommentList(props: {
         return (
           <div key={comment.id}>
             {/* @ts-expect-error Server Component */}
-            <CommentComponent session={props.session} locale={props.locale} comment={comment} />
+            <CommentComponent isModerator={props.isModerator}  session={props.session} locale={props.locale} comment={comment} />
           </div>
         )
       })}

@@ -10,12 +10,14 @@ export async function CommentComponent(props: {
   locale: any,
   session?: any,
   isChild?: boolean
+  isModerator: boolean
   comment: Awaited<ReturnType<typeof getComments>>[0]
 }) {
   const isSelfhost = !env.isHosted
   // get child comments
   const comments = await getComments(props.comment.page.projectId, props.comment.page.slug, 1, {
-    parentId: props.comment.id
+    parentId: props.comment.id,
+    onlyApproved: !props.isModerator,
   })
   const isModerator = props.comment.moderator?.id === props.comment.page.project.ownerId
 
