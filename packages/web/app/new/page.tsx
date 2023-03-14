@@ -30,9 +30,9 @@ export default async function Page() {
             </a>
           </div>
           <div>
-            <h2 className="font-bold text-3xl mb-2">Getting start</h2>
+            <h2 className="font-bold text-3xl mb-2">Create a project</h2>
             <div className="text-sm">
-              Create your first website to use Cusdis
+              Create your project to use Cusdis in your website
             </div>
           </div>
           <div>

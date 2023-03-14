@@ -1,6 +1,7 @@
 'use client'
 
 import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
 import React from "react"
 import { Button } from "../components/Button"
 import { Input } from "../components/Input"
@@ -16,7 +17,13 @@ export const createProject = async (body: { title: string }) => {
 
 export function NewSiteForm() {
   const [title, setTitle] = React.useState("")
-  const createProjectMutation = useMutation(createProject)
+  const router = useRouter()
+
+  const createProjectMutation = useMutation(createProject, {
+    onSuccess(res) {
+      router.push(`/new_dashboard/project/${res.data.id}`)
+    }
+  })
 
   return (
     <div>

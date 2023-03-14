@@ -33,6 +33,7 @@
     "@emotion/styled": "^11.0.0",
     "@hapi/boom": "^9.1.2",
     "@prisma/client": "^4.11.0",
+    "@radix-ui/react-dropdown-menu": "^2.0.4",
     "@sendgrid/mail": "^7.4.2",
     "@sentry/node": "^6.3.1",
     "@sentry/tracing": "^6.3.1",
