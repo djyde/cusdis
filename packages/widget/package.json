@@ -2,7 +2,7 @@
   "name": "@cusdis/widget",
   "version": "2.0.0",
   "scripts": {
-    "copy-lang": "cp ./src/lang ../web/public/js/widget/lang",
+    "copy-lang": "mkdir -p ../web/public/js/widget/lang && cp -R src/lang/* ../web/public/js/widget/lang",
     "build": "vite build && npm run copy-lang"
   },
   "main": "dist/widget.umd.js",

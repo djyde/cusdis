@@ -5,7 +5,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "cp cusdis.docsify.js ../web/public/js"
+    "build": "mkdir -p ../web/public/js && cp cusdis.docsify.js ../web/public/js"
   },
   "version": "1.0.0"
 }
