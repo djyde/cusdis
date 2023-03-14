@@ -31,7 +31,7 @@ export function SiteSelectButton(props: {
           <DropdownMenuSeparator />
           {props.projects.map(project => {
             return (
-              <Link key={project.id} href={`/new_dashboard/project/${project.id}`}>
+              <Link key={project.id} href={`/dashboard/projects/${project.id}`}>
                 <DropdownMenuItem>{project.title}</DropdownMenuItem>
               </Link>
             )

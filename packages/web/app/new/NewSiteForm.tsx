@@ -21,7 +21,7 @@ export function NewSiteForm() {
 
   const createProjectMutation = useMutation(createProject, {
     onSuccess(res) {
-      router.push(`/new_dashboard/project/${res.data.id}`)
+      router.push(`/dasbhoard/projects/${res.data.id}`)
     }
   })
 

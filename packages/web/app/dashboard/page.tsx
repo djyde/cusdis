@@ -25,5 +25,5 @@ export default async function Page() {
     redirect('/new')
   }
 
-  redirect(`/new_dashboard/project/${defaultProject.id}`)
+  redirect(`/dashboard/projects/${defaultProject.id}`)
 }
