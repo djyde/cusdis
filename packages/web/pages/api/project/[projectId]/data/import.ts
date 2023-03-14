@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import formidable from 'formidable'
-import { DataService } from '../../../../../../../service/data.service'
 import * as fs from 'fs'
-import { AuthService } from '../../../../../../../service/auth.service'
-import { ProjectService } from '../../../../../../../service/project.service'
 import { Project } from '@prisma/client'
+import { AuthService } from '../../../../../service/auth.service'
+import { ProjectService } from '../../../../../service/project.service'
+import { DataService } from '../../../../../service/data.service'
 
 export const config = {
   api: {

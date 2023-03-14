@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { resolvedConfig } from '../../../utils.server'
 import jwt from 'jsonwebtoken'
-import { CommentService } from '../../../../../service/comment.service'
-import { SecretKey, TokenBody, TokenService } from '../../../../../service/token.service'
+import { CommentService } from '../../../service/comment.service'
+import { SecretKey, TokenBody, TokenService } from '../../../service/token.service'
 
 export default async function handler(
   req: NextApiRequest,

@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import {
   CommentService,
   CommentWrapper,
-} from '../../../../../service/comment.service'
+} from '../../../service/comment.service'
 import { apiHandler } from '../../../utils.server'
 import Cors from 'cors'
-import { ProjectService } from '../../../../../service/project.service'
-import { statService } from '../../../../../service/stat.service'
+import { ProjectService } from '../../../service/project.service'
+import { statService } from '../../../service/stat.service'
 
 export default apiHandler()
   .use(

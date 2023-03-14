@@ -4,11 +4,11 @@ import React from "react"
 import { useMutation } from "react-query"
 import { Footer } from "../components/Footer"
 import { Navbar } from "../components/Navbar"
-import { UserSession } from "../../../service"
 import { apiClient } from "../utils.client"
 import { getSession, prisma } from "../utils.server"
 import { Head } from "../components/Head"
 import { MainLayout } from "../components/Layout"
+import { UserSession } from "../service"
 
 
 // From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript

@@ -1,8 +1,8 @@
 import * as React from "react"
 import { apiClient } from "../../utils.client"
 import { Project } from "@prisma/client"
-import { ProjectService } from "../../../../service/project.service"
 import { getSession } from "../../utils.server"
+import { ProjectService } from "../../service/project.service"
 
 
 export const getAllProjects = async () => {

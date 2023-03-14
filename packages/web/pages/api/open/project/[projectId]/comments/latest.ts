@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { ProjectService } from "../../../../../../../../service/project.service";
+import { ProjectService } from "../../../../../../service/project.service";
 import { prisma } from "../../../../../../utils.server";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

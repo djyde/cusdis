@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AuthService } from '../../../../../../service/auth.service'
-import { CommentService } from '../../../../../../service/comment.service'
+import { AuthService } from '../../../../service/auth.service'
+import { CommentService } from '../../../../service/comment.service'
 
 export default async function handler(
   req: NextApiRequest,

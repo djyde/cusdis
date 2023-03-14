@@ -3,7 +3,7 @@ import router from "next/router"
 import React from "react"
 import { useMutation } from "react-query"
 import { Head } from "../components/Head"
-import { ProjectService } from "../../../service/project.service"
+import { ProjectService } from "../service/project.service"
 import { apiClient } from "../utils.client"
 import { getSession } from "../utils.server"
 
