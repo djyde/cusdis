@@ -272,9 +272,10 @@ export class CommentService extends RequestScopeService {
       data: {
         content: body.content,
         by_email: body.email,
-        by_nickname: body.nickname,
+        by_nickname: body.nickname || poster?.displayName || poster?.name,
         pageId: page.id,
         moderatorId: poster?.id ? poster.id : undefined,
+        postById: poster?.id ? poster.id : undefined,
         approved: isModerator ? true : false,
         parentId,
       },

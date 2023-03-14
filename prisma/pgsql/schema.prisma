@@ -57,6 +57,7 @@ model User {
   projects Project[]
 
   Comment Comment[]
+  postedComments Comment[] @relation("postby")
 
   enableNewCommentNotification Boolean? @default(true) @map(name: "enable_new_comment_notification")
   notificationEmail            String?  @map(name: "notification_email")
@@ -135,6 +136,9 @@ model Comment {
   by_email    String?
   by_nickname String
   content     String
+
+  postById String?
+  postBy   User?   @relation("postby", fields: [postById], references: [id])
 
   approved Boolean @default(false)
 

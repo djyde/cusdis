@@ -27,7 +27,8 @@
     "build:widget": "npm run cp-widget-lang && vite build --config scripts/vite.widget.config.js && npm run build:sdk && npm run build:iframe && npm run build:count",
     "build:sdk": "tsup sdk/embeded.ts --outDir public/js/v2/sdk --format iife",
     "build:iframe": "vite build --config scripts/vite.iframe.config.js",
-    "build:count": "vite build --config scripts/vite.count.config.js"
+    "build:count": "vite build --config scripts/vite.count.config.js",
+    "sqlite:migrate:gen": "prisma migrate dev --schema ./prisma/sqlite/schema.prisma"
   },
   "prettier": "@egoist/prettier-config",
   "dependencies": {
