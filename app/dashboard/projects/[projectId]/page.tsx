@@ -2,8 +2,10 @@ import { Globe } from "lucide-react"
 import { ActionPannel } from "../../../components/ui/ActionPanel"
 import { Button } from "../../../components/ui/Button"
 import { Container } from "../../../components/ui/Container"
+import { env } from "../../../env"
 import { prisma } from "../../../utils/prisma"
 import { DangerZone } from "./DangerZone"
+import { EmbededCode } from "./EmbededCode"
 import { LatestCommentList } from "./LatestCommentList"
 import { NotificationSettings } from "./NotificationSettings"
 import { ProjectSettings } from "./ProjectSettings"
@@ -73,7 +75,7 @@ export default async function Page(props) {
 
       <div className="py-12 border-b border-b-slate-100">
         <Container className="">
-          <NotificationSettings project={project} /> 
+          <NotificationSettings project={project} />
         </Container>
       </div>
 
