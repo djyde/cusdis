@@ -19,6 +19,7 @@ export default async function Page(props) {
   const pageId = props.searchParams['p_id'] || pageUrl
   const pageTitle = props.searchParams['p_t']
   const projectId = props.params['projectId']
+  const timezoneOffset = Number(props.searchParams['tz'] || 0)
   const locale = en
   const project = await prisma.project.findUnique({
     where: {
@@ -36,7 +37,7 @@ export default async function Page(props) {
 
   const session = await getSession()
   const isModerate = project.ownerId === session?.uid
-  const comments = await getComments(props.params.projectId, pageId, 1, {
+  const comments = await getComments(props.params.projectId, pageId, 1, timezoneOffset, {
     onlyApproved: !isModerate,
     parentId: undefined
   })
@@ -49,7 +50,7 @@ export default async function Page(props) {
           <ReplyForm isSelfHost={isSelfHost} variant="expanded" session={session} locale={locale} projectId={projectId} />
         </div>
         {/* @ts-expect-error Server Component */}
-        <CommentList isModerator={isModerate} session={session} locale={locale} comments={comments} />
+        <CommentList timezoneOffset={timezoneOffset} isModerator={isModerate} session={session} locale={locale} comments={comments} />
       </div>
 
     </>

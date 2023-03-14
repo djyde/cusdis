@@ -7,6 +7,7 @@ export async function CommentList(props: {
   locale: any,
   session?: any,
   isModerator: boolean
+  timezoneOffset: number,
 }) {
   return (
     <div className="flex flex-col" >
@@ -14,7 +15,7 @@ export async function CommentList(props: {
         return (
           <div key={comment.id}>
             {/* @ts-expect-error Server Component */}
-            <CommentComponent isModerator={props.isModerator}  session={props.session} locale={props.locale} comment={comment} />
+            <CommentComponent timezoneOffset={props.timezoneOffset} isModerator={props.isModerator}  session={props.session} locale={props.locale} comment={comment} />
           </div>
         )
       })}

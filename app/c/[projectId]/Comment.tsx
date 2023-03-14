@@ -11,11 +11,12 @@ export async function CommentComponent(props: {
   session?: any,
   isChild?: boolean
   isModerator: boolean
+  timezoneOffset: number,
   comment: Awaited<ReturnType<typeof getComments>>[0]
 }) {
   const isSelfhost = !env.isHosted
   // get child comments
-  const comments = await getComments(props.comment.page.projectId, props.comment.page.slug, 1, {
+  const comments = await getComments(props.comment.page.projectId, props.comment.page.slug, 1, props.timezoneOffset, {
     parentId: props.comment.id,
     onlyApproved: !props.isModerator,
   })
@@ -40,7 +41,8 @@ export async function CommentComponent(props: {
             </div>
           )}
           <div className='text-gray-500 text-sm'>
-            2023/12/12 12:12
+            {/* @ts-expect-error */}
+            {props.comment.createdAt as string}
           </div>
         </div>
       </div>

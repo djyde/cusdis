@@ -1,10 +1,11 @@
 import 'server-only'
 
 import { prisma } from "../../utils/prisma"
+import dayjs from '../../utils/dayjs'
 
-export async function getComments(projectId: string, pageSlug: string, page: number, options?: {
+export async function getComments(projectId: string, pageSlug: string, page: number, timezoneOffset: number, options?: {
   parentId?: string,
-  onlyApproved?: boolean
+  onlyApproved?: boolean,
 }) {
   const comments = await prisma.comment.findMany({
     orderBy: {
@@ -22,6 +23,7 @@ export async function getComments(projectId: string, pageSlug: string, page: num
     select: {
       id: true,
       by_nickname: true,
+      createdAt: true,
       moderator: {
         select: {
           displayName: true,
@@ -44,6 +46,14 @@ export async function getComments(projectId: string, pageSlug: string, page: num
       }
     }
   })
+
+  for (let c of comments) {
+    // @ts-expect-error
+    c.createdAt = dayjs
+      .utc(c.createdAt)
+      .utcOffset(timezoneOffset)
+      .format('YYYY-MM-DD HH:mm')
+  }
   return comments
 }
 

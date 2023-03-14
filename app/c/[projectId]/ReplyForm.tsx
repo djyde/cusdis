@@ -65,18 +65,15 @@ export function ReplyForm(props: {
       router.refresh()
       setIsEditing(false)
       commentField.reset("")
-      if (!props.isModerate) {
-        alert(props.locale['comment_has_been_sent'])
-      }
     }
   })
 
   async function onClickReply() {
-    if (!usernameField.value) {
+    if (!usernameField.value && !props.session) {
       alert(props.locale['nickname_is_required'])
       return
     }
-    if (!commentField.value) {
+    if (!commentField.value && !props.session) {
       alert(props.locale['content_is_required'])
       return
     }
