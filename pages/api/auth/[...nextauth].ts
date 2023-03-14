@@ -61,6 +61,17 @@ export default NextAuth({
       return true
     }
   },
+  
+  cookies: {
+    sessionToken: {
+      name: '__Secure-next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true
+      }
+    }
+  },
 
   events: {
     async error(message) {
