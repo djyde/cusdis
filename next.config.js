@@ -1,3 +1,9 @@
+const staticFileHeaders = [
+  {
+    key: 'Access-Control-Allow-Origin',
+    value: '*'
+  }
+]
 module.exports = {
   experimental: {
     appDir: true
@@ -6,21 +12,15 @@ module.exports = {
     return [
       {
         source: '/js/iframe.umd',
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        }
+        headers: staticFileHeaders 
       },
       {
         source: '/js/cusdis.es.js',
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        }
+        headers: staticFileHeaders 
       },
       {
         source: '/js/style.css',
-        headers: {
-          'Access-Control-Allow-Origin': '*'
-        }
+        headers: staticFileHeaders 
       }
     ]
   },
