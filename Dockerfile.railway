@@ -6,6 +6,7 @@ ARG PORT
 ARG EnvironmentVariable
 
 ENV PORT=${PORT}
+ENV DB_URL=${DATABASE_URL}
 
 ADD . /repo
 WORKDIR /repo
