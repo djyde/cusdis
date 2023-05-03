@@ -27,6 +27,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         fetchLatestCommentsAt: true
       }
     })
+    
+    if (!project) {
+      res.status(404).json({
+        message: 'Project not found'
+      })
+      return
+    }
 
     if (project.token !== token) {
       res.status(403)
@@ -37,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const comments = await projectService.fetchLatestComment(projectId, {
-      from: project.fetchLatestCommentsAt,
+      from: project.fetchLatestCommentsAt || undefined,
       markAsRead: true
     })
 

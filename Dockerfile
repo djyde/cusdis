@@ -1,35 +1,20 @@
-FROM node:16-alpine3.15 as builder
+FROM node:16-alpine
 
-VOLUME [ "/data" ]
+ARG DATABASE_URL
+ARG PORT
 
-ARG DB_TYPE=sqlite
-ENV DB_TYPE=$DB_TYPE
+ARG EnvironmentVariable
 
-RUN apk add --no-cache python3 py3-pip make gcc g++
+ENV PORT=${PORT}
 
-COPY . /app
-
-COPY package.json yarn.lock /app/
-
+ADD . /app
 WORKDIR /app
 
-RUN npm install -g pnpm
-RUN yarn install --frozen-lockfile && npx browserslist@latest --update-db
-RUN npm run build:without-migrate
+RUN apk update
+RUN apk add python3 make g++
+RUN npm i -g pnpm
+RUN pnpm i
+RUN npm run build
 
-FROM node:16-alpine3.15 as runner
-
-ENV NODE_ENV=production
-ARG DB_TYPE=sqlite
-ENV DB_TYPE=$DB_TYPE
-
-WORKDIR /app
-
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY . /app
-
-EXPOSE 3000/tcp
-
-CMD ["npm", "run", "start:with-migrate"]
+EXPOSE ${PORT}
+CMD ["npm", "start"]

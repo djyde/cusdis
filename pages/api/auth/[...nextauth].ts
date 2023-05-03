@@ -13,6 +13,8 @@ declare module "next-auth" {
   }
   interface User {
     id: string
+    displayName?: string
+    notificationEmail?: string
   }
 }
 
@@ -37,8 +39,15 @@ export default NextAuth({
   },
 
   callbacks: {
-    session(session, user) {
+    async session(session, user) {
+      const userInDb = await prisma.user.findUnique({
+        where: {
+          id: user.id
+        }
+      })
       session.uid = user.id
+      session.user.displayName = userInDb?.displayName
+      session.user.notificationEmail = userInDb?.notificationEmail
       return session
     },
     jwt(token, user) {
@@ -50,6 +59,17 @@ export default NextAuth({
     signIn() {
       statService.capture('signIn')
       return true
+    }
+  },
+  
+  cookies: {
+    sessionToken: {
+      name: '__Secure-next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: process.env.NODE_ENV === 'production'
+      }
     }
   },
 

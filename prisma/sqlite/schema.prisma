@@ -25,7 +25,6 @@ model Account {
   createdAt          DateTime  @default(now()) @map(name: "created_at")
   updatedAt          DateTime  @default(now()) @map(name: "updated_at")
 
-
   @@index([providerAccountId], name: "providerAccountId")
   @@index([providerId], name: "providerId")
   @@index([userId], name: "userId")
@@ -47,7 +46,7 @@ model Session {
 model User {
   id            String    @id @default(uuid())
   name          String?
-  displayName String?
+  displayName   String?
   email         String?   @unique
   emailVerified DateTime? @map(name: "email_verified")
   image         String?
@@ -59,7 +58,9 @@ model User {
   Comment Comment[]
 
   enableNewCommentNotification Boolean? @default(true) @map(name: "enable_new_comment_notification")
-  notificationEmail            String? @map(name: "notification_email")
+  notificationEmail            String?  @map(name: "notification_email")
+
+  postedComments Comment[] @relation("postby")
 
   @@map(name: "users")
 }
@@ -78,10 +79,10 @@ model VerificationRequest {
 // next-auth END
 
 model Project {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   title     String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @default(now()) @map(name: "updated_at")
   deletedAt DateTime? @map(name: "deleted_at")
 
   ownerId String
@@ -94,7 +95,7 @@ model Project {
 
   enableNotification Boolean? @default(true) @map(name: "enable_notification")
 
-  webhook String?
+  webhook       String?
   enableWebhook Boolean?
 
   @@map(name: "projects")
@@ -115,7 +116,6 @@ model Page {
 
   comments Comment[]
 
-
   @@index([projectId], name: "projectId")
   @@map("pages")
 }
@@ -135,6 +135,9 @@ model Comment {
   by_email    String?
   by_nickname String
   content     String
+
+  postById String?
+  postBy   User?   @relation("postby", fields: [postById], references: [id])
 
   approved Boolean @default(false)
 
