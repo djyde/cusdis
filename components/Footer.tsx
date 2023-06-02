@@ -46,8 +46,16 @@ export function Footer(props: {
                 <ListItem>
                   <Link isExternal href="/privacy-policy">Privacy Policy</Link>
                 </ListItem>
+                <ListItem>
+                  <Box>
+                    <a href="https://vercel.com?utm_source=randysoft&utm_campaign=oss">
+                      <img width={128} src="https://images.ctfassets.net/e5382hct74si/78Olo8EZRdUlcDUFQvnzG7/fa4cdb6dc04c40fceac194134788a0e2/1618983297-powered-by-vercel.svg" />
+                    </a>
+                  </Box>
+                </ListItem>
               </List>
             </Box>
+
           </HStack>
 
           <VStack spacing={2} mt={12} alignItems="center">
