@@ -3,7 +3,7 @@
 
 Cusdis is an open-source, lightweight (~5kb gzip), privacy-friendly alternative to Disqus.
 
-https://cusdis.com
+> Contact me if you want to buy/acquire this project 💖
 
 ![](/public/images/landing.png)
 
