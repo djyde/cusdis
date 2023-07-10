@@ -1,4 +1,4 @@
-import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Drawer, DrawerOverlay, DrawerContent, DrawerBody, DrawerCloseButton } from '@chakra-ui/react'
+import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Drawer, DrawerOverlay, DrawerContent, DrawerBody, DrawerCloseButton, ListItem } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -15,7 +15,8 @@ import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
-import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl} from 'react-icons/ai'
+import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl } from 'react-icons/ai'
+import { List } from '@mantine/core'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -214,125 +215,18 @@ function ProjectPage(props: {
 
   return (
     <>
-      <Head title={props.project.title}></Head>
-      <Drawer isOpen={preferencesModal.isOpen} onClose={preferencesModal.onClose} placement="right" size="lg">
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerBody>
-            <Settings project={props.project} />
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-      <MainLayout session={props.session}>
-        <VStack align="stretch" spacing="24">
-          <VStack align="stretch">
-            <Text fontSize="lg" fontWeight="bold">
-              {props.project.title}
-            </Text>
-
-            <HStack align="stretch" spacing="4">
-              <Button onClick={_ => void embedCodeModal.onOpen()} leftIcon={<Icon as={AiOutlineCode}></Icon>} size="xs">Embed Code</Button>
-              <Button onClick={_ => void preferencesModal.onOpen()} leftIcon={<Icon as={AiOutlineControl}></Icon>} size="xs">Preferences</Button>
-            </HStack>
-
-            <Modal onClose={embedCodeModal.onClose} isOpen={embedCodeModal.isOpen} size="xl">
-              <ModalOverlay /> 
-              <ModalContent>
-                <ModalHeader>
-                  Embed Code
-                </ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Box>
-                    {typeof window !== 'undefined' && <Box w="full" as="pre" whiteSpace="pre-wrap" bgColor="gray.200" p={4} rounded={'md'} fontSize="sm">
-                      <code>
-                        {`<div id="cusdis_thread"
-  data-host="${location.origin}"
-  data-app-id="${props.project.id}"
-  data-page-id="{{ PAGE_ID }}"
-  data-page-url="{{ PAGE_URL }}"
-  data-page-title="{{ PAGE_TITLE }}"
-></div>
-<script async defer src="${location.origin}/js/cusdis.es.js"></script>
-`}
-                      </code>
-                    </Box>
-                    }
-                    <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/sdk">SDK reference</Link>
-                  </Box>
-
-                </ModalBody>
-                <ModalFooter>
-                  <Button onClick={embedCodeModal.onClose}>Close</Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </VStack>
-{/* 
-          <Box borderTopWidth="1px" borderBottomWidth="1px" borderColor="gray.100" py="8">
-            <StatGroup>
-              <Stat>
-                <StatLabel>
-                  Comments
-                </StatLabel>
-                <StatNumber>
-                  1000
-                </StatNumber>
-              </Stat>
-
-              <Stat>
-                <StatLabel>
-                  Pages
-                </StatLabel>
-                <StatNumber>
-                  1000
-                </StatNumber>
-              </Stat>
-            </StatGroup>
-          </Box> */}
-
-          <Box>
-            <HStack align="start" spacing="8">
-              <Text fontWeight="bold" mb="2" fontSize="sm">Comments</Text>
-              <HStack spacing="4" pt="0.5">
-                <HStack>
-                  <Box width="5px" height="5px" borderRadius="50%" bgColor="green.100"></Box>
-                  <Text fontSize="xs">Approved</Text>
-                </HStack>
-                <HStack>
-                  <Box width="5px" height="5px" borderRadius="50%" bgColor="orange.100"></Box>
-                  <Text fontSize="xs">Pending</Text>
-                </HStack>
-              </HStack>
-            </HStack>
-            <Box>
-              {getCommentsQuery.data?.data.length === 0 && <Box textAlign="center" p="8" fontSize="sm" textColor="gray.400">
-                  No comment yet
-                </Box>}
-              {getCommentsQuery.data?.data.map(comment => <Box mb="2">
-                <CommentComponent isRoot key={comment.id} refetch={getCommentsQuery.refetch} comment={comment} />
-              </Box>)}
-            </Box>
-
-
-            <Flex>
-              <Spacer />
-              <VStack alignItems="stretch" spacing={4}>
-                <HStack spacing={2} fontSize="xs">
-                  {new Array(pageCount).fill(0).map((_, index) => {
-                    return (
-                      <Link bgColor={page === index + 1 ? 'blue.50' : ''} px={2} key={index} onClick={_ => setPage(index + 1)}>{index + 1}</Link>
-                    )
-                  })}
-                </HStack>
-              </VStack>
-            </Flex>
-          </Box>
-
-        </VStack>
-
-
+      <MainLayout id="comments" session={props.session}>
+        <Box>
+          <List>
+            {getCommentsQuery.data?.data.map(comment => {
+              return (
+                <ListItem key={comment.id}>
+                  {comment.content}
+                </ListItem>
+              )
+            })}
+          </List>
+        </Box>
       </MainLayout>
     </>
   )
