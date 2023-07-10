@@ -153,12 +153,22 @@ function ProjectPage(props: {
                         }}>
                           {comment.by_nickname}
                         </Text>
+                      </Group>
+                      <Group spacing={8} sx={{
+                        fontSize: 12
+                      }}>
+                        <Text sx={{
+                        }}>
+                          {comment.parsedCreatedAt}
+                        </Text>
                         <Text>
                           on
                         </Text>
                         <Anchor href={comment.page.url} target="_blank">{comment.page.slug}</Anchor>
                       </Group>
-                      <Box>
+                      <Box sx={{
+                        marginTop: 8
+                      }}>
                         {comment.content}
                       </Box>
                     </Stack>
