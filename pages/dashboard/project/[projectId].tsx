@@ -1,4 +1,4 @@
-import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box as ChakraBox, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button as ChakraButton, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text as ChakraText, Textarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Drawer, DrawerOverlay, DrawerContent, DrawerBody, DrawerCloseButton, ListItem } from '@chakra-ui/react'
+import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box as ChakraBox, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button as ChakraButton, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text as ChakraText, Textarea as ChakraTextarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Drawer, DrawerOverlay, DrawerContent, DrawerBody, DrawerCloseButton, ListItem } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -15,8 +15,8 @@ import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
-import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
-import { List, Stack, Box, Text, Group, Anchor, Button, Pagination } from '@mantine/core'
+import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl, AiOutlineCheck, AiOutlineClose, AiOutlineSmile } from 'react-icons/ai'
+import { List, Stack, Box, Text, Group, Anchor, Button, Pagination, Textarea } from '@mantine/core'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -63,36 +63,81 @@ function CommentToolbar(props: {
   comment: CommentItem,
   refetch: any,
 }) {
+
+  const [replyContent, setReplyContent] = React.useState("")
+  const [isOpenReplyForm, setIsOpenReplyForm] = React.useState(false)
+
   const approveCommentMutation = useMutation(approveComment, {
+    onSuccess() {
+      props.refetch()
+    }
+  })
+  const replyCommentMutation = useMutation(replyAsModerator, {
+    onSuccess() {
+      setIsOpenReplyForm(false)
+      props.refetch()
+    }
+  })
+  const deleteCommentMutation = useMutation(deleteComment, {
     onSuccess() {
       props.refetch()
     }
   })
 
   return (
-    <Group spacing={4}>
-      {props.comment.approved ? (
-        <Button color="green" disabled size="xs" variant={'outline'}>
-          Approved
+    <Stack>
+      <Group spacing={4}>
+        {props.comment.approved ? (
+          <Button leftIcon={<AiOutlineCheck />} color="green" size="xs" variant={'light'}>
+            Approved
+          </Button>
+        ) : (
+          <Button loading={approveCommentMutation.isLoading} onClick={_ => {
+            if (window.confirm("Are you sure you want to approve this comment?")) {
+              approveCommentMutation.mutate({
+                commentId: props.comment.id
+              })
+            }
+          }} leftIcon={<AiOutlineSmile />} size="xs" variant={'subtle'}>
+            Approve
+          </Button>
+        )}
+        <Button onClick={_ => {
+          setIsOpenReplyForm(!isOpenReplyForm)
+        }} size="xs" variant={'subtle'}>
+          Reply
         </Button>
-      ) : (
-        <Button loading={approveCommentMutation.isLoading} onClick={_ => {
-          if (window.confirm("Are you sure you want to approve this comment?")) {
-            approveCommentMutation.mutate({
+        <Button loading={deleteCommentMutation.isLoading} onClick={_ => {
+          if (window.confirm("Are you sure you want to delete this comment?")) {
+            deleteCommentMutation.mutate({
               commentId: props.comment.id
             })
           }
-        }} color="green" leftIcon={<AiOutlineCheck />} size="xs" variant={'light'}>
-          Approve
+        }} color="red" size="xs" variant={'subtle'}>
+          Delete
         </Button>
-      )}
-      <Button size="xs" variant={'subtle'}>
-        Reply
-      </Button>
-      <Button color="red" size="xs" variant={'subtle'}>
-        Delete
-      </Button>
-    </Group>
+      </Group>
+      {
+        isOpenReplyForm &&
+        <Stack>
+          <Textarea
+            autosize
+            minRows={2}
+            onChange={e => setReplyContent(e.currentTarget.value)}
+            placeholder="Reply as moderator"
+            sx={{
+              // width: 512,
+              // maxWidth: '100%'
+            }} />
+          <Button loading={replyCommentMutation.isLoading} onClick={_ => {
+            replyCommentMutation.mutate({
+              parentId: props.comment.id,
+              content: replyContent
+            })
+          }} disabled={replyContent.length === 0} size="xs">Reply and approve</Button>
+        </Stack>
+      }
+    </Stack>
   )
 }
 
@@ -119,9 +164,6 @@ function ProjectPage(props: {
 
 
   const { commentCount = 0, pageCount = 0 } = getCommentsQuery.data || {}
-
-  const embedCodeModal = useDisclosure()
-  const preferencesModal = useDisclosure()
 
   return (
     <>
@@ -182,7 +224,7 @@ function ProjectPage(props: {
             })}
           </List>
           <Box>
-            <Pagination total={getCommentsQuery.data?.pageCount || 0} value={pageCount} onChange={count => {
+            <Pagination total={getCommentsQuery.data?.pageCount || 0} value={page} onChange={count => {
               setPage(count)
             }} />
           </Box>

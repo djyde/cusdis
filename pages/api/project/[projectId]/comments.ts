@@ -39,7 +39,7 @@ export default async function handler(
     })
 
     const comments = await commentService.getComments(projectId, Number(timezoneOffsetInHour), {
-      parentId: null,
+      // parentId: null,
       page: Number(page),
       onlyOwn: true,
       select: {

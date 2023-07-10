@@ -9,7 +9,7 @@ import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, A
 import { signout, signOut } from "next-auth/client"
 import { Footer } from "./Footer"
 import { createProject } from "../pages/getting-start"
-import { AppShell, Box, Button, Header, Navbar, NavLink, Stack, Text, Title } from "@mantine/core"
+import { AppShell, Box, Button, Header, Navbar, NavLink, ScrollArea, Stack, Text, Title } from "@mantine/core"
 
 // just for type
 
@@ -69,10 +69,10 @@ export function MainLayout(props: { session: UserSession, id?: "comments" | "set
   return (
     <>
       <AppShell
-        padding={'md'}
         fixed={false}
-        navbar={<Navbar width={{
-          base: 240
+        navbar={<Navbar sx={{
+        }} width={{
+          base: 240,
         }}>
           {Menubar}
         </Navbar>}
@@ -82,11 +82,16 @@ export function MainLayout(props: { session: UserSession, id?: "comments" | "set
         }
         styles={{
           body: {
-            backgroundColor: '#f5f5f5'
+            backgroundColor: '#f5f5f5',
+          },
+          main: {
+            overflow: 'scroll'
           }
         }}
       >
-        {props.children}
+        <ScrollArea>
+          {props.children}
+        </ScrollArea>
       </AppShell>
     </>
   )
