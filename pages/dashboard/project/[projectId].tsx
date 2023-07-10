@@ -1,4 +1,4 @@
-import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text, Textarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Drawer, DrawerOverlay, DrawerContent, DrawerBody, DrawerCloseButton, ListItem } from '@chakra-ui/react'
+import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box as ChakraBox, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button as ChakraButton, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text as ChakraText, Textarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Drawer, DrawerOverlay, DrawerContent, DrawerBody, DrawerCloseButton, ListItem } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -15,8 +15,8 @@ import { Navbar } from '../../../components/Navbar'
 import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
-import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl } from 'react-icons/ai'
-import { List } from '@mantine/core'
+import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai'
+import { List, Stack, Box, Text, Group, Anchor, Button, Pagination } from '@mantine/core'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -119,7 +119,7 @@ function CommentComponent(props: {
             <Textarea fontSize="xs" {...form.register('content')} placeholder="Reply as moderator" />
           </FormControl>
           <FormControl mt="2">
-            <Button size="xs" isLoading={replyMutation.isLoading} type="submit">Send</Button>
+            <ChakraButton size="xs" isLoading={replyMutation.isLoading} type="submit">Send</ChakraButton>
           </FormControl>
         </form>
       </>
@@ -145,44 +145,44 @@ function CommentComponent(props: {
     <>
       {props.isRoot && (
         <>
-          <Box mb="2" fontSize="sm" pl="0">
-            <Text as="div">
+          <ChakraBox mb="2" fontSize="sm" pl="0">
+            <ChakraText as="div">
               <Link href={props.comment.page.url} isExternal fontWeight="medium">
                 {props.comment.page.title}
               </Link>
-            </Text>
-          </Box>
+            </ChakraText>
+          </ChakraBox>
         </>
       )}
-      <Box key={comment.id} pl={!props.isRoot ? 4 : 0} fontSize="xs">
+      <ChakraBox key={comment.id} pl={!props.isRoot ? 4 : 0} fontSize="xs">
         <VStack align="strech" borderTopWidth={props.isRoot ? "1px" : "0"} spacing="2" px="4" py="4" borderLeftWidth="4px" {...approveStyle[String(comment.approved)]} mb="0" >
           <Flex align="">
-            <Text fontWeight="medium">
+            <ChakraText fontWeight="medium">
               {comment.by_nickname} {comment.by_email && <>({comment.by_email})</>}
-            </Text>
+            </ChakraText>
             <Spacer />
-            <Text color="gray.400">
+            <ChakraText color="gray.400">
               {comment.parsedCreatedAt}
-            </Text>
+            </ChakraText>
           </Flex>
 
-          <Box>
+          <ChakraBox>
             <div dangerouslySetInnerHTML={{ __html: comment.parsedContent }}></div>
-          </Box>
+          </ChakraBox>
 
           <HStack spacing={4} pt="2">
-            <Button isLoading={approveCommentMutation.isLoading} disabled={comment.approved} type="button" variant="link" size="xs" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</Button>
-            <Button type="button" variant="link" size="xs" onClick={_ => setShowReplyForm(true)} >Reply</Button>
-            <Button isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="xs" onClick={_ => confirm(`Are your sure?`) && deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</Button>
+            <ChakraButton isLoading={approveCommentMutation.isLoading} disabled={comment.approved} type="button" variant="link" size="xs" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</ChakraButton>
+            <ChakraButton type="button" variant="link" size="xs" onClick={_ => setShowReplyForm(true)} >Reply</ChakraButton>
+            <ChakraButton isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="xs" onClick={_ => confirm(`Are your sure?`) && deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</ChakraButton>
           </HStack>
         </VStack>
 
 
-        {showReplyForm && <Box py="2" pb="4"> <ReplyForm parentId={comment.id} /> </Box>}
+        {showReplyForm && <ChakraBox py="2" pb="4"> <ReplyForm parentId={comment.id} /> </ChakraBox>}
 
         {comment.replies.data.length > 0 && comment.replies.data.map(reply => <CommentComponent key={reply.id} {...props} comment={reply} isRoot={false} />)}
 
-      </Box>
+      </ChakraBox>
     </>
   )
 }
@@ -216,17 +216,70 @@ function ProjectPage(props: {
   return (
     <>
       <MainLayout id="comments" session={props.session}>
-        <Box>
-          <List>
+        <Stack>
+          <List listStyleType={'none'} styles={{
+            root: {
+              border: '1px solid #eee'
+            },
+            item: {
+              backgroundColor: '#fff',
+              padding: 12,
+              ':not(:last-child)': {
+                borderBottom: '1px solid #eee',
+              }
+              // borderBottom: '1px solid #eee',
+            }
+          }}>
             {getCommentsQuery.data?.data.map(comment => {
               return (
-                <ListItem key={comment.id}>
-                  {comment.content}
-                </ListItem>
+                <List.Item key={comment.id}>
+                  <Stack>
+                    <Stack spacing={4}>
+                      <Group spacing={8} sx={{
+                        fontSize: 14
+                      }}>
+                        <Text sx={{
+                          fontWeight: 500
+                        }}>
+                          {comment.by_nickname}
+                        </Text>
+                        <Text>
+                          on
+                        </Text>
+                        <Anchor href={comment.page.url} target="_blank">{comment.page.slug}</Anchor>
+                      </Group>
+                      <Box>
+                        {comment.content}
+                      </Box>
+                    </Stack>
+                    <Group sx={{
+                    }}>
+                      <Button.Group>
+                        {comment.approved ? (
+                          <Button size="xs" variant={'default'}>
+                            Disapprove
+                          </Button>
+                        ) : (
+                          <Button color="green"  size="xs" variant={'outline'}>
+                            Approve
+                          </Button>
+                        )}
+                        <Button size="xs" variant={'default'}>
+                          Reply
+                        </Button>
+                      </Button.Group>
+                    </Group>
+                  </Stack>
+                </List.Item>
               )
             })}
           </List>
-        </Box>
+          <Box>
+            <Pagination total={getCommentsQuery.data?.pageCount || 0} value={pageCount} onChange={count => {
+              setPage(count)
+            }} />
+          </Box>
+        </Stack>
       </MainLayout>
     </>
   )
@@ -383,19 +436,19 @@ function Settings(props: {
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            <Text>
+            <ChakraText>
               Are you sure?
-            </Text>
-            <Box mt={2}>
+            </ChakraText>
+            <ChakraBox mt={2}>
               <Link fontSize="sm" color="telegram.500" href='/doc#/faq?id=what-if-i-delete-a-project'>What if I delete a project?</Link>
-            </Box>
+            </ChakraBox>
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button ref={cancelDeleteProjectRef} onClick={onCloseDeleteProjectModal}>
+            <ChakraButton ref={cancelDeleteProjectRef} onClick={onCloseDeleteProjectModal}>
               Cancel
-            </Button>
-            <Button ml={4} colorScheme="red" onClick={_ => deleteProjectMutation.mutate({ projectId: props.project.id })} isLoading={deleteProjectMutation.isLoading}>Delete</Button>
+            </ChakraButton>
+            <ChakraButton ml={4} colorScheme="red" onClick={_ => deleteProjectMutation.mutate({ projectId: props.project.id })} isLoading={deleteProjectMutation.isLoading}>Delete</ChakraButton>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>
@@ -436,11 +489,11 @@ function Settings(props: {
             <Heading as="h1" size="md">Email Notification</Heading>
 
           </HStack>
-          <Box>
+          <ChakraBox>
             <Link href="/user" fontSize="sm">
               Advanced Notification Settings
             </Link>
-          </Box>
+          </ChakraBox>
         </VStack>
 
         <VStack alignItems="start">
@@ -451,35 +504,35 @@ function Settings(props: {
           <InputGroup>
             <Input defaultValue={props.project.webhook} type="text" ref={webhookInputRef}></Input>
             <InputRightElement width='16'>
-              <Button size="sm" isLoading={updateWebhookUrlMutation.isLoading} onClick={onSaveWebhookUrl}>Save</Button>
+              <ChakraButton size="sm" isLoading={updateWebhookUrlMutation.isLoading} onClick={onSaveWebhookUrl}>Save</ChakraButton>
             </InputRightElement>
           </InputGroup>
           <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/webhook">How to use Webhook?</Link>
         </VStack>
 
-        <Box>
+        <ChakraBox>
           <Heading as="h1" size="md" my={4}>Data</Heading>
           <Heading as="h2" size="sm" my={4}>Import from Disqus</Heading>
           <HStack>
             <Input type="file" onChange={onChangeFile} />
-            <Button onClick={_ => {
+            <ChakraButton onClick={_ => {
               if (importFile.current) {
                 uploadMutation.mutate()
               }
-            }} isLoading={uploadMutation.isLoading}>Import</Button>
+            }} isLoading={uploadMutation.isLoading}>Import</ChakraButton>
 
           </HStack>
 
           {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
 
-        </Box>
+        </ChakraBox>
 
-        <Box>
+        <ChakraBox>
           <Heading as="h1" size="md" my={4}>Danger Zone</Heading>
-          <Button size="sm" colorScheme="red" onClick={_ => setIsOpenDeleteProjectModal(true)} isLoading={deleteProjectMutation.isLoading}>Delete project</Button>
+          <ChakraButton size="sm" colorScheme="red" onClick={_ => setIsOpenDeleteProjectModal(true)} isLoading={deleteProjectMutation.isLoading}>Delete project</ChakraButton>
           {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
           {DeleteProjectDialog}
-        </Box>
+        </ChakraBox>
 
       </VStack>
 

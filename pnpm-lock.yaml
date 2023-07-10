@@ -29,8 +29,8 @@ dependencies:
     specifier: ^6.0.16
     version: 6.0.16(@mantine/core@6.0.16)(@mantine/hooks@6.0.16)(react-dom@18.2.0)(react@18.2.0)
   '@prisma/client':
-    specifier: ^3.5.0
-    version: 3.15.2(prisma@3.15.2)
+    specifier: ^4.16.2
+    version: 4.16.2(prisma@4.16.2)
   '@sendgrid/mail':
     specifier: ^7.4.2
     version: 7.7.0
@@ -81,7 +81,7 @@ dependencies:
     version: 13.4.9(@babel/core@7.18.13)(react-dom@18.2.0)(react@18.2.0)
   next-auth:
     specifier: 3.29.10
-    version: 3.29.10(@prisma/client@3.15.2)(react-dom@18.2.0)(react@18.2.0)
+    version: 3.29.10(@prisma/client@4.16.2)(react-dom@18.2.0)(react@18.2.0)
   next-connect:
     specifier: ^0.10.1
     version: 0.10.2
@@ -163,11 +163,11 @@ devDependencies:
     specifier: ^3.1.0
     version: 3.1.3(prettier@2.7.1)
   prisma:
-    specifier: ^3.5.0
-    version: 3.15.2
+    specifier: ^4.16.2
+    version: 4.16.2
   typegraphql-prisma:
     specifier: ^0.9.4
-    version: 0.9.4(@prisma/cli@2.14.0)(@prisma/client@3.15.2)(@types/graphql-fields@1.3.5)(@types/node@14.18.26)(graphql-fields@2.0.3)(graphql-type-json@0.3.2)(type-graphql@1.1.1)
+    version: 0.9.4(@prisma/cli@2.14.0)(@prisma/client@4.16.2)(@types/graphql-fields@1.3.5)(@types/node@14.18.26)(graphql-fields@2.0.3)(graphql-type-json@0.3.2)(type-graphql@1.1.1)
   typescript:
     specifier: ^4.8.2
     version: 4.8.2
@@ -1571,15 +1571,15 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@next-auth/prisma-legacy-adapter@0.1.2(@prisma/client@3.15.2)(next-auth@3.29.10):
+  /@next-auth/prisma-legacy-adapter@0.1.2(@prisma/client@4.16.2)(next-auth@3.29.10):
     resolution: {integrity: sha512-QpGcRvrnFERkvVFroqS89qDbnskw9AjhvWxO095u3xl/8QVI++Y+doluQdZWuV6PewjrV7xY+uVUEnRhnGM8yQ==}
     peerDependencies:
       '@prisma/client': ^2.16.1
       next-auth: ^3.17.2
     dependencies:
       '@babel/runtime': 7.18.9
-      '@prisma/client': 3.15.2(prisma@3.15.2)
-      next-auth: 3.29.10(@prisma/client@3.15.2)(react-dom@18.2.0)(react@18.2.0)
+      '@prisma/client': 4.16.2(prisma@4.16.2)
+      next-auth: 3.29.10(@prisma/client@4.16.2)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@next-auth/typeorm-legacy-adapter@0.1.4(next-auth@3.29.10):
@@ -1601,7 +1601,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.18.9
-      next-auth: 3.29.10(@prisma/client@3.15.2)(react-dom@18.2.0)(react@18.2.0)
+      next-auth: 3.29.10(@prisma/client@4.16.2)(react-dom@18.2.0)(react@18.2.0)
       require_optional: 1.0.1
       typeorm: 0.2.45
     transitivePeerDependencies:
@@ -1747,9 +1747,9 @@ packages:
       '@prisma/engines': 2.14.0-28.5d491261d382a2a5ffdc71de17072b0e409f1cc1
     dev: true
 
-  /@prisma/client@3.15.2(prisma@3.15.2):
-    resolution: {integrity: sha512-ErqtwhX12ubPhU4d++30uFY/rPcyvjk+mdifaZO5SeM21zS3t4jQrscy8+6IyB0GIYshl5ldTq6JSBo1d63i8w==}
-    engines: {node: '>=12.6'}
+  /@prisma/client@4.16.2(prisma@4.16.2):
+    resolution: {integrity: sha512-qCoEyxv1ZrQ4bKy39GnylE8Zq31IRmm8bNhNbZx7bF2cU5aiCCnSa93J2imF88MBjn7J9eUQneNxUQVJdl/rPQ==}
+    engines: {node: '>=14.17'}
     requiresBuild: true
     peerDependencies:
       prisma: '*'
@@ -1757,8 +1757,8 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e
-      prisma: 3.15.2
+      '@prisma/engines-version': 4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81
+      prisma: 4.16.2
 
   /@prisma/debug@2.14.0:
     resolution: {integrity: sha512-dYN1p0czp7hUyKg+HTfupxKzZXLZOAJMESdVKnJcst+B8cfuLWZwR/bclGKdXUNP4IBmahioY53OFVhgp4fsSg==}
@@ -1788,16 +1788,16 @@ packages:
       - supports-color
     dev: true
 
-  /@prisma/engines-version@3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
-    resolution: {integrity: sha512-e3k2Vd606efd1ZYy2NQKkT4C/pn31nehyLhVug6To/q8JT8FpiMrDy7zmm3KLF0L98NOQQcutaVtAPhzKhzn9w==}
+  /@prisma/engines-version@4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81:
+    resolution: {integrity: sha512-q617EUWfRIDTriWADZ4YiWRZXCa/WuhNgLTVd+HqWLffjMSPzyM5uOWoauX91wvQClSKZU4pzI4JJLQ9Kl62Qg==}
 
   /@prisma/engines@2.14.0-28.5d491261d382a2a5ffdc71de17072b0e409f1cc1:
     resolution: {integrity: sha512-t5/Mq0VtL7khYQtbap8myr7RwyIvmruCFxsph6oTi8QZaklmuxSp7FAC2DWBz8r/KoZFngMpmliKfDrWN7uwzQ==}
     requiresBuild: true
     dev: true
 
-  /@prisma/engines@3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e:
-    resolution: {integrity: sha512-NHlojO1DFTsSi3FtEleL9QWXeSF/UjhCW0fgpi7bumnNZ4wj/eQ+BJJ5n2pgoOliTOGv9nX2qXvmHap7rJMNmg==}
+  /@prisma/engines@4.16.2:
+    resolution: {integrity: sha512-vx1nxVvN4QeT/cepQce68deh/Turxy5Mr+4L4zClFuK1GlxN3+ivxfuv+ej/gvidWn1cE1uAhW7ALLNlYbRUAw==}
     requiresBuild: true
 
   /@prisma/fetch-engine@2.14.0:
@@ -4184,14 +4184,14 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /next-auth@3.29.10(@prisma/client@3.15.2)(react-dom@18.2.0)(react@18.2.0):
+  /next-auth@3.29.10(@prisma/client@4.16.2)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-e4nNYhISQRHNnem/WX1ybnQGDGb2rMP29maNmIXEOxSL6Uhu/pGFYu/aqApgIObDVWFt5l+33Ddh3rc71hjvEA==}
     peerDependencies:
       react: ^16.13.1 || ^17
       react-dom: ^16.13.1 || ^17
     dependencies:
       '@babel/runtime': 7.18.9
-      '@next-auth/prisma-legacy-adapter': 0.1.2(@prisma/client@3.15.2)(next-auth@3.29.10)
+      '@next-auth/prisma-legacy-adapter': 0.1.2(@prisma/client@4.16.2)(next-auth@3.29.10)
       '@next-auth/typeorm-legacy-adapter': 0.1.4(next-auth@3.29.10)
       futoin-hkdf: 1.5.2
       jose: 1.28.2
@@ -4620,13 +4620,13 @@ packages:
     resolution: {integrity: sha512-VVtxR7sOh0VsG8o06Ttq5TrI1aiZKmC+ClSn4eBPaNf4SHr5lzbYW+kYGX3HocBL/MfpVrRfFZ9V3vCbLaiplg==}
     dev: true
 
-  /prisma@3.15.2:
-    resolution: {integrity: sha512-nMNSMZvtwrvoEQ/mui8L/aiCLZRCj5t6L3yujKpcDhIPk7garp8tL4nMx2+oYsN0FWBacevJhazfXAbV1kfBzA==}
-    engines: {node: '>=12.6'}
+  /prisma@4.16.2:
+    resolution: {integrity: sha512-SYCsBvDf0/7XSJyf2cHTLjLeTLVXYfqp7pG5eEVafFLeT0u/hLFz/9W196nDRGUOo1JfPatAEb+uEnTQImQC1g==}
+    engines: {node: '>=14.17'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      '@prisma/engines': 3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e
+      '@prisma/engines': 4.16.2
 
   /process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -5589,7 +5589,7 @@ packages:
       tslib: 2.4.0
     dev: true
 
-  /typegraphql-prisma@0.9.4(@prisma/cli@2.14.0)(@prisma/client@3.15.2)(@types/graphql-fields@1.3.5)(@types/node@14.18.26)(graphql-fields@2.0.3)(graphql-type-json@0.3.2)(type-graphql@1.1.1):
+  /typegraphql-prisma@0.9.4(@prisma/cli@2.14.0)(@prisma/client@4.16.2)(@types/graphql-fields@1.3.5)(@types/node@14.18.26)(graphql-fields@2.0.3)(graphql-type-json@0.3.2)(type-graphql@1.1.1):
     resolution: {integrity: sha512-Plbf0k8BhhwJS5yU8N2m73cKLM+qqPDjkbmXdzoX+VQ3qwht1iD0Wl/+6xc1tkifAvIGE+xC92RWwpPRguehIQ==}
     engines: {node: '>=12.4'}
     hasBin: true
@@ -5603,7 +5603,7 @@ packages:
       type-graphql: ^1.1.1
     dependencies:
       '@prisma/cli': 2.14.0
-      '@prisma/client': 3.15.2(prisma@3.15.2)
+      '@prisma/client': 4.16.2(prisma@4.16.2)
       '@prisma/generator-helper': 2.14.0
       '@prisma/sdk': 2.14.0
       '@types/graphql-fields': 1.3.5
