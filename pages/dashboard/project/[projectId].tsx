@@ -59,131 +59,40 @@ const updateProjectSettings = async ({ projectId, body }) => {
   return res.data
 }
 
-function CommentComponent(props: {
-  isRoot: boolean,
+function CommentToolbar(props: {
+  comment: CommentItem,
   refetch: any,
-  comment: CommentItem
 }) {
-  const toast = useToast()
-
-  const refetch = props.refetch
-  const comment = props.comment
-
-  const [showReplyForm, setShowReplyForm] = React.useState(false)
-
   const approveCommentMutation = useMutation(approveComment, {
     onSuccess() {
-      toast({
-        status: 'success',
-        title: 'Approved',
-        position: 'top'
-      })
-      refetch()
+      props.refetch()
     }
   })
-
-  const deleteCommentMutation = useMutation(deleteComment, {
-    onSuccess() {
-      toast({
-        status: 'success',
-        title: 'Deleted',
-        position: 'top'
-      })
-      refetch()
-    }
-  })
-
-  function ReplyForm(props: {
-    parentId: string
-  }) {
-    const form = useForm()
-    function onSubmit({ content }) {
-      replyMutation.mutate({ content, parentId: props.parentId })
-    }
-    const replyMutation = useMutation(replyAsModerator, {
-      onSuccess() {
-        toast({
-          status: 'success',
-          title: 'Sent',
-          position: 'top'
-        })
-        refetch()
-        setShowReplyForm(false)
-      }
-    })
-
-    return (
-      <>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormControl>
-            <Textarea fontSize="xs" {...form.register('content')} placeholder="Reply as moderator" />
-          </FormControl>
-          <FormControl mt="2">
-            <ChakraButton size="xs" isLoading={replyMutation.isLoading} type="submit">Send</ChakraButton>
-          </FormControl>
-        </form>
-      </>
-    )
-  }
-
-  const approveStyle: { [key: string]: any } = {
-    "true": {
-      borderBottomWidth: "1px",
-      borderRightWidth: "1px",
-      borderRightColor: "gray.100",
-      borderLeftColor: "green.100"
-    },
-    "false": {
-      borderBottomWidth: "1px",
-      borderRightWidth: "1px",
-      borderRightColor: "gray.100",
-      borderLeftColor: "orange.100"
-    }
-  }
 
   return (
-    <>
-      {props.isRoot && (
-        <>
-          <ChakraBox mb="2" fontSize="sm" pl="0">
-            <ChakraText as="div">
-              <Link href={props.comment.page.url} isExternal fontWeight="medium">
-                {props.comment.page.title}
-              </Link>
-            </ChakraText>
-          </ChakraBox>
-        </>
+    <Group spacing={4}>
+      {props.comment.approved ? (
+        <Button color="green" disabled size="xs" variant={'outline'}>
+          Approved
+        </Button>
+      ) : (
+        <Button loading={approveCommentMutation.isLoading} onClick={_ => {
+          if (window.confirm("Are you sure you want to approve this comment?")) {
+            approveCommentMutation.mutate({
+              commentId: props.comment.id
+            })
+          }
+        }} color="green" leftIcon={<AiOutlineCheck />} size="xs" variant={'light'}>
+          Approve
+        </Button>
       )}
-      <ChakraBox key={comment.id} pl={!props.isRoot ? 4 : 0} fontSize="xs">
-        <VStack align="strech" borderTopWidth={props.isRoot ? "1px" : "0"} spacing="2" px="4" py="4" borderLeftWidth="4px" {...approveStyle[String(comment.approved)]} mb="0" >
-          <Flex align="">
-            <ChakraText fontWeight="medium">
-              {comment.by_nickname} {comment.by_email && <>({comment.by_email})</>}
-            </ChakraText>
-            <Spacer />
-            <ChakraText color="gray.400">
-              {comment.parsedCreatedAt}
-            </ChakraText>
-          </Flex>
-
-          <ChakraBox>
-            <div dangerouslySetInnerHTML={{ __html: comment.parsedContent }}></div>
-          </ChakraBox>
-
-          <HStack spacing={4} pt="2">
-            <ChakraButton isLoading={approveCommentMutation.isLoading} disabled={comment.approved} type="button" variant="link" size="xs" onClick={_ => approveCommentMutation.mutate({ commentId: comment.id })}>Approve</ChakraButton>
-            <ChakraButton type="button" variant="link" size="xs" onClick={_ => setShowReplyForm(true)} >Reply</ChakraButton>
-            <ChakraButton isLoading={deleteCommentMutation.isLoading} type="button" variant="link" size="xs" onClick={_ => confirm(`Are your sure?`) && deleteCommentMutation.mutate({ commentId: comment.id })}>Delete</ChakraButton>
-          </HStack>
-        </VStack>
-
-
-        {showReplyForm && <ChakraBox py="2" pb="4"> <ReplyForm parentId={comment.id} /> </ChakraBox>}
-
-        {comment.replies.data.length > 0 && comment.replies.data.map(reply => <CommentComponent key={reply.id} {...props} comment={reply} isRoot={false} />)}
-
-      </ChakraBox>
-    </>
+      <Button size="xs" variant={'subtle'}>
+        Reply
+      </Button>
+      <Button color="red" size="xs" variant={'subtle'}>
+        Delete
+      </Button>
+    </Group>
   )
 }
 
@@ -207,6 +116,7 @@ function ProjectPage(props: {
 
   const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string, page }], getComments, {
   })
+
 
   const { commentCount = 0, pageCount = 0 } = getCommentsQuery.data || {}
 
@@ -254,20 +164,7 @@ function ProjectPage(props: {
                     </Stack>
                     <Group sx={{
                     }}>
-                      <Button.Group>
-                        {comment.approved ? (
-                          <Button size="xs" variant={'default'}>
-                            Disapprove
-                          </Button>
-                        ) : (
-                          <Button color="green"  size="xs" variant={'outline'}>
-                            Approve
-                          </Button>
-                        )}
-                        <Button size="xs" variant={'default'}>
-                          Reply
-                        </Button>
-                      </Button.Group>
+                      <CommentToolbar comment={comment} refetch={getCommentsQuery.refetch} />
                     </Group>
                   </Stack>
                 </List.Item>
