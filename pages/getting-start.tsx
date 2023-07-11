@@ -7,8 +7,6 @@ import { ProjectService } from "../service/project.service"
 import { apiClient } from "../utils.client"
 import { getSession } from "../utils.server"
 
-
-
 export const createProject = async (body: { title: string }) => {
   const res = await apiClient.post("/projects", {
     title: body.title,
@@ -86,23 +84,23 @@ export async function getServerSideProps(ctx) {
     }
   }
 
-  const projectService = new ProjectService(ctx.req)
+  // const projectService = new ProjectService(ctx.req)
 
-  const defaultProject = await projectService.getFirstProject(session.uid, {
-    select: {
-      id: true
-    }
-  })
+  // const defaultProject = await projectService.getFirstProject(session.uid, {
+  //   select: {
+  //     id: true
+  //   }
+  // })
 
-  if (defaultProject) {
-    // redirect to project dashboard
-    return {
-      redirect: {
-        destination: `/dashboard/project/${defaultProject.id}`,
-        permanent: false
-      }
-    }
-  }
+  // if (defaultProject) {
+  //   // redirect to project dashboard
+  //   return {
+  //     redirect: {
+  //       destination: `/dashboard/project/${defaultProject.id}`,
+  //       permanent: false
+  //     }
+  //   }
+  // }
 
   return {
     props: {

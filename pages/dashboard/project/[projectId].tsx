@@ -142,7 +142,8 @@ function CommentToolbar(props: {
 
 function ProjectPage(props: {
   project: ProjectServerSideProps,
-  session: UserSession
+  session: UserSession,
+  projects: Awaited<ReturnType<ProjectService['list']>>
 }) {
 
   React.useEffect(() => {
@@ -166,7 +167,7 @@ function ProjectPage(props: {
 
   return (
     <>
-      <MainLayout id="comments" session={props.session} project={props.project}>
+      <MainLayout id="comments" session={props.session} project={props.project} projects={props.projects}>
         <Stack>
           <List listStyleType={'none'} styles={{
             root: {
@@ -258,9 +259,12 @@ export async function getServerSideProps(ctx) {
     }
   }
 
+  const projects = await projectService.list()
+
   return {
     props: {
       session: await getSession(ctx.req),
+      projects,
       project: {
         id: project.id,
         title: project.title,

@@ -1,53 +1,66 @@
-import React from "react"
+import React, { useCallback, useState } from "react"
 import { useMutation, useQuery } from "react-query"
 import { getAllProjects } from "../pages/dashboard"
 import { UserSession } from "../service"
 import NextLink from 'next/link'
 import { useRouter } from "next/router"
 import { SettingsIcon } from '@chakra-ui/icons'
-import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode } from 'react-icons/ai'
+import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
 import { Footer } from "./Footer"
 import { createProject } from "../pages/getting-start"
-import { AppShell, Box, Button, Code, Group, Header, Navbar, NavLink, ScrollArea, Stack, Text, Title } from "@mantine/core"
+import { AppShell, Box, Button, Code, Group, Header, Menu, Navbar, NavLink, ScrollArea, Select, Stack, Text, Title } from "@mantine/core"
 import Link from "next/link"
 import type { ProjectServerSideProps } from "../pages/dashboard/project/[projectId]/settings"
 import { modals } from "@mantine/modals"
 import { useClipboard } from '@mantine/hooks';
 import { notifications } from "@mantine/notifications"
+import { Project } from "@prisma/client"
+import { ProjectService } from "../service/project.service"
 
 // just for type
 
-export function MainLayout(props: { session: UserSession, id?: "comments" | "settings", project: ProjectServerSideProps, children?: any }) {
+export function MainLayout(props: { session: UserSession, id?: "comments" | "settings", project: ProjectServerSideProps, projects: Awaited<ReturnType<ProjectService['list']>>, children?: any }) {
 
   const router = useRouter()
   const clipboard = useClipboard()
-
-  const createProjectMutation = useMutation(createProject)
-  const titleInputRef = React.useRef<HTMLInputElement>(null)
-
   const projectId = router.query.projectId as string
 
   const getProjects = useQuery("getProjects", getAllProjects, {
     enabled: !!props.session,
+    onSuccess() {
+
+    }
   })
 
-  async function onClickCreateProject() {
-    if (!titleInputRef.current.value) {
-      return
-    }
-
-    await createProjectMutation.mutate(
-      {
-        title: titleInputRef.current.value,
-      },
-      {
-        onSuccess(data) {
-          location.href = `/dashboard/project/${data.data.id}`
-        },
-      }
-    )
-  }
+  // should memo
+  const ProjectMenu = React.useCallback(() => {
+    return <Menu>
+      <Menu.Target>
+        <Button size='xs' variant={'light'} rightIcon={<AiOutlineDown />}>{props.project.title}</Button>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Link href="/getting-start" style={{ textDecoration: 'none' }}>
+          <Menu.Item icon={<AiOutlinePlus />}>
+            New site
+          </Menu.Item>
+        </Link>
+        <Menu.Divider />
+        <Menu.Label>
+          Sites
+        </Menu.Label>
+        {props.projects.map(project => {
+          return (
+          <Menu.Item key={project.id} onClick={_ => {
+            location.href = `/dashboard/project/${project.id}`
+          }}>
+            {project.title}
+          </Menu.Item>
+          )
+        })}
+      </Menu.Dropdown>
+    </Menu>
+  }, [props.project.id])
 
   const Menubar = React.useMemo(() => {
     const styles = {
@@ -118,6 +131,7 @@ export function MainLayout(props: { session: UserSession, id?: "comments" | "set
           <Title order={3} style={{ fontWeight: 'bold' }}>
             Cusdis
           </Title>
+          <ProjectMenu />
         </Group>
         <Group sx={{
           // height: '100%'

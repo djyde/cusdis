@@ -44,7 +44,8 @@ export type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 
 
 export default function Page(props: {
   session: any,
-  project: ProjectServerSideProps
+  project: ProjectServerSideProps,
+  projects: ReturnType<Awaited<ProjectService['list']>>
 }) {
   const { classes: listClasses } = useListStyle()
 
@@ -110,7 +111,7 @@ export default function Page(props: {
   }
 
   return (
-    <MainLayout session={props.session} id="settings" project={props.project}>
+    <MainLayout session={props.session} id="settings" project={props.project} projects={props.projects}>
       <Container sx={{
         marginTop: 24
       }}>
@@ -206,9 +207,12 @@ export async function getServerSideProps(ctx) {
     }
   }
 
+  const projects = await projectService.list()
+
   return {
     props: {
       session: await getSession(ctx.req),
+      projects,
       project: {
         id: project.id,
         title: project.title,
