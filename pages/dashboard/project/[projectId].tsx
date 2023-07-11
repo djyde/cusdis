@@ -15,7 +15,7 @@ import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
 import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl, AiOutlineCheck, AiOutlineClose, AiOutlineSmile } from 'react-icons/ai'
-import { List, Stack, Box, Text, Group, Anchor, Button, Pagination, Textarea, Title } from '@mantine/core'
+import { List, Stack, Box, Text, Group, Anchor, Button, Pagination, Textarea, Title, Center } from '@mantine/core'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -223,6 +223,17 @@ function ProjectPage(props: {
               )
             })}
           </List>
+          {getCommentsQuery.data?.data.length === 0 && (
+            <Box p={'xl'} sx={{
+              backgroundColor: '#fff'
+            }}>
+              <Center>
+                <Text color="gray" size="sm">
+                  No comments yet
+                </Text>
+              </Center>
+            </Box>
+          )}
           <Box>
             <Pagination total={getCommentsQuery.data?.pageCount || 0} value={page} onChange={count => {
               setPage(count)
