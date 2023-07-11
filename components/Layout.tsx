@@ -9,7 +9,7 @@ import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, A
 import { signout, signOut } from "next-auth/client"
 import { Footer } from "./Footer"
 import { createProject } from "../pages/getting-start"
-import { AppShell, Box, Button, Code, Group, Header, Menu, Navbar, NavLink, ScrollArea, Select, Stack, Text, Title } from "@mantine/core"
+import { Anchor, AppShell, Avatar, Badge, Box, Button, Code, Group, Header, Menu, Modal, Navbar, NavLink, ScrollArea, Select, Space, Stack, Switch, Text, TextInput, Title } from "@mantine/core"
 import Link from "next/link"
 import type { ProjectServerSideProps } from "../pages/dashboard/project/[projectId]/settings"
 import { modals } from "@mantine/modals"
@@ -17,21 +17,103 @@ import { useClipboard } from '@mantine/hooks';
 import { notifications } from "@mantine/notifications"
 import { Project } from "@prisma/client"
 import { ProjectService } from "../service/project.service"
+import type { resolvedConfig } from "../utils.server"
+import { useDisclosure } from '@mantine/hooks';
+import { apiClient } from "../utils.client"
+import { useForm } from "react-hook-form"
+import { MainLayoutData } from "../service/viewData.service"
 
-// just for type
+// From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+function validateEmail(email) {
+  if (email === '') {
+    return true
+  }
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 
-export function MainLayout(props: { session: UserSession, id?: "comments" | "settings", project: ProjectServerSideProps, projects: Awaited<ReturnType<ProjectService['list']>>, children?: any }) {
+const updateUserSettings = async (params: {
+  notificationEmail?: string,
+  enableNewCommentNotification?: boolean,
+  displayName?: string,
+}) => {
+  const res = await apiClient.put(`/user`, {
+    displayName: params.displayName,
+    notificationEmail: params.notificationEmail,
+    enableNewCommentNotification: params.enableNewCommentNotification,
+  })
+  return res.data
+}
+
+export function MainLayout(props: {
+  children?: any,
+  id: 'comments' | 'settings'
+  project: ProjectServerSideProps,
+} & MainLayoutData) {
 
   const router = useRouter()
   const clipboard = useClipboard()
-  const projectId = router.query.projectId as string
+  const [isUserPannelOpen, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
 
-  const getProjects = useQuery("getProjects", getAllProjects, {
-    enabled: !!props.session,
+  const userSettingsForm = useForm({
+    defaultValues: {
+      username: props.userInfo.name,
+      displayName: props.userInfo.displayName,
+      email: props.userInfo.email,
+      notificationEmail: props.userInfo.notificationEmail,
+    },
+  })
+
+  const updateNewCommentNotification = useMutation(updateUserSettings, {
     onSuccess() {
-
+      notifications.show({
+        title: 'Success',
+        message: 'User settings updated',
+        color: 'green'
+      })
+    },
+    onError() {
+      notifications.show({
+        title: 'Error',
+        message: 'Something went wrong',
+        color: 'red'
+      })
     }
   })
+  const updateUserSettingsMutation = useMutation(updateUserSettings, {
+    onSuccess() {
+      notifications.show({
+        title: 'Success',
+        message: 'User settings updated',
+        color: 'green'
+      })
+    },
+    onError() {
+      notifications.show({
+        title: 'Error',
+        message: 'Something went wrong',
+        color: 'red'
+      })
+    }
+  })
+
+  const onClickSaveUserSettings = async () => {
+    const data = userSettingsForm.getValues() 
+    if (!validateEmail(data.notificationEmail)) {
+      notifications.show({
+        title: 'Invalid email',
+        message: 'Please enter a valid email address',
+        color: 'red'
+      })
+      return
+    }
+    updateUserSettingsMutation.mutate({
+      displayName: data.displayName,
+      notificationEmail: data.notificationEmail,
+    })
+  }
+
+  const projectId = router.query.projectId as string
 
   // should memo
   const ProjectMenu = React.useCallback(() => {
@@ -51,11 +133,11 @@ export function MainLayout(props: { session: UserSession, id?: "comments" | "set
         </Menu.Label>
         {props.projects.map(project => {
           return (
-          <Menu.Item key={project.id} onClick={_ => {
-            location.href = `/dashboard/project/${project.id}`
-          }}>
-            {project.title}
-          </Menu.Item>
+            <Menu.Item key={project.id} onClick={_ => {
+              location.href = `/dashboard/project/${project.id}`
+            }}>
+              {project.title}
+            </Menu.Item>
           )
         })}
       </Menu.Dropdown>
@@ -76,15 +158,18 @@ export function MainLayout(props: { session: UserSession, id?: "comments" | "set
       }
     }
     return (
-      <Stack spacing={8} p="sm">
-        <Link href={`/dashboard/project/${projectId}`} style={{ textDecoration: 'none' }}>
-          <NavLink active={props.id === "comments"} styles={styles} label="Comments" icon={<AiOutlineComment />}>
-          </NavLink>
-        </Link>
-        <Link href={`/dashboard/project/${projectId}/settings`} style={{ textDecoration: 'none' }}>
-          <NavLink active={props.id === 'settings'} styles={styles} label="Settings" icon={<AiOutlineSetting />}>
-          </NavLink>
-        </Link>
+      <Stack>
+        <Stack spacing={8} p="sm">
+          <Link href={`/dashboard/project/${projectId}`} style={{ textDecoration: 'none' }}>
+            <NavLink active={props.id === "comments"} styles={styles} label="Comments" icon={<AiOutlineComment />}>
+            </NavLink>
+          </Link>
+          <Link href={`/dashboard/project/${projectId}/settings`} style={{ textDecoration: 'none' }}>
+            <NavLink active={props.id === 'settings'} styles={styles} label="Site settings" icon={<AiOutlineSetting />}>
+            </NavLink>
+          </Link>
+        </Stack>
+
       </Stack>
     )
   }, [])
@@ -122,23 +207,39 @@ export function MainLayout(props: { session: UserSession, id?: "comments" | "set
     })
   }, [])
 
+  const badge = React.useMemo(() => {
+    if (!props.config.isHosted) {
+      return <Badge color="green" size="xs">OSS</Badge>
+    }
+
+    return <Badge color="green" size="xs">PRO</Badge>
+  }, [])
+
   const header = React.useMemo(() => {
     return (
       <Group mx="md" sx={{
-        height: '100%'
+        height: '100%',
+        justifyContent: 'space-between'
       }}>
         <Group>
-          <Title order={3} style={{ fontWeight: 'bold' }}>
-            Cusdis
-          </Title>
-          <ProjectMenu />
+          <Group>
+            <Title order={3} style={{ fontWeight: 'bold' }}>
+              Cusdis
+            </Title>
+            <ProjectMenu />
+          </Group>
+          <Group sx={{
+            // height: '100%'
+          }}>
+            <Button leftIcon={<AiOutlineCode />} onClick={openEmbededCodeModal} size="xs" variant={'outline'}>
+              Embeded code
+            </Button>
+          </Group>
         </Group>
-        <Group sx={{
-          // height: '100%'
-        }}>
-          <Button leftIcon={<AiOutlineCode />} onClick={openEmbededCodeModal} size="xs" variant={'outline'}>
-            Embeded code
-          </Button>
+        <Group spacing={4}>
+          <Button onClick={_ => {
+            openUserModal()
+          }} size="xs" rightIcon={<AiOutlineRight />} variant='subtle'>{props.session.user.name} {badge}</Button>
         </Group>
       </Group>
     )
@@ -168,6 +269,39 @@ export function MainLayout(props: { session: UserSession, id?: "comments" | "set
           }
         }}
       >
+        <Modal opened={isUserPannelOpen} onClose={closeUserModal}
+          title="User Settings"
+        >
+          <Stack>
+            <Stack spacing={8}>
+              <Text weight={500} size="sm">Username</Text>
+              <TextInput defaultValue={props.userInfo.name} size="sm" disabled />
+            </Stack>
+            <Stack spacing={8}>
+              <Text weight={500} size="sm">Email (for login)</Text>
+              <TextInput defaultValue={props.userInfo.email} size="sm" disabled />
+            </Stack>
+            <Stack spacing={8}>
+              <Text weight={500} size="sm">Email (for notification)</Text>
+              <TextInput placeholder={props.userInfo.email} {...userSettingsForm.register("notificationEmail")} size="sm" />
+              <Switch defaultChecked={props.userInfo.enableNewCommentNotification} onChange={e => {
+                updateNewCommentNotification.mutate({
+                  enableNewCommentNotification: e.target.checked
+                })
+              }} label="Enable notification" />
+            </Stack>
+            <Stack spacing={8}>
+              <Text weight={500} size="sm">Display name</Text>
+              <TextInput placeholder={props.userInfo.name} {...userSettingsForm.register("displayName")} size="sm" />
+            </Stack>
+            <Stack spacing={8}>
+              <Text weight={500} size="sm">Subscription </Text>
+              <Text size="sm">Current plan: {badge}</Text>
+              <Anchor size="sm">Manage subscription</Anchor>
+            </Stack>
+            <Button loading={updateUserSettingsMutation.isLoading} onClick={onClickSaveUserSettings}>Save</Button>
+          </Stack>
+        </Modal>
         {props.children}
       </AppShell>
     </>

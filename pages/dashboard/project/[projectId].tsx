@@ -11,11 +11,12 @@ import { useForm } from 'react-hook-form'
 import { UserSession } from '../../../service'
 import { Head } from '../../../components/Head'
 import { Navbar } from '../../../components/Navbar'
-import { getSession } from '../../../utils.server'
+import { getSession, resolvedConfig } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
 import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl, AiOutlineCheck, AiOutlineClose, AiOutlineSmile } from 'react-icons/ai'
 import { List, Stack, Box, Text, Group, Anchor, Button, Pagination, Textarea, Title, Center } from '@mantine/core'
+import { MainLayoutData, ViewDataService } from '../../../service/viewData.service'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -143,7 +144,7 @@ function CommentToolbar(props: {
 function ProjectPage(props: {
   project: ProjectServerSideProps,
   session: UserSession,
-  projects: Awaited<ReturnType<ProjectService['list']>>
+  mainLayoutData: MainLayoutData
 }) {
 
   React.useEffect(() => {
@@ -167,7 +168,7 @@ function ProjectPage(props: {
 
   return (
     <>
-      <MainLayout id="comments" session={props.session} project={props.project} projects={props.projects}>
+      <MainLayout id="comments" project={props.project} {...props.mainLayoutData}>
         <Stack>
           <List listStyleType={'none'} styles={{
             root: {
@@ -251,6 +252,7 @@ export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
   const session = await getSession(ctx.req)
   const project = await projectService.get(ctx.query.projectId) as Project
+  const viewDataService = new ViewDataService(ctx.req)
 
   if (project.deletedAt) {
     return {
@@ -275,7 +277,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       session: await getSession(ctx.req),
-      projects,
+      mainLayoutData: await viewDataService.fetchMainLayoutData(),
       project: {
         id: project.id,
         title: project.title,

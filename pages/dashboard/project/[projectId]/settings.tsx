@@ -5,10 +5,11 @@ import { useRouter } from "next/router"
 import React from "react"
 import { useForm } from "react-hook-form"
 import { useMutation } from "react-query"
-import { MainLayout } from "../../../../components/Layout"
+import {  MainLayout } from "../../../../components/Layout"
 import { ProjectService } from "../../../../service/project.service"
+import { MainLayoutData, ViewDataService } from "../../../../service/viewData.service"
 import { apiClient } from "../../../../utils.client"
-import { getSession } from "../../../../utils.server"
+import { getSession, resolvedConfig } from "../../../../utils.server"
 
 const deleteProject = async ({ projectId }) => {
   const res = await apiClient.delete<{
@@ -45,7 +46,7 @@ export type ProjectServerSideProps = Pick<Project, 'ownerId' | 'id' | 'title' | 
 export default function Page(props: {
   session: any,
   project: ProjectServerSideProps,
-  projects: ReturnType<Awaited<ProjectService['list']>>
+  mainLayoutData: MainLayoutData
 }) {
   const { classes: listClasses } = useListStyle()
 
@@ -111,7 +112,7 @@ export default function Page(props: {
   }
 
   return (
-    <MainLayout session={props.session} id="settings" project={props.project} projects={props.projects}>
+    <MainLayout id="settings" project={props.project} {...props.mainLayoutData}>
       <Container sx={{
         marginTop: 24
       }}>
@@ -186,6 +187,8 @@ export default function Page(props: {
 }
 export async function getServerSideProps(ctx) {
   const projectService = new ProjectService(ctx.req)
+  const viewDataService = new ViewDataService(ctx.req)
+
   const session = await getSession(ctx.req)
   const project = await projectService.get(ctx.query.projectId) as Project
 
@@ -207,12 +210,11 @@ export async function getServerSideProps(ctx) {
     }
   }
 
-  const projects = await projectService.list()
+  
 
   return {
     props: {
-      session: await getSession(ctx.req),
-      projects,
+      mainLayoutData: await viewDataService.fetchMainLayoutData(),
       project: {
         id: project.id,
         title: project.title,
