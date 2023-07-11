@@ -25,6 +25,9 @@ dependencies:
   '@mantine/hooks':
     specifier: ^6.0.16
     version: 6.0.16(react@18.2.0)
+  '@mantine/modals':
+    specifier: ^6.0.16
+    version: 6.0.16(@mantine/core@6.0.16)(@mantine/hooks@6.0.16)(react-dom@18.2.0)(react@18.2.0)
   '@mantine/notifications':
     specifier: ^6.0.16
     version: 6.0.16(@mantine/core@6.0.16)(@mantine/hooks@6.0.16)(react-dom@18.2.0)(react@18.2.0)
@@ -1531,6 +1534,21 @@ packages:
       react: '>=16.8.0'
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /@mantine/modals@6.0.16(@mantine/core@6.0.16)(@mantine/hooks@6.0.16)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-RMDp5jZTrbXgMJN3aPBt82LsIL91xepQDq/zmtLnj2JJnDYTKZarvpOJPvUO/Ewyr6GYJ3iNbcXkV0w0CqCNGg==}
+    peerDependencies:
+      '@mantine/core': 6.0.16
+      '@mantine/hooks': 6.0.16
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@mantine/core': 6.0.16(@emotion/react@11.10.4)(@mantine/hooks@6.0.16)(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 6.0.16(react@18.2.0)
+      '@mantine/utils': 6.0.16(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@mantine/notifications@6.0.16(@mantine/core@6.0.16)(@mantine/hooks@6.0.16)(react-dom@18.2.0)(react@18.2.0):

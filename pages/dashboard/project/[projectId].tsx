@@ -1,4 +1,3 @@
-import { AlertDialog, ModalCloseButton, AlertDialogBody, Icon, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box as ChakraBox, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button as ChakraButton, Center, Checkbox, Code, Container, CSSObject, Divider, Flex, FormControl, Heading, HStack, Input, InputGroup, InputRightElement, Link, Spacer, Spinner, StackDivider, Stat, StatGroup, StatLabel, StatNumber, Switch, Tab, TabList, TabPanel, TabPanels, Tabs, Tag, Text as ChakraText, Textarea as ChakraTextarea, toast, Tooltip, useDisclosure, useToast, VStack, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Drawer, DrawerOverlay, DrawerContent, DrawerBody, DrawerCloseButton, ListItem } from '@chakra-ui/react'
 import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
@@ -16,7 +15,7 @@ import { getSession } from '../../../utils.server'
 import { Footer } from '../../../components/Footer'
 import { MainLayout } from '../../../components/Layout'
 import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl, AiOutlineCheck, AiOutlineClose, AiOutlineSmile } from 'react-icons/ai'
-import { List, Stack, Box, Text, Group, Anchor, Button, Pagination, Textarea } from '@mantine/core'
+import { List, Stack, Box, Text, Group, Anchor, Button, Pagination, Textarea, Title } from '@mantine/core'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -24,7 +23,7 @@ const getComments = async ({ queryKey }) => {
     data: CommentWrapper,
   }>(`/project/${projectId}/comments`, {
     params: {
-      page
+      page,
     }
   })
   return res.data.data
@@ -167,7 +166,7 @@ function ProjectPage(props: {
 
   return (
     <>
-      <MainLayout id="comments" session={props.session}>
+      <MainLayout id="comments" session={props.session} project={props.project}>
         <Stack>
           <List listStyleType={'none'} styles={{
             root: {
@@ -230,262 +229,6 @@ function ProjectPage(props: {
           </Box>
         </Stack>
       </MainLayout>
-    </>
-  )
-}
-
-function Settings(props: {
-  project: ProjectServerSideProps
-}) {
-
-  const importFile = React.useRef(null)
-  const toast = useToast()
-
-  const enableNotificationMutation = useMutation(updateProjectSettings)
-  const enableWebhookMutation = useMutation(updateProjectSettings)
-  const updateWebhookUrlMutation = useMutation(updateProjectSettings)
-  const deleteProjectMutation = useMutation(deleteProject, {
-    onSuccess() {
-      toast({
-        title: 'Deleted',
-        status: 'success',
-        position: 'top'
-      })
-      location.href = "/dashboard"
-    },
-    onError() {
-      toast({
-        title: 'Something went wrong',
-        status: 'error',
-        position: 'top'
-      })
-    }
-  })
-
-  const [isOpenDeleteProjectModal, setIsOpenDeleteProjectModal] = React.useState(false)
-  const cancelDeleteProjectRef = React.useRef()
-  const onCloseDeleteProjectModal = () => {
-    setIsOpenDeleteProjectModal(false)
-  }
-
-  const webhookInputRef = useRef<HTMLInputElement>(null)
-
-  const uploadMutation = useMutation(upload, {
-    onSuccess(data) {
-      toast({
-        title: 'Import success',
-        description: `imported ${data.commentCount} comments`,
-        status: 'success',
-        position: 'top'
-      })
-    },
-    onError() {
-      toast({
-        title: 'Something went wrong',
-        status: 'error',
-        position: 'top'
-      })
-    }
-  })
-
-  function onChangeFile(e) {
-    const file = e.target.files[0]
-    importFile.current = file
-  }
-
-  async function upload() {
-    const formData = new FormData()
-    formData.append('file', importFile.current)
-    const res = await apiClient.post<{
-      data: {
-        pageCount: number,
-        commentCount: number,
-      }
-    }>(`/project/${props.project.id}/data/import`, formData, {
-      headers: {
-        'content-type': 'multipart/form-data'
-      }
-    })
-    return res.data.data
-  }
-
-  const onSaveWebhookUrl = async _ => {
-    const value = webhookInputRef.current.value
-
-    const validUrlRegexp = /^https?:/
-
-    if (!validUrlRegexp.exec(value)) {
-      toast({
-        title: 'Not a valid http/https URL',
-        status: 'error',
-        position: 'top'
-      })
-      return
-    }
-
-    updateWebhookUrlMutation.mutate({
-      projectId: props.project.id,
-      body: {
-        webhookUrl: value
-      }
-    }, {
-      onSuccess() {
-        toast({
-          title: 'Saved',
-          status: 'success',
-          position: 'top'
-        })
-      },
-      onError() {
-        toast({
-          title: 'Something went wrong',
-          status: 'error',
-          position: 'top'
-        })
-      }
-    })
-  }
-
-  const onChangeEnableWebhook = async _ => {
-    const value = _.target.checked
-    enableWebhookMutation.mutate({
-      projectId: props.project.id,
-      body: {
-        enableWebhook: value
-      }
-    }, {
-      onSuccess() {
-        toast({
-          title: 'Saved',
-          status: 'success',
-          position: 'top'
-        })
-      },
-      onError() {
-        toast({
-          title: 'Something went wrong',
-          status: 'error',
-          position: 'top'
-        })
-      }
-    })
-  }
-
-
-  const DeleteProjectDialog = (
-    <AlertDialog
-      isOpen={isOpenDeleteProjectModal}
-      leastDestructiveRef={cancelDeleteProjectRef}
-      onClose={onCloseDeleteProjectModal}
-    >
-      <AlertDialogOverlay>
-        <AlertDialogContent>
-          <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Delete Project
-          </AlertDialogHeader>
-
-          <AlertDialogBody>
-            <ChakraText>
-              Are you sure?
-            </ChakraText>
-            <ChakraBox mt={2}>
-              <Link fontSize="sm" color="telegram.500" href='/doc#/faq?id=what-if-i-delete-a-project'>What if I delete a project?</Link>
-            </ChakraBox>
-          </AlertDialogBody>
-
-          <AlertDialogFooter>
-            <ChakraButton ref={cancelDeleteProjectRef} onClick={onCloseDeleteProjectModal}>
-              Cancel
-            </ChakraButton>
-            <ChakraButton ml={4} colorScheme="red" onClick={_ => deleteProjectMutation.mutate({ projectId: props.project.id })} isLoading={deleteProjectMutation.isLoading}>Delete</ChakraButton>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialogOverlay>
-    </AlertDialog>
-  )
-
-  return (
-    <>
-      <VStack
-        spacing={8}
-        alignItems="stretch"
-      >
-        <VStack alignItems="start">
-          <HStack mt={4}>
-            <Switch onChange={e => {
-              enableNotificationMutation.mutate({
-                projectId: props.project.id,
-                body: {
-                  enableNotification: e.target.checked
-                }
-              }, {
-                onSuccess() {
-                  toast({
-                    title: 'Saved',
-                    status: 'success',
-                    position: 'top'
-                  })
-                },
-                onError() {
-                  toast({
-                    title: 'Something went wrong',
-                    status: 'error',
-                    position: 'top'
-                  })
-                }
-              })
-            }} defaultChecked={props.project.enableNotification}></Switch>
-            <Heading as="h1" size="md">Email Notification</Heading>
-
-          </HStack>
-          <ChakraBox>
-            <Link href="/user" fontSize="sm">
-              Advanced Notification Settings
-            </Link>
-          </ChakraBox>
-        </VStack>
-
-        <VStack alignItems="start">
-          <HStack>
-            <Switch onChange={onChangeEnableWebhook} defaultChecked={props.project.enableWebhook} />
-            <Heading size="md">Webhook</Heading>
-          </HStack>
-          <InputGroup>
-            <Input defaultValue={props.project.webhook} type="text" ref={webhookInputRef}></Input>
-            <InputRightElement width='16'>
-              <ChakraButton size="sm" isLoading={updateWebhookUrlMutation.isLoading} onClick={onSaveWebhookUrl}>Save</ChakraButton>
-            </InputRightElement>
-          </InputGroup>
-          <Link fontSize="sm" color="gray.500" textDecor="underline" isExternal href="/doc#/advanced/webhook">How to use Webhook?</Link>
-        </VStack>
-
-        <ChakraBox>
-          <Heading as="h1" size="md" my={4}>Data</Heading>
-          <Heading as="h2" size="sm" my={4}>Import from Disqus</Heading>
-          <HStack>
-            <Input type="file" onChange={onChangeFile} />
-            <ChakraButton onClick={_ => {
-              if (importFile.current) {
-                uploadMutation.mutate()
-              }
-            }} isLoading={uploadMutation.isLoading}>Import</ChakraButton>
-
-          </HStack>
-
-          {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
-
-        </ChakraBox>
-
-        <ChakraBox>
-          <Heading as="h1" size="md" my={4}>Danger Zone</Heading>
-          <ChakraButton size="sm" colorScheme="red" onClick={_ => setIsOpenDeleteProjectModal(true)} isLoading={deleteProjectMutation.isLoading}>Delete project</ChakraButton>
-          {/* <Heading as="h2" size="sm" my={4}>Export</Heading> */}
-          {DeleteProjectDialog}
-        </ChakraBox>
-
-      </VStack>
-
-
     </>
   )
 }
