@@ -190,6 +190,16 @@ export async function getServerSideProps(ctx) {
   const viewDataService = new ViewDataService(ctx.req)
 
   const session = await getSession(ctx.req)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/dashboard',
+        permanent: false
+      }
+    }
+  }
+
   const project = await projectService.get(ctx.query.projectId) as Project
 
   if (project.deletedAt) {

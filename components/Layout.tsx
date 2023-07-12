@@ -22,6 +22,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { apiClient } from "../utils.client"
 import { useForm } from "react-hook-form"
 import { MainLayoutData } from "../service/viewData.service"
+import { Head } from "./Head"
 
 // From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
 function validateEmail(email) {
@@ -249,6 +250,7 @@ export function MainLayout(props: {
 
   return (
     <>
+      <Head title={`${props.project.title} - Cusdis`} />
       <AppShell
         fixed={false}
         navbar={<Navbar sx={{
