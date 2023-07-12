@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react"
 import { useMutation, useQuery } from "react-query"
 import { useRouter } from "next/router"
-import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown, AiOutlineFile } from 'react-icons/ai'
+import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown, AiOutlineFile, AiOutlineQuestion, AiOutlineQuestionCircle } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
 import { Anchor, AppShell, Avatar, Badge, Box, Button, Code, Group, Header, Menu, Modal, Navbar, NavLink, ScrollArea, Select, Space, Stack, Switch, Text, TextInput, Title } from "@mantine/core"
 import Link from "next/link"
@@ -193,9 +193,17 @@ export function MainLayout(props: {
         })
       },
       children: (
-        <Code block>
-          {code}
-        </Code>
+        <Stack>
+          <Code block>
+            {code}
+          </Code>
+          <Anchor size="sm" href="/doc#/advanced/sdk" target={'_blank'}>
+            <Group spacing={4} align='center'>
+              <AiOutlineQuestionCircle />
+              Learn more
+            </Group>
+          </Anchor>
+        </Stack>
       )
     })
   }, [])
