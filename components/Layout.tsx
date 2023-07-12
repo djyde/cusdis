@@ -5,7 +5,7 @@ import { UserSession } from "../service"
 import NextLink from 'next/link'
 import { useRouter } from "next/router"
 import { SettingsIcon } from '@chakra-ui/icons'
-import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown } from 'react-icons/ai'
+import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown, AiOutlineFile } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
 import { Footer } from "./Footer"
 import { createProject } from "../pages/getting-start"
@@ -168,6 +168,8 @@ export function MainLayout(props: {
             <NavLink active={props.id === 'settings'} styles={styles} label="Site settings" icon={<AiOutlineSetting />}>
             </NavLink>
           </Link>
+          <NavLink component="a" href="/doc" target={'_blank'} label="Documentation" icon={<AiOutlineFileText />}>
+          </NavLink>
         </Stack>
 
       </Stack>
@@ -300,6 +302,9 @@ export function MainLayout(props: {
               <Anchor size="sm">Manage subscription</Anchor>
             </Stack>
             <Button loading={updateUserSettingsMutation.isLoading} onClick={onClickSaveUserSettings}>Save</Button>
+            <Button onClick={_ => signOut()} variant={'outline'} color='red'>
+              Logout
+            </Button>
           </Stack>
         </Modal>
         {props.children}
