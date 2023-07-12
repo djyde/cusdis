@@ -1,4 +1,5 @@
-import { Box, Container, Heading, Text, Input, Button, VStack, Image, useToast } from "@chakra-ui/react"
+import { Box, Container, Stack, Title, Text, Button, TextInput, Image } from "@mantine/core"
+import { notifications } from "@mantine/notifications"
 import router from "next/router"
 import React from "react"
 import { useMutation } from "react-query"
@@ -6,8 +7,6 @@ import { Head } from "../components/Head"
 import { ProjectService } from "../service/project.service"
 import { apiClient } from "../utils.client"
 import { getSession } from "../utils.server"
-
-
 
 export const createProject = async (body: { title: string }) => {
   const res = await apiClient.post("/projects", {
@@ -18,7 +17,6 @@ export const createProject = async (body: { title: string }) => {
 
 function GettingStart() {
   const createProjectMutation = useMutation(createProject)
-  const toast = useToast()
   const titleInputRef = React.useRef<HTMLInputElement>(null)
 
 
@@ -33,9 +31,10 @@ function GettingStart() {
       },
       {
         onSuccess(data) {
-          toast({
-            status: "success",
+          notifications.show({
             title: "Project created",
+            message: "Redirecting to project dashboard",
+            color: 'green'
           })
           router.push(`/dashboard/project/${data.data.id}`, null, {
             shallow: true,
@@ -44,30 +43,35 @@ function GettingStart() {
       }
     )
   }
+
   return (
     <>
-      <Head title="Getting Start" />
-      <Container mt="24">
-        <Image w={24} src="/images/artworks/logo-256.png" mb="16">
+      <Head title="Add new site - Cusdis" />
+      <Container mt={120}>
 
-        </Image>
-
-        <Heading mb="4" mt="4">
-          Getting Start
-        </Heading>
-        <Box border="1px solid" borderColor="gray.200" p="4" rounded="md" bgColor="gray.50">
-          <VStack align="stretch" spacing={4}>
-            <Text>
-              Create your first website to start using Cusdis:
+        <Stack>
+          <Image width={48} src="/images/artworks/logo-256.png" mb="16">
+          </Image>
+          <Stack spacing={4}>
+            <Title order={2} weight={500}>
+              Let's create a new site
+            </Title>
+            <Text color="gray">
+              Give your site a name, and you can start using Cusdis.
             </Text>
-            <Box bgColor="white">
-              <Input ref={titleInputRef}></Input>
-            </Box>
-            <Box>
-              <Button onClick={_ => void onClickCreateProject()} isLoading={createProjectMutation.isLoading} colorScheme="blue">Create</Button>
-            </Box>
-          </VStack>
-        </Box>
+          </Stack>
+
+          <Stack spacing={8}>
+            <Text>
+              Site name
+            </Text>
+            <TextInput placeholder="My personal blog" ref={titleInputRef} />
+          </Stack>
+
+          <Box>
+            <Button onClick={_ => void onClickCreateProject()} loading={createProjectMutation.isLoading} color="blue">Create</Button>
+          </Box>
+        </Stack>
       </Container>
     </>
   )
@@ -86,23 +90,23 @@ export async function getServerSideProps(ctx) {
     }
   }
 
-  const projectService = new ProjectService(ctx.req)
+  // const projectService = new ProjectService(ctx.req)
 
-  const defaultProject = await projectService.getFirstProject(session.uid, {
-    select: {
-      id: true
-    }
-  })
+  // const defaultProject = await projectService.getFirstProject(session.uid, {
+  //   select: {
+  //     id: true
+  //   }
+  // })
 
-  if (defaultProject) {
-    // redirect to project dashboard
-    return {
-      redirect: {
-        destination: `/dashboard/project/${defaultProject.id}`,
-        permanent: false
-      }
-    }
-  }
+  // if (defaultProject) {
+  //   // redirect to project dashboard
+  //   return {
+  //     redirect: {
+  //       destination: `/dashboard/project/${defaultProject.id}`,
+  //       permanent: false
+  //     }
+  //   }
+  // }
 
   return {
     props: {

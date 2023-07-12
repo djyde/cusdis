@@ -47,6 +47,10 @@ export class ProjectService extends RequestScopeService {
         deletedAt: null,
         ownerId: session.uid,
       },
+      select: {
+        id: true,
+        title: true,
+      }
     })
 
     return projects

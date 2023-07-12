@@ -1,6 +1,5 @@
-import { Button } from "@chakra-ui/button"
-import { Container, Text, VStack } from "@chakra-ui/layout"
-import { Box, Divider, FormControl, FormLabel, Heading, Link, Textarea, useToast } from "@chakra-ui/react"
+import { Container, Stack, Title, Text, Divider, Textarea, Box, Button, Anchor } from "@mantine/core"
+import { notifications } from "@mantine/notifications"
 import { Comment, Page, Project } from "@prisma/client"
 import { useRouter } from "next/router"
 import React from "react"
@@ -17,7 +16,7 @@ const approveComment = async ({ token }) => {
   return res.data
 }
 
-const appendReply = async ({  replyContent, token }) => {
+const appendReply = async ({ replyContent, token }) => {
   const res = await apiClient.post(`/open/approve?token=${token}`, {
     replyContent
   })
@@ -33,41 +32,39 @@ function ApprovePage(props: {
 }) {
 
   const router = useRouter()
-  const toast = useToast()
 
   const [replyContent, setReplyContent] = React.useState('')
 
   const appendReplyMutation = useMutation(appendReply, {
     onSuccess() {
-      toast({
+      notifications.show({
         title: 'Success',
-        status: "success",
-        position: 'top'
+        message: 'Reply appended',
+        color: 'green'
       })
       setReplyContent('')
     },
     onError() {
-      toast({
+      notifications.show({
         title: 'Something went wrong',
-        status: "error",
-        position: 'top'
+        message: 'Please try again later',
       })
     }
   })
   const approveCommentMutation = useMutation(approveComment, {
     onSuccess() {
-      toast({
+      notifications.show({
         title: 'Success',
-        status: "success",
-        position: 'top'
+        message: 'Reply appended',
+        color: 'green'
       })
+
       location.reload()
     },
     onError() {
-      toast({
+      notifications.show({
         title: 'Something went wrong',
-        status: "error",
-        position: 'top'
+        message: 'Please try again later',
       })
     }
   })
@@ -76,13 +73,20 @@ function ApprovePage(props: {
     <>
       <Head title="New comment - Cusdis" />
       <Container mt={12} my={12}>
-        <Heading mb={12}>
-          Cusdis
-        </Heading>
-        <VStack alignItems="start" spacing={4}>
-          <Text>New comment on project <strong>{props.comment.page.project.title}</strong>, page <Link fontWeight="bold" isExternal href={props.comment.page.url}>{props.comment.page.title || props.comment.page.slug}</Link></Text>
-          <Text><strong>{props.comment.by_nickname}</strong> ({props.comment.by_email || 'Email not provided'})</Text>
-          <Text whiteSpace="pre-wrap" as='pre' bgColor="gray.100" p={2} w="full">{props.comment.content}</Text>
+        <Stack>
+          <Title mb={12}>
+            Cusdis
+          </Title>
+
+          <Stack spacing={4}>
+            <Text>New comment on site <strong>{props.comment.page.project.title}</strong>, page <Anchor weight={'bold'} target="_blank" href={props.comment.page.url}>{props.comment.page.title || props.comment.page.slug}</Anchor></Text>
+            <Text>From: <strong>{props.comment.by_nickname}</strong> ({props.comment.by_email || 'Email not provided'})</Text>
+            <Text sx={theme =>({
+              whiteSpace: 'pre-wrap',
+              backgroundColor: theme.colors.gray[0],
+              padding: theme.spacing.md
+            })} component='pre' w="full" size="sm">{props.comment.content}</Text>
+          </Stack>
 
           <Box>
             {
@@ -90,32 +94,28 @@ function ApprovePage(props: {
                 approveCommentMutation.mutate({
                   token: router.query.token as string
                 })
-              }} isLoading={approveCommentMutation.isLoading} colorScheme="telegram">
+              }} loading={approveCommentMutation.isLoading} color="telegram">
                 Approve
-          </Button>
+              </Button>
             }
           </Box>
 
-        </VStack>
+          <Divider my={24} />
 
-        <Divider my={8}></Divider>
+          <Stack>
+            <Textarea placeholder="Your comment..." value={replyContent} onChange={e => setReplyContent(e.target.value)}></Textarea>
+            <Text size="sm" color="gray">* Appending reply to a comment will automatically approve the comment</Text>
 
-        <VStack mt={4} alignItems="start">
-          <FormControl>
-            <FormLabel>Append reply as moderator</FormLabel>
+            <Button onClick={_ => {
+              appendReplyMutation.mutate({
+                token: router.query.token as string,
+                replyContent
+              })
+            }} loading={appendReplyMutation.isLoading} mt={4}>Append reply</Button>
+          </Stack>
 
-            <Textarea value={replyContent} onChange={e => setReplyContent(e.target.value)}></Textarea>
-          </FormControl>
+        </Stack>
 
-          <Text fontSize="sm" color="gray.500">* Appending reply to a comment will automatically approve the comment</Text>
-        </VStack>
-
-        <Button onClick={_ => {
-          appendReplyMutation.mutate({
-            token: router.query.token as string,
-            replyContent
-          })
-        }} isLoading={appendReplyMutation.isLoading} mt={4}>Append</Button>
 
       </Container>
     </>
@@ -149,7 +149,6 @@ export async function getServerSideProps(ctx) {
   } catch (e) {
     return redirectError(ErrorCode.INVALID_TOKEN)
   }
-
 
   const comment = await prisma.comment.findUnique({
     where: {

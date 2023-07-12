@@ -1,36 +1,15 @@
 import React from 'react'
-import {
-  Box,
-  Button,
-  Center,
-  Container,
-  Heading,
-  HStack,
-  Icon,
-  Image,
-  Img,
-  Link,
-  LinkBox,
-  LinkOverlay,
-  List,
-  ListItem,
-  SimpleGrid,
-  Spacer,
-  Text,
-  UnorderedList,
-  VStack,
-} from '@chakra-ui/react'
 import { signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import { Footer } from '../components/Footer'
 import { Head } from '../components/Head'
 import { getSession, resolvedConfig, sentry } from '../utils.server'
 import { GetServerSideProps, Redirect } from 'next'
-import { ArrowForwardIcon } from '@chakra-ui/icons'
-import { GoMarkGithub } from "react-icons/go";
 import axios from 'axios'
 import { UserSession } from '../service'
 import NextHead from 'next/head'
+import { Button, Container, Group, Stack, Text, Title, Box, Anchor, Grid, Center, Image } from '@mantine/core'
+import { AiOutlineArrowRight, AiOutlineRight } from 'react-icons/ai'
 
 type Props = {
   session: UserSession
@@ -47,14 +26,52 @@ type Contributer = {
   website?: string
 }
 
+const integrations = [
+  {
+    label: 'Vanilla JS',
+    image: '/images/vanilla.png',
+    imageWidth: 48,
+    link: ''
+  },
+  {
+    label: 'Vue',
+    image: '/images/vue.png',
+    imageWidth: 48,
+    link: 'https://github.com/evillt/vue-cusdis'
+  },
+  {
+    label: 'React',
+    image: '/images/react.png',
+    imageWidth: 80,
+    link: 'https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis'
+  },
+  {
+    label: 'Svelte',
+    image: '/images/svelte.svg',
+    imageWidth: 96,
+    link: '#'
+  },
+  {
+    label: 'Docsify',
+    image: '/images/docsify.svg',
+    imageWidth: 48,
+    link: '/doc#/integration/docsify'
+  },
+  {
+    label: 'Hexo',
+    image: '/images/hexo.svg',
+    imageWidth: 48,
+    link: 'http://blog.cusdis.com/integate-cusdis-in-hexo/'
+  }
+]
+
 function IndexPage({ session, contributers }: Props) {
   const router = useRouter()
 
   const StartButton = session ? (
     <Button
-      rightIcon={<ArrowForwardIcon />}
+      rightIcon={<AiOutlineArrowRight />}
       onClick={() => router.push('/dashboard')}
-      fontWeight="bold"
       color="gray.700"
     >
       Dashboard
@@ -64,293 +81,145 @@ function IndexPage({ session, contributers }: Props) {
       onClick={() =>
         signIn(null, { callbackUrl: `${location.origin}/dashboard` })
       }
-      fontWeight="bold"
-      colorScheme="telegram"
     >
       Start for free
     </Button>
   )
 
   return (
-    <Box className="font">
+    <Box className="">
       <Head title="Cusdis - Lightweight, privacy-first, open-source comment system" />
       <NextHead>
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" />
+        {/* <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet" /> */}
       </NextHead>
-      <Box as="nav" py={4} mt={[2, 24]} mb={12}>
-        <Container maxWidth="3xl">
-          <HStack>
-            <Image w={12} src="/images/artworks/logo-256.png" />
-            <Text className="font" fontWeight="bold" fontSize="2xl">
-              Cusdis
-            </Text>
-            <Spacer />
-            <Box display={['none', 'initial']}>
-              <HStack>
-
-              </HStack>
+      <Container mt={120}>
+        <Stack spacing={48}>
+          <Stack>
+            <Box component='h1' sx={theme => ({
+              lineHeight: 1.1,
+              fontSize: 62,
+              fontWeight: 800,
+              margin: 0
+            })}>
+              A <Text variant={'gradient'} gradient={{ from: "blue", to: "cyan" }} component="span" inherit>lightweight, privacy-first, open-source</Text> comment system
+              {/* <Text>for your blog</Text> */}
             </Box>
-
-
-            {/* 
-            <Link
-              isExternal
-              href="https://github.com/djyde/cusdis"
-              fontWeight="bold"
-              color="gray.700"
-            >
-              GitHub
-          </Link> */}
-
-          </HStack>
-        </Container>
-      </Box>
-
-      <Container maxWidth="3xl">
-        <VStack alignItems="start" spacing={16}>
-          <Box>
-            <Box mt={16} boxSizing="border-box" className="font">
-              <Heading as="h1" size="4xl" fontSize={['5xl', '7xl']}><Text color="#014f86" as="span">Lightweight</Text>, <Text color="#2c7da0" as="span">privacy-first</Text>,  <Text color="#1b263b" as="span">open-source</Text> comment system</Heading>
-            </Box>
-            <Text fontSize="lg" mt={8} color="gray.700" className="font">
-              <strong>Cusdis</strong> is an open-source, lightweight (~5kb gzipped), privacy-first <strong>alternative to Disqus</strong>. It's super easy to use and integrate with your existing website. We don't track you and your users.
+            <Text color="gray">
+              <strong>Cusdis</strong> is an open-source, lightweight, privacy-first <strong>alternative to Disqus</strong>. It's super easy to use and integrate with your existing website. We don't track you and your users.
             </Text>
-
-            <HStack mt={12} spacing={4}>
-              {StartButton}
-
-              <Link fontWeight="medium" isExternal href="/doc">
-                Documentation
-              </Link>
-            </HStack>
-          </Box>
-
-          <Box mt={24}>
-            <Container maxWidth="3xl">
-              <SimpleGrid columns={[1, 2, 2]} textAlign="left" spacing={12} spacingY={24}>
-                <VStack alignItems="start">
-                  <Img shadow="base" mb={2} src="/images/intro-widget.png" />
-                  <Heading size="sm">Lightweight</Heading>
-                  <Box color="gray.500" fontSize="sm">
-                    The <Link textDecoration='underline' href="/doc#/advanced/sdk">JS SDK</Link> embedded to your website is only around <strong>5kb</strong> (gzipped). It has built-in i18n, dark-mode.
-              </Box>
-                </VStack>
-
-                <VStack alignItems="start">
-                  <Img shadow="base" mb={2} src="/images/intro-dashboard.png" />
-                  <Heading size="sm">Dashboard</Heading>
-                  <Box color="gray.500" fontSize="sm">
-                    Moderate all the comments on a dashboard.
-              </Box>
-                </VStack>
-
-                <VStack alignItems="start">
-                  <Img shadow="base" mb={2} src="/images/intro-email.png" />
-                  <Heading size="sm">Email Notification</Heading>
-                  <Box color="gray.500" fontSize="sm">
-                    You will receive Email notification when a new comment comes in, and approve the new comment without login.
-              </Box>
-                </VStack>
-
-                <VStack alignItems="start">
-                  <Img shadow="base" mb={2} src="/images/intro-bot.png" />
-                  <Heading size="sm">Webhook</Heading>
-                  <VStack color="gray.500" fontSize="sm" alignItems="start">
-                    <Text>You can set a Webhook URL that will be triggered when your websites have new comment. Integrate Cusdis with your favorite tools such as Telegram.</Text>
-                    <Link href="/doc#/advanced/webhook" isExternal textDecoration="underline">How to use Webhook</Link>
-                  </VStack>
-                </VStack>
-
-                <VStack alignItems="start">
-                  <Img shadow="base" mb={2} src="/images/intro-approval.png" />
-                  <Heading size="sm">Approve/Reply without login</Heading>
-                  <Box color="gray.500" fontSize="sm">
-                    In the notification email and webhook, you will get a short-time link to approve/reply the new comment without login to dashboard. All the things get done in your mobile.
-              </Box>
-                </VStack>
-
-                <VStack>
-
-                </VStack>
-
-                <VStack alignItems="start">
-                  <Heading size="sm">Import from Disqus</Heading>
-                  <Box color="gray.500" fontSize="sm">
-                    One-click to import your existed data in Disqus to Cusdis.
-              </Box>
-                </VStack>
-
-
-                <VStack alignItems="start">
-                  <Heading size="sm">Open source</Heading>
-                  <Box color="gray.500" fontSize="sm">
-                    Cusdis is an open-source project. You can be sure that <strong>you and your users are not tracked</strong>. If you'd prefer to own your data, you can also self-host Cusdis easily.
-              </Box>
-                  <Box pt={2}>
-                    <Link href="https://github.com/djyde/cusdis" isExternal>
-                      <Icon w={8} h={8} as={GoMarkGithub} />
-                    </Link>
-                  </Box>
-                </VStack>
-              </SimpleGrid>
-
-            </Container>
-          </Box>
-
-
-        </VStack>
-
-      </Container>
-
-
-
-      <Container maxWidth="3xl">
-        <Heading mt={48} mb={12} letterSpacing="wider" color="gray.500" fontSize="md" textAlign="center">
-          Integrate with frameworks and platforms with ease
-        </Heading>
-      </Container>
-
-      <Box width="full">
-        <Container maxWidth="3xl">
-          <SimpleGrid columns={[2, 2, 4]} spacingY={12}>
-            <LinkBox>
-              <LinkOverlay isExternal href="/doc#/advanced/sdk">
-                <Center>
-                  <Img src="/images/vanilla.png" w={12} mt={6} />
-                </Center>
-              </LinkOverlay>
-            </LinkBox>
-            <LinkBox>
-              <LinkOverlay isExternal href="https://github.com/Cusdis/sdk/tree/master/packages/react-cusdis">
-                <Center>
-                  <Img src="/images/react.png" w={24} mt={4} />
-                </Center>
-              </LinkOverlay>
-            </LinkBox>
-            <LinkBox>
-              <LinkOverlay isExternal href="https://github.com/evillt/vue-cusdis">
-                <Center>
-                  <Img src="/images/vue.png" w={12} mt={8} />
-                </Center>
-              </LinkOverlay>
-            </LinkBox>
-            <LinkBox>
-              <LinkOverlay isExternal href="#">
-                <Center>
-                  <Img src="/images/svelte.svg" w={24} mt={8} />
-                </Center>
-              </LinkOverlay>
-            </LinkBox>
-            <LinkBox>
-              <LinkOverlay isExternal href="/doc#/integration/docsify">
-                <Center>
-                  <Img src="/images/docsify.svg" w={12} mt={6} />
-                </Center>
-              </LinkOverlay>
-            </LinkBox>
-
-            <LinkBox>
-              <LinkOverlay isExternal href="http://blog.cusdis.com/integate-cusdis-in-hexo/">
-                <Center>
-                  <Img src="/images/hexo.svg" w={12} mt={4} />
-                </Center>
-              </LinkOverlay>
-            </LinkBox>
-          </SimpleGrid>
-        </Container>
-      </Box>
-
-
-
-      <Container maxW="3xl">
-        <Box mt={48}>
-          <Heading mb={12} textAlign="center">
-            Pricing
-            </Heading>
-
+          </Stack>
           <Center>
-            <SimpleGrid columns={[1, 2]} spacing={8}>
-              <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
-                <Heading size="xl" textAlign="center">$0</Heading>
-                <Box px={6} pb={3}>
-                  <Text fontSize="sm" color="gray.500">
-                    Free
-                    </Text>
-                </Box>
+            <Stack mt={12}>
+              <Group spacing={24}>
+                {StartButton}
 
-                <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
-                  <List fontSize="sm" spacing={2}>
-                    <ListItem>
-                      <strong>3</strong> Websites
-                    </ListItem>
-                    <ListItem>
-                      Email Notification
-                    </ListItem>
-                  </List>
-                </Box>
-              </VStack>
-              <VStack border="1px solid" borderColor="gray.200" py={6} rounded="lg">
-                <Heading size="xl" textAlign="center"><del>$1</del> <Text as="span" fontSize="sm">/month</Text></Heading>
-                <Box px={6} pb={3}>
-                  <Text fontSize="sm" color="gray.500">
-                    Cusdis is totally free for now.
-                  </Text>
-                </Box>
+                <Button variant={'outline'} component='a' target={'_blank'} href="/doc">
+                  Documentation
+                </Button>
 
-                <Box w="full" borderTop="1px solid" borderColor="gray.200" p={6}>
-                  <List fontSize="sm" spacing={2}>
-                    <ListItem>
-                      <strong>Unlimited</strong> Websites
-                    </ListItem>
-                    <ListItem>
-                      Email Notification
-                    </ListItem>
-                    <ListItem>
-                      Webhook
-                    </ListItem>
-                    <ListItem>
-                      Spam filter (coming soon)
-                      </ListItem>
-                  </List>
-                </Box>
-              </VStack>
-            </SimpleGrid>
-
+                {/* <Anchor weight={500}>Pricing</Anchor> */}
+              </Group>
+            </Stack>
           </Center>
 
-          <VStack alignItems="start">
-            <Text fontSize="sm" mt={12} color="gray.500">
-              * We are not making money yet. Users sign up before we launch our paid plans will get three-months paid membership after the plans launch.
-            </Text>
+          <Stack mt={24}>
+            <Image src="/images/intro-dashboard-2.png" />
+          </Stack>
 
-            <Text fontSize="sm" mt={12} color="gray.500">
-              * If you like Cusdis. Consider <Link fontWeight="medium" textDecoration="underline" href="https://opencollective.com/cusdis" isExternal>sponsor us</Link> to help us be sustainable.
-              </Text>
+          <Title order={1} my={96} align='center'>Features</Title>
 
-            <Text fontSize="sm" mt={12} color="gray.500">
-              * Special thanks to these sponsors
-              </Text>
-            <UnorderedList spacing={1} pl={6} fontSize="sm" mt={12} color="gray.500">
-              {contributers.map(contributer => {
-                return (
-                  <ListItem key={contributer.MemberId}>
-                    <Link href={contributer.website || contributer.profile} fontSize="sm">{contributer.name}</Link>
+          <Grid gutter={64}>
+            <Grid.Col span={6}>
+              <Stack>
+                <Image src="/images/intro-widget.png" w="100%" />
+                <Stack spacing={8}>
+                  <Title order={4}>
+                    Lightweight
+                  </Title>
+                  <Text>
+                    The JS SDK embedded to your website is only around 5kb (gzipped). It has built-in i18n, dark-mode.
+                  </Text>
+                </Stack>
+              </Stack>
+            </Grid.Col>
 
-                  </ListItem>
-                )
-              })}
-            </UnorderedList>
-          </VStack>
+            <Grid.Col span={6}>
+              <Stack>
+                <Image src="/images/intro-email.png" w="100%" />
+                <Stack spacing={8}>
+                  <Title order={4}>
+                    Email Notification
+                  </Title>
+                  <Text>
+                    You will receive Email notification when a new comment comes in, and approve the new comment without login.
+                  </Text>
+                </Stack>
+              </Stack>
+            </Grid.Col>
 
-        </Box>
+            <Grid.Col span={6}>
+              <Stack>
+                <Image src="/images/intro-approval.png" w="100%" />
+                <Stack spacing={8}>
+                  <Title order={4}>
+                    Approve/Reply without login
+                  </Title>
+                  <Text>
+                    In the notification email and webhook, you will get a short-time link to approve/reply the new comment without login to dashboard. All the things get done in your mobile.
+                  </Text>
+                </Stack>
+              </Stack>
+            </Grid.Col>
 
+            <Grid.Col span={6}>
+              <Stack>
+                <Image src="/images/intro-bot.png" w="100%" />
+                <Stack spacing={8}>
+                  <Title order={4}>
+                    Webhook
+                  </Title>
+                  <Text>
+                    You can set a Webhook URL that will be triggered when your websites have new comment. Integrate Cusdis with your favorite tools such as Telegram.
+                  </Text>
+                  <Anchor  href="/doc#/advanced/webhook" sx={{
+                    textDecoration: 'underline'
+                  }}>How to use Webhook</Anchor>
+                </Stack>
+              </Stack>
+            </Grid.Col>
+
+          </Grid>
+
+          <Title order={1} align='center' my={96}>
+            Integrate with frameworks and platforms with ease
+          </Title>
+        </Stack>
       </Container>
 
+      <Stack mt={48} sx={theme => ({
+        boxShadow: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
+        backgroundColor: theme.colors.gray[0],
+        paddingTop: 80
+      })}>
+        <Grid gutter={'xl'}>
+          {integrations.map(item => {
+            return (
+              <Grid.Col mb={48} key={item.label} span={2}>
+                <Stack align={'center'} justify='space-between'>
+                  <Anchor href={item.link}>
+                    <Image src={item.image} width={item.imageWidth} />
+                  </Anchor>
+                </Stack>
+              </Grid.Col>
+            )
+          })}
+        </Grid>
+      </Stack>
 
-      <Box mt={24} textAlign="center">
+      <Center my={96}>
         {StartButton}
-      </Box>
+      </Center>
 
       <Footer maxWidth="3xl" />
     </Box>
