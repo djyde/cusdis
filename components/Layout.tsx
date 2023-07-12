@@ -1,24 +1,14 @@
 import React, { useCallback, useState } from "react"
 import { useMutation, useQuery } from "react-query"
-import { getAllProjects } from "../pages/dashboard"
-import { UserSession } from "../service"
-import NextLink from 'next/link'
 import { useRouter } from "next/router"
-import { SettingsIcon } from '@chakra-ui/icons'
 import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown, AiOutlineFile } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
-import { Footer } from "./Footer"
-import { createProject } from "../pages/getting-start"
 import { Anchor, AppShell, Avatar, Badge, Box, Button, Code, Group, Header, Menu, Modal, Navbar, NavLink, ScrollArea, Select, Space, Stack, Switch, Text, TextInput, Title } from "@mantine/core"
 import Link from "next/link"
 import type { ProjectServerSideProps } from "../pages/dashboard/project/[projectId]/settings"
 import { modals } from "@mantine/modals"
-import { useClipboard } from '@mantine/hooks';
+import { useClipboard, useDisclosure } from '@mantine/hooks';
 import { notifications } from "@mantine/notifications"
-import { Project } from "@prisma/client"
-import { ProjectService } from "../service/project.service"
-import type { resolvedConfig } from "../utils.server"
-import { useDisclosure } from '@mantine/hooks';
 import { apiClient } from "../utils.client"
 import { useForm } from "react-hook-form"
 import { MainLayoutData } from "../service/viewData.service"
@@ -99,7 +89,7 @@ export function MainLayout(props: {
   })
 
   const onClickSaveUserSettings = async () => {
-    const data = userSettingsForm.getValues() 
+    const data = userSettingsForm.getValues()
     if (!validateEmail(data.notificationEmail)) {
       notifications.show({
         title: 'Invalid email',
@@ -227,7 +217,9 @@ export function MainLayout(props: {
         <Group>
           <Group>
             <Title order={3} style={{ fontWeight: 'bold' }}>
-              Cusdis
+              <Anchor href="/">
+                Cusdis
+              </Anchor>
             </Title>
             <ProjectMenu />
           </Group>
@@ -242,7 +234,7 @@ export function MainLayout(props: {
         <Group spacing={4}>
           <Button onClick={_ => {
             openUserModal()
-          }} size="xs" rightIcon={<AiOutlineRight />} variant='subtle'>{props.session.user.name} {badge}</Button>
+          }} size="xs" rightIcon={<AiOutlineRight />} variant='subtle'>{props.session.user.name}</Button>
         </Group>
       </Group>
     )
@@ -298,11 +290,11 @@ export function MainLayout(props: {
               <Text weight={500} size="sm">Display name</Text>
               <TextInput placeholder={props.userInfo.name} {...userSettingsForm.register("displayName")} size="sm" />
             </Stack>
-            <Stack spacing={8}>
+            {/* <Stack spacing={8}>
               <Text weight={500} size="sm">Subscription </Text>
               <Text size="sm">Current plan: {badge}</Text>
               <Anchor size="sm">Manage subscription</Anchor>
-            </Stack>
+            </Stack> */}
             <Button loading={updateUserSettingsMutation.isLoading} onClick={onClickSaveUserSettings}>Save</Button>
             <Button onClick={_ => signOut()} variant={'outline'} color='red'>
               Logout

@@ -1,5 +1,4 @@
 import { Provider } from 'next-auth/client'
-import { ChakraProvider } from "@chakra-ui/react"
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications';

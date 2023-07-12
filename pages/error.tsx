@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/layout"
+import { Text } from '@mantine/core'
 
 export enum ErrorCode {
   INVALID_TOKEN = 'INVALID_TOKEN'

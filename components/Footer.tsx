@@ -1,4 +1,4 @@
-import { Box, Container, HStack, Image, Link, LinkBox, LinkOverlay, List, ListItem, Text, VStack } from '@chakra-ui/react'
+import { Anchor, Box, Group, List, Stack, Text, Image, Center } from '@mantine/core'
 import * as React from 'react'
 import { VERSION } from '../utils.client'
 
@@ -6,68 +6,49 @@ export function Footer(props: {
   maxWidth?: string
 }) {
   return (
-    <>
-      <Box borderTopWidth={1} borderTopColor="gray.100" py={12} mt={24}>
-        <Container maxWidth={props.maxWidth || '6xl'}>
-          <HStack alignItems="stretch" spacing={24}>
-            <Box fontSize="sm">
-              <List color="gray.500" spacing={2}>
-                <ListItem>
-                  <Text color="gray.900" fontWeight="medium">Contact</Text>
-                </ListItem>
-                <ListItem>
-                  <Link isExternal href="https://twitter.com/cusdis_hq">Twitter</Link>
-                </ListItem>
-                <ListItem>
-                  <Link isExternal href="https://blog.cusdis.com">Blog</Link>
-                </ListItem>
-                <ListItem>
-                  <Link isExternal href="https://github.com/djyde/cusdis">GitHub</Link>
-                </ListItem>
-                <ListItem>
-                  <Text>hi@cusdis.com</Text>
-                </ListItem>
+    <Box p={48}>
+      <Center>
+        <Group spacing={120} align="start">
+          <List listStyleType={'none'} color="gray.500" spacing={2}>
+            <List.Item mb={8}>
+              <Text color="gray.900" weight={500}>Contact</Text>
+            </List.Item>
+            <List.Item>
+              <Anchor target={'_blank'} href="https://twitter.com/cusdis_hq">Twitter</Anchor>
+            </List.Item>
+            <List.Item>
+              <Anchor target="_blank" href="https://blog.cusdis.com">Blog</Anchor>
+            </List.Item>
+            <List.Item>
+              <Anchor target="_blank" href="https://github.com/djyde/cusdis">GitHub</Anchor>
+            </List.Item>
+            <List.Item>
+              <Text>hi@cusdis.com</Text>
+            </List.Item>
+          </List>
+          <List listStyleType={'none'} color="gray.500" spacing={2}>
+            <List.Item mb={8}>
+              <Text weight={500} color="gray">Resources</Text>
+            </List.Item>
+            <List.Item>
+              <Anchor target="_blank" href="https://cusdis.com/doc">Documentation</Anchor>
+            </List.Item>
+            <List.Item>
+              <Anchor target="_blank" href="https://opencollective.com/cusdis">Sponsor</Anchor>
+            </List.Item>
+            <List.Item>
+              <Anchor target="_blank" href="/privacy-policy">Privacy Policy</Anchor>
+            </List.Item>
+          </List>
 
-              </List>
-              {/* <Text>Made with ❤️ by <Link href="https://twitter.com/randyloop">Randy</Link></Text> */}
-            </Box>
-
-            <Box fontSize="sm">
-              <List color="gray.500" spacing={2}>
-                <ListItem>
-                  <Text fontWeight="medium" color="gray.900" >Resources</Text>
-                </ListItem>
-                <ListItem>
-                  <Link isExternal href="https://cusdis.com/doc">Documentation</Link>
-                </ListItem>
-                <ListItem>
-                  <Link isExternal href="https://opencollective.com/cusdis">Sponsor</Link>
-                </ListItem>
-                <ListItem>
-                  <Link isExternal href="/privacy-policy">Privacy Policy</Link>
-                </ListItem>
-                <ListItem>
-                  <Box>
-                    <a href="https://vercel.com?utm_source=randysoft&utm_campaign=oss">
-                      <img width={128} src="https://images.ctfassets.net/e5382hct74si/78Olo8EZRdUlcDUFQvnzG7/fa4cdb6dc04c40fceac194134788a0e2/1618983297-powered-by-vercel.svg" />
-                    </a>
-                  </Box>
-                </ListItem>
-              </List>
-            </Box>
-
-          </HStack>
-
-          <VStack spacing={2} mt={12} alignItems="center">
-            <Image w={8} src="/images/artworks/logo-gray-256.png" />
-            <Text fontSize="sm" textAlign="right" color="gray.500">
-              v{VERSION}
-            </Text>
-          </VStack>
-
-        </Container>
-      </Box>
-
-    </>
+        </Group>
+      </Center> 
+      <Stack spacing={2} mt={12} align="center">
+        <Image width={8} src="/images/artworks/logo-gray-256.png" />
+        <Text size="sm" align="right" color="gray.500">
+          v{VERSION}
+        </Text>
+      </Stack>
+    </Box>
   )
 }
