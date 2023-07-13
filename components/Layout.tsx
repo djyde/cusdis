@@ -419,7 +419,7 @@ export function MainLayout(props: {
                               {props.subscription.status === 'cancelled' && (<Text size='xs' align='center'>Expire on {dayjs(props.subscription.endAt).format('YYYY/MM/DD')}</Text>)}
                             </>
                           ) : (
-                            <Button size='xs' component="a" href={`${props.config.checkout.url}?checkout=[custom][user_id]=${props.session.uid}`}>Upgrade $5/month</Button>
+                            <Button size='xs' component="a" href={`${props.config.checkout.url}?checkout[custom][user_id]=${props.session.uid}`}>Upgrade $5/month</Button>
                           )}
                         </Stack>
                       </Paper>

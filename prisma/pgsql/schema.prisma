@@ -25,7 +25,6 @@ model Account {
   createdAt          DateTime  @default(now()) @map(name: "created_at")
   updatedAt          DateTime  @default(now()) @map(name: "updated_at")
 
-
   @@index([providerAccountId], name: "providerAccountId")
   @@index([providerId], name: "providerId")
   @@index([userId], name: "userId")
@@ -47,7 +46,7 @@ model Session {
 model User {
   id            String    @id @default(uuid())
   name          String?
-  displayName String?
+  displayName   String?
   email         String?   @unique
   emailVerified DateTime? @map(name: "email_verified")
   image         String?
@@ -58,10 +57,33 @@ model User {
 
   Comment Comment[]
 
+  subscription Subscription?
+
   enableNewCommentNotification Boolean? @default(true) @map(name: "enable_new_comment_notification")
   notificationEmail            String?  @map(name: "notification_email")
 
+  usage Usage[]
+
   @@map(name: "users")
+}
+
+model Subscription {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  lemonSubscriptionId String?   @map(name: "lemon_subscription_id")
+  orderId             String    @map(name: "order_id")
+  productId           String?   @map(name: "product_id")
+  variantId           String?   @map(name: "variant_id")
+  customerId          String?   @map(name: "customer_id")
+  status              String
+  endsAt              DateTime? @map(name: "endsAt")
+
+  updatePaymentMethodUrl String? @map(name: "update_payment_method_url")
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
 }
 
 model VerificationRequest {
@@ -78,10 +100,10 @@ model VerificationRequest {
 // next-auth END
 
 model Project {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   title     String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @default(now()) @map(name: "updated_at")
   deletedAt DateTime? @map(name: "deleted_at")
 
   ownerId String
@@ -115,7 +137,6 @@ model Page {
 
   comments Comment[]
 
-
   @@index([projectId], name: "projectId")
   @@map("pages")
 }
@@ -143,4 +164,20 @@ model Comment {
   replies  Comment[] @relation("replies")
 
   @@map("comments")
+}
+
+model Usage {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  label String
+  count Int @default(0)
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, label])
+
+  @@map("usages")
 }
