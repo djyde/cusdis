@@ -1,11 +1,6 @@
 import { RequestScopeService } from ".";
+import { UsageLabel } from "../config.common";
 import { prisma } from "../utils.server";
-
-
-export enum UsageLabel {
-  ApproveComment = 'approve_comment',
-  QuickApprove = 'quick_approve',
-}
 
 export class UsageService extends RequestScopeService {
   async incr(label: UsageLabel) {

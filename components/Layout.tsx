@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query"
 import { useRouter } from "next/router"
 import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown, AiOutlineFile, AiOutlineQuestion, AiOutlineQuestionCircle } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
-import { Anchor, AppShell, Avatar, Badge, Box, Button, Code, Grid, Group, Header, List, Menu, Modal, Navbar, NavLink, Paper, ScrollArea, Select, Space, Stack, Switch, Text, TextInput, Title } from "@mantine/core"
+import { Anchor, AppShell, Avatar, Badge, Box, Button, Code, Grid, Group, Header, List, Menu, Modal, Navbar, NavLink, Paper, Progress, ScrollArea, Select, Space, Stack, Switch, Text, TextInput, Title } from "@mantine/core"
 import Link from "next/link"
 import type { ProjectServerSideProps } from "../pages/dashboard/project/[projectId]/settings"
 import { modals } from "@mantine/modals"
@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form"
 import { MainLayoutData } from "../service/viewData.service"
 import { Head } from "./Head"
 import dayjs from "dayjs"
+import { usageLimitation } from "../config.common"
 
 // From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
 function validateEmail(email) {
@@ -271,6 +272,37 @@ export function MainLayout(props: {
     )
   }, [])
 
+  const usageBoard = React.useMemo(() => {
+    return (
+      <>
+        <Text size="sm" weight={900}>
+          Usage (per month)
+        </Text>
+        <Stack spacing={4}>
+          <Group spacing={4}>
+            <Text weight={500} size="sm">Sites:</Text>
+            <Text size='sm'>
+              {`${props.usage.projectCount} / ${usageLimitation['create_site']}`}
+            </Text>
+          </Group>
+          
+          <Group spacing={4}>
+            <Text weight={500} size="sm">Approve comments:</Text>
+            <Text size='sm'>
+              {`${props.usage.approveCommentUsage} / ${usageLimitation['approve_comment']}`}
+            </Text>
+          </Group>
+          <Group spacing={4}>
+            <Text weight={500} size="sm">Quick Approve:</Text>
+            <Text size='sm'>
+              {`${props.usage.quickApproveUsage} / ${usageLimitation['quick_approve']}`}
+            </Text>
+          </Group>
+        </Stack>
+      </>
+    )
+  }, [])
+
   return (
     <>
       <Head title={`${props.project.title} - Cusdis`} />
@@ -322,76 +354,79 @@ export function MainLayout(props: {
               <TextInput placeholder={props.userInfo.name} {...userSettingsForm.register("displayName")} size="sm" />
             </Stack>
             {props.config.checkout.enabled && (
-              <Stack spacing={8}>
-                <Text weight={500} size="sm">Subscription </Text>
-                <Grid>
-                  <Grid.Col span={6}>
-                    <Paper sx={theme => ({
-                      border: '1px solid #eaeaea',
-                      padding: theme.spacing.md
-                    })}>
-                      <Stack>
-                        <Title order={4}>
-                          Free
-                        </Title>
-                        <List size='sm' sx={{
-                        }}>
-                          <List.Item>
-                            Up to 1 site
-                          </List.Item>
-                          <List.Item>
-                            10 Quick Approve / month
-                          </List.Item>
-                          <List.Item>
-                            100 approved comments / month
-                          </List.Item>
-                        </List>
-                        {!props.subscription.isActived || props.subscription.status === 'cancelled' ? (
-                          <Button disabled size="xs">Current plan</Button>
-                        ) : (
-                          <Button size="xs" variant={'outline'} loading={downgradePlanMutation.isLoading} onClick={_ => {
-                            if (window.confirm('Are you sure to downgrade?')) {
-                              downgradePlanMutation.mutate()
-                            }
-                          }}>Downgrade</Button>
-                        )}
-                      </Stack>
-                    </Paper>
-                  </Grid.Col>
-                  <Grid.Col span={6}>
-                    <Paper sx={theme => ({
-                      border: '1px solid #eaeaea',
-                      padding: theme.spacing.md
-                    })}>
-                      <Stack>
-                        <Title order={4}>
-                          Pro
-                        </Title>
-                        <List size='sm' sx={{
-                        }}>
-                          <List.Item>
-                            Unlimited sites
-                          </List.Item>
-                          <List.Item>
-                            Unlimited Quick Approve
-                          </List.Item>
-                          <List.Item>
-                            Unlimited approved comments
-                          </List.Item>
-                        </List>
-                        {props.subscription.isActived ? (
-                          <>
-                            <Button size="xs" component="a" href={props.subscription.updatePaymentMethodUrl}>Manage payment method</Button>
-                            {props.subscription.status === 'cancelled' && (<Text size='xs' align='center'>Expire on {dayjs(props.subscription.endAt).format('YYYY/MM/DD')}</Text>)}
-                          </>
-                        ) : (
-                          <Button size='xs' component="a" href={`${props.config.checkout.url}?checkout=[custom][user_id]=${props.session.uid}`}>Upgrade $5/month</Button>
-                        )}
-                      </Stack>
-                    </Paper>
-                  </Grid.Col>
-                </Grid>
-              </Stack>
+              <>
+                {usageBoard}
+                <Stack spacing={8}>
+                  <Text weight={900} size="sm">Subscription </Text>
+                  <Grid>
+                    <Grid.Col span={6}>
+                      <Paper sx={theme => ({
+                        border: '1px solid #eaeaea',
+                        padding: theme.spacing.md
+                      })}>
+                        <Stack>
+                          <Title order={4}>
+                            Free
+                          </Title>
+                          <List size='sm' sx={{
+                          }}>
+                            <List.Item>
+                              Up to 1 site
+                            </List.Item>
+                            <List.Item>
+                              10 Quick Approve / month
+                            </List.Item>
+                            <List.Item>
+                              100 approved comments / month
+                            </List.Item>
+                          </List>
+                          {!props.subscription.isActived || props.subscription.status === 'cancelled' ? (
+                            <Button disabled size="xs">Current plan</Button>
+                          ) : (
+                            <Button size="xs" variant={'outline'} loading={downgradePlanMutation.isLoading} onClick={_ => {
+                              if (window.confirm('Are you sure to downgrade?')) {
+                                downgradePlanMutation.mutate()
+                              }
+                            }}>Downgrade</Button>
+                          )}
+                        </Stack>
+                      </Paper>
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                      <Paper sx={theme => ({
+                        border: '1px solid #eaeaea',
+                        padding: theme.spacing.md
+                      })}>
+                        <Stack>
+                          <Title order={4}>
+                            Pro
+                          </Title>
+                          <List size='sm' sx={{
+                          }}>
+                            <List.Item>
+                              Unlimited sites
+                            </List.Item>
+                            <List.Item>
+                              Unlimited Quick Approve
+                            </List.Item>
+                            <List.Item>
+                              Unlimited approved comments
+                            </List.Item>
+                          </List>
+                          {props.subscription.isActived ? (
+                            <>
+                              <Button size="xs" component="a" href={props.subscription.updatePaymentMethodUrl}>Manage payment method</Button>
+                              {props.subscription.status === 'cancelled' && (<Text size='xs' align='center'>Expire on {dayjs(props.subscription.endAt).format('YYYY/MM/DD')}</Text>)}
+                            </>
+                          ) : (
+                            <Button size='xs' component="a" href={`${props.config.checkout.url}?checkout=[custom][user_id]=${props.session.uid}`}>Upgrade $5/month</Button>
+                          )}
+                        </Stack>
+                      </Paper>
+                    </Grid.Col>
+                  </Grid>
+                </Stack>
+              </>
             )}
             <Button loading={updateUserSettingsMutation.isLoading} onClick={onClickSaveUserSettings}>Save</Button>
             <Button onClick={_ => signOut()} variant={'outline'} color='red'>

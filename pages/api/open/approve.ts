@@ -3,8 +3,9 @@ import { resolvedConfig } from '../../../utils.server'
 import jwt from 'jsonwebtoken'
 import { CommentService } from '../../../service/comment.service'
 import { SecretKey, TokenBody, TokenService } from '../../../service/token.service'
-import { UsageLabel, UsageService } from '../../../service/usage.service'
-import { SubscriptionService, usageLimitation } from '../../../service/subscription.service'
+import { UsageService } from '../../../service/usage.service'
+import { SubscriptionService } from '../../../service/subscription.service'
+import { UsageLabel, usageLimitation } from '../../../config.common'
 
 export default async function handler(
   req: NextApiRequest,

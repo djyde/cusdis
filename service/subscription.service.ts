@@ -1,10 +1,5 @@
+import { UsageLabel, usageLimitation } from "../config.common"
 import { prisma, resolvedConfig } from "../utils.server"
-import { UsageLabel } from "./usage.service"
-
-export const usageLimitation = {
-  [UsageLabel.ApproveComment]: 100,
-  [UsageLabel.QuickApprove]: 10,
-}
 
 export class SubscriptionService {
   async update(body) {
