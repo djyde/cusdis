@@ -40,6 +40,18 @@ function GettingStart() {
             shallow: true,
           })
         },
+        onError(data: any) {
+          const {
+            error: message,
+            status: statusCode
+          } = data.response.data
+
+          notifications.show({
+            title: "Error",
+            message,
+            color: 'yellow'
+          })
+        }
       }
     )
   }

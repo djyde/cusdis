@@ -16,6 +16,7 @@ import { MainLayout } from '../../../components/Layout'
 import { AiOutlineCode, AiOutlineUnorderedList, AiOutlineControl, AiOutlineCheck, AiOutlineClose, AiOutlineSmile } from 'react-icons/ai'
 import { List, Stack, Box, Text, Group, Anchor, Button, Pagination, Textarea, Title, Center } from '@mantine/core'
 import { MainLayoutData, ViewDataService } from '../../../service/viewData.service'
+import { notifications } from '@mantine/notifications'
 
 const getComments = async ({ queryKey }) => {
   const [_key, { projectId, page }] = queryKey
@@ -69,6 +70,18 @@ function CommentToolbar(props: {
   const approveCommentMutation = useMutation(approveComment, {
     onSuccess() {
       props.refetch()
+    },
+    onError(data: any) {
+      const {
+        error: message,
+        status: statusCode
+      } = data.response.data
+
+      notifications.show({
+        title: "Error",
+        message,
+        color: 'yellow'
+      })
     }
   })
   const replyCommentMutation = useMutation(replyAsModerator, {

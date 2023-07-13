@@ -1,4 +1,10 @@
-import { prisma } from "../utils.server"
+import { prisma, resolvedConfig } from "../utils.server"
+import { UsageLabel } from "./usage.service"
+
+export const usageLimitation = {
+  [UsageLabel.ApproveComment]: 100,
+  [UsageLabel.QuickApprove]: 10,
+}
 
 export class SubscriptionService {
   async update(body) {
@@ -49,6 +55,22 @@ export class SubscriptionService {
     })
   }
 
+  async isActivated(userId: string) {
+    const subscription = await prisma.subscription.findUnique({
+      where: {
+        userId
+      },
+    })
+
+    if (!subscription) {
+      return false
+    }
+
+    let isActived = subscription?.status === 'active' || subscription?.status === 'cancelled'
+
+    return isActived
+  }
+
   async getStatus(userId: string) {
     const subscription = await prisma.subscription.findUnique({
       where: {
@@ -56,13 +78,100 @@ export class SubscriptionService {
       },
     })
 
-    let isActived = subscription?.status === 'active' || subscription?.status === 'cancelled'
-
     return {
-      isActived,
+      isActived: await this.isActivated(userId),
       status: subscription?.status || '',
       endAt: subscription?.endsAt.toISOString() || '',
       updatePaymentMethodUrl: subscription?.updatePaymentMethodUrl || ''
     }
+  }
+
+  async createProjectValidate(userId: string) {
+    if (!resolvedConfig.checkout.enabled) {
+      return true
+    }
+
+    const [projectCount] = await prisma.$transaction([
+      prisma.project.count({
+        where: {
+          ownerId: userId,
+          deletedAt: {
+            equals: null
+          }
+        }
+      }),
+    ])
+
+    if (projectCount < 0) {
+      return true
+    }
+
+    if (await this.isActivated(userId)) {
+      return true
+    }
+
+    return false
+  }
+
+  async approveCommentValidate(userId: string) {
+    if (!resolvedConfig.checkout.enabled) {
+      return true
+    }
+
+    const [usage] = await prisma.$transaction([
+      prisma.usage.findUnique({
+        where: {
+          userId_label: {
+            userId,
+            label: UsageLabel.ApproveComment
+          }
+        }
+      }),
+    ])
+
+    if (await this.isActivated(userId)) {
+      return true
+    }
+
+    if (!usage) {
+      return true
+    }
+
+    if (usage.count <= usageLimitation[UsageLabel.ApproveComment]) {
+      return true
+    }
+ 
+    return false
+  }
+
+  async quickApproveValidate(userId: string) {
+    if (!resolvedConfig.checkout.enabled) {
+      return true
+    }
+
+    const [usage] = await prisma.$transaction([
+      prisma.usage.findUnique({
+        where: {
+          userId_label: {
+            userId,
+            label: UsageLabel.QuickApprove
+          }
+        }
+      }),
+    ])
+
+    // if (await this.isActivated(userId)) {
+    //   return true
+    // }
+
+    if (!usage) {
+      return true
+    }
+
+    if (usage.count <= usageLimitation[UsageLabel.QuickApprove]) {
+      return true
+    }
+
+    return false
   }
 }

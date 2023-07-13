@@ -44,10 +44,16 @@ function ApprovePage(props: {
       })
       setReplyContent('')
     },
-    onError() {
+    onError(data: any) {
+      const {
+        error: message,
+        status: statusCode
+      } = data.response.data
+
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again later',
+        title: "Error",
+        message,
+        color: 'yellow'
       })
     }
   })
@@ -61,10 +67,16 @@ function ApprovePage(props: {
 
       location.reload()
     },
-    onError() {
+    onError(data: any) {
+      const {
+        error: message,
+        status: statusCode
+      } = data.response.data
+
       notifications.show({
-        title: 'Something went wrong',
-        message: 'Please try again later',
+        title: "Error",
+        message,
+        color: 'yellow'
       })
     }
   })

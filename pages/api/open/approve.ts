@@ -3,12 +3,17 @@ import { resolvedConfig } from '../../../utils.server'
 import jwt from 'jsonwebtoken'
 import { CommentService } from '../../../service/comment.service'
 import { SecretKey, TokenBody, TokenService } from '../../../service/token.service'
+import { UsageLabel, UsageService } from '../../../service/usage.service'
+import { SubscriptionService, usageLimitation } from '../../../service/subscription.service'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   const commentService = new CommentService(req)
+  const usageService = new UsageService(req)
+  const subscriptionService = new SubscriptionService()
+
   const tokenService = new TokenService()
 
   if (req.method === 'GET') {
@@ -59,6 +64,14 @@ export default async function handler(
       return
     }
 
+    // check usage
+    if (!await subscriptionService.quickApproveValidate(tokenBody.owner.id)) {
+      res.status(402).json({
+        error: `You have reached the maximum number of Quick Approve on free plan (${usageLimitation.quick_approve}/month). Please upgrade to Pro plan to use Quick Approve more.`
+      })
+      return
+    }
+
     // firstly, approve comment
     await commentService.approve(tokenBody.commentId)
 
@@ -68,6 +81,8 @@ export default async function handler(
         owner: tokenBody.owner
       })
     }
+
+    await usageService.incr(UsageLabel.QuickApprove)
 
     res.json({
       message: 'success'
