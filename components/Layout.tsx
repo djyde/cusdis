@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "react-query"
 import { useRouter } from "next/router"
 import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown, AiOutlineFile, AiOutlineQuestion, AiOutlineQuestionCircle } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
-import { Anchor, AppShell, Avatar, Badge, Box, Button, Code, Group, Header, Menu, Modal, Navbar, NavLink, ScrollArea, Select, Space, Stack, Switch, Text, TextInput, Title } from "@mantine/core"
+import { Anchor, AppShell, Avatar, Badge, Box, Button, Code, Grid, Group, Header, List, Menu, Modal, Navbar, NavLink, Paper, ScrollArea, Select, Space, Stack, Switch, Text, TextInput, Title } from "@mantine/core"
 import Link from "next/link"
 import type { ProjectServerSideProps } from "../pages/dashboard/project/[projectId]/settings"
 import { modals } from "@mantine/modals"
@@ -13,6 +13,7 @@ import { apiClient } from "../utils.client"
 import { useForm } from "react-hook-form"
 import { MainLayoutData } from "../service/viewData.service"
 import { Head } from "./Head"
+import dayjs from "dayjs"
 
 // From https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
 function validateEmail(email) {
@@ -53,6 +54,25 @@ export function MainLayout(props: {
       email: props.userInfo.email,
       notificationEmail: props.userInfo.notificationEmail,
     },
+  })
+
+  const downgradePlanMutation = useMutation(async () => {
+    await apiClient.delete('/subscription')
+  }, {
+    onSuccess() {
+      notifications.show({
+        title: 'Success',
+        message: 'Downgrade success',
+        color: 'green'
+      })
+    },
+    onError() {
+      notifications.show({
+        title: 'Error',
+        message: 'Something went wrong, please contact hi@cusdis.com',
+        color: 'red'
+      })
+    }
   })
 
   const updateNewCommentNotification = useMutation(updateUserSettings, {
@@ -209,11 +229,14 @@ export function MainLayout(props: {
   }, [])
 
   const badge = React.useMemo(() => {
-    if (!props.config.isHosted) {
-      return <Badge color="green" size="xs">OSS</Badge>
+    if (props.subscription.isActived) {
+      return <Badge color="green" size="xs">PRO</Badge>
     }
 
-    return <Badge color="green" size="xs">PRO</Badge>
+    if (props.config.isHosted) {
+      return <Badge color="gray" size="xs">OSS</Badge>
+    }
+    return <Badge color="green" size="xs">FREE</Badge>
   }, [])
 
   const header = React.useMemo(() => {
@@ -242,7 +265,7 @@ export function MainLayout(props: {
         <Group spacing={4}>
           <Button onClick={_ => {
             openUserModal()
-          }} size="xs" rightIcon={<AiOutlineRight />} variant='subtle'>{props.session.user.name}</Button>
+          }} size="xs" rightIcon={<AiOutlineRight />} variant='subtle'>{props.session.user.name} {badge}</Button>
         </Group>
       </Group>
     )
@@ -273,7 +296,7 @@ export function MainLayout(props: {
           }
         }}
       >
-        <Modal opened={isUserPannelOpen} onClose={closeUserModal}
+        <Modal opened={isUserPannelOpen} size="lg" onClose={closeUserModal}
           title="User Settings"
         >
           <Stack>
@@ -298,11 +321,78 @@ export function MainLayout(props: {
               <Text weight={500} size="sm">Display name</Text>
               <TextInput placeholder={props.userInfo.name} {...userSettingsForm.register("displayName")} size="sm" />
             </Stack>
-            {/* <Stack spacing={8}>
-              <Text weight={500} size="sm">Subscription </Text>
-              <Text size="sm">Current plan: {badge}</Text>
-              <Anchor size="sm">Manage subscription</Anchor>
-            </Stack> */}
+            {props.config.checkout.enabled && (
+              <Stack spacing={8}>
+                <Text weight={500} size="sm">Subscription </Text>
+                <Grid>
+                  <Grid.Col span={6}>
+                    <Paper sx={theme => ({
+                      border: '1px solid #eaeaea',
+                      padding: theme.spacing.md
+                    })}>
+                      <Stack>
+                        <Title order={4}>
+                          Free
+                        </Title>
+                        <List size='sm' sx={{
+                        }}>
+                          <List.Item>
+                            Up to 1 site
+                          </List.Item>
+                          <List.Item>
+                            10 Quick Approve / month
+                          </List.Item>
+                          <List.Item>
+                            100 approved comments / month
+                          </List.Item>
+                        </List>
+                        {!props.subscription.isActived || props.subscription.status === 'cancelled' ? (
+                          <Button disabled size="xs">Current plan</Button>
+                        ) : (
+                          <Button size="xs" variant={'outline'} loading={downgradePlanMutation.isLoading} onClick={_ => {
+                            if (window.confirm('Are you sure to downgrade?')) {
+                              downgradePlanMutation.mutate()
+                            }
+                          }}>Downgrade</Button>
+                        )}
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                  <Grid.Col span={6}>
+                    <Paper sx={theme => ({
+                      border: '1px solid #eaeaea',
+                      padding: theme.spacing.md
+                    })}>
+                      <Stack>
+                        <Title order={4}>
+                          Pro
+                        </Title>
+                        <List size='sm' sx={{
+                        }}>
+                          <List.Item>
+                            Unlimited sites
+                          </List.Item>
+                          <List.Item>
+                            Unlimited Quick Approve
+                          </List.Item>
+                          <List.Item>
+                            Unlimited approved comments
+                          </List.Item>
+                        </List>
+                        {props.subscription.isActived ? (
+                          <>
+                            <Button size="xs" component="a" href={props.subscription.updatePaymentMethodUrl}>Manage payment method</Button>
+                            {props.subscription.status === 'cancelled' && (<Text size='xs' align='center'>Expire on {dayjs(props.subscription.endAt).format('YYYY/MM/DD')}</Text>)}
+                          </>
+                        ) : (
+                          <Button size='xs' component="a" href={`${props.config.checkout.url}?checkout=[custom][user_id]=${props.session.uid}`}>Upgrade $5/month</Button>
+                        )}
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                </Grid>
+              </Stack>
+            )}
             <Button loading={updateUserSettingsMutation.isLoading} onClick={onClickSaveUserSettings}>Save</Button>
             <Button onClick={_ => signOut()} variant={'outline'} color='red'>
               Logout
