@@ -8,12 +8,12 @@ import { GetServerSideProps, Redirect } from 'next'
 import axios from 'axios'
 import { UserSession } from '../service'
 import NextHead from 'next/head'
-import { Button, Container, Group, Stack, Text, Title, Box, Anchor, Grid, Center, Image } from '@mantine/core'
+import { Button, Container, Group, Stack, Text, Title, Box, Anchor, Grid, Center, Image, List, Badge, Flex } from '@mantine/core'
 import { AiOutlineArrowRight, AiOutlineRight } from 'react-icons/ai'
+import { usageLimitation } from '../config.common'
 
 type Props = {
   session: UserSession
-  contributers: Contributer[]
 }
 
 type Contributer = {
@@ -65,7 +65,7 @@ const integrations = [
   }
 ]
 
-function IndexPage({ session, contributers }: Props) {
+function IndexPage({ session }: Props) {
   const router = useRouter()
 
   const StartButton = session ? (
@@ -118,6 +118,8 @@ function IndexPage({ session, contributers }: Props) {
                   Documentation
                 </Button>
 
+                <Anchor href="#pricing" weight={500}>Pricing</Anchor>
+
                 {/* <Anchor weight={500}>Pricing</Anchor> */}
               </Group>
             </Stack>
@@ -152,7 +154,7 @@ function IndexPage({ session, contributers }: Props) {
                     Email Notification
                   </Title>
                   <Text>
-                    You will receive Email notification when a new comment comes in, and approve the new comment without login.
+                    You will receive Email notification when a new comment comes in, and do a Quick Approve.
                   </Text>
                 </Stack>
               </Stack>
@@ -163,7 +165,7 @@ function IndexPage({ session, contributers }: Props) {
                 <Image src="/images/intro-approval.png" w="100%" />
                 <Stack spacing={8}>
                   <Title order={4}>
-                    Approve/Reply without login
+                    Quick Approve
                   </Title>
                   <Text>
                     In the notification email and webhook, you will get a short-time link to approve/reply the new comment without login to dashboard. All the things get done in your mobile.
@@ -182,7 +184,7 @@ function IndexPage({ session, contributers }: Props) {
                   <Text>
                     You can set a Webhook URL that will be triggered when your websites have new comment. Integrate Cusdis with your favorite tools such as Telegram.
                   </Text>
-                  <Anchor  href="/doc#/advanced/webhook" sx={{
+                  <Anchor href="/doc#/advanced/webhook" sx={{
                     textDecoration: 'underline'
                   }}>How to use Webhook</Anchor>
                 </Stack>
@@ -215,13 +217,72 @@ function IndexPage({ session, contributers }: Props) {
             )
           })}
         </Grid>
+
       </Stack>
 
-      <Center my={96}>
-        {StartButton}
-      </Center>
+      <Box>
+        <Title id="pricing" order={1} align='center' my={96}>Pricing</Title>
+        <Flex
+          gap="lg"
+          justify={'center'}
+        >
+          <Stack sx={{
+            border: '1px solid #eee',
+            padding: 24,
+            borderRadius: 12
+          }} >
+            <Title order={3}>Self Host</Title>
+            <Box>
+              <Badge>FREE</Badge>
+            </Box>
+            <List listStyleType={'none'} sx={{
+            }} size="sm">
+              <List.Item>All features. But host on your own server and database.</List.Item>
+            </List>
+            <Button component="a" href="/doc" target={'_blank'}>Documentation</Button>
+          </Stack>
 
-      <Footer maxWidth="3xl" />
+          <Stack sx={{
+            border: '1px solid #eee',
+            padding: 24,
+            borderRadius: 12
+          }}>
+            <Title order={3}>Cloud</Title>
+            <Box>
+              <Badge>FREE</Badge>
+            </Box>
+            <List sx={{
+            }} size="sm">
+              <List.Item>{usageLimitation['create_site']} site</List.Item>
+              <List.Item>{usageLimitation['approve_comment']} approved comments / month</List.Item>
+              <List.Item>{usageLimitation['quick_approve']} Quick Approve / month</List.Item>
+            </List>
+            <Button component="a" href="/dashboard" target={'_blank'}>Start for free</Button>
+          </Stack>
+
+          <Stack sx={{
+            border: '1px solid #eee',
+            padding: 24,
+            borderRadius: 12
+          }}>
+            <Title order={3}>Cloud Pro</Title>
+            <Box>
+              <Badge>$5 / month</Badge>
+            </Box>
+            <List sx={{
+            }} size="sm">
+              <List.Item>Unlimited sites</List.Item>
+              <List.Item>Unlimited approved comments</List.Item>
+              <List.Item>Unlimited Quick Approve</List.Item>
+            </List>
+            <Button component="a" href="/dashboard" target={'_blank'}>Start for free</Button>
+          </Stack>
+        </Flex>
+      </Box>
+
+      <Box my={96}>
+        <Footer maxWidth="3xl" />
+      </Box>
     </Box>
   )
 }
@@ -240,16 +301,9 @@ export const getServerSideProps: GetServerSideProps<Props> | Redirect = async (c
 
   let contributers = [] as Contributer[]
 
-  try {
-    contributers = (await axios.get<Contributer[]>('https://opencollective.com/cusdis/members/all.json')).data
-  } catch (e) {
-
-  }
-
   return {
     props: {
       session,
-      contributers: contributers.filter(_ => _.role !== 'HOST' && _.role !== 'ADMIN')
     },
   }
 }
