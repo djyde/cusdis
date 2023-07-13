@@ -234,7 +234,7 @@ export function MainLayout(props: {
       return <Badge color="green" size="xs">PRO</Badge>
     }
 
-    if (props.config.isHosted) {
+    if (!props.config.isHosted) {
       return <Badge color="gray" size="xs">OSS</Badge>
     }
     return <Badge color="green" size="xs">FREE</Badge>
