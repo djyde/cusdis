@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { AuthService } from '../../../../service/auth.service'
 import { CommentService } from '../../../../service/comment.service'
+import { SubscriptionService, usageLimitation } from '../../../../service/subscription.service'
+import { UsageLabel, UsageService } from '../../../../service/usage.service'
+import { getSession } from '../../../../utils.server'
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,6 +11,10 @@ export default async function handler(
 ) {
   const commentService = new CommentService(req)
   const authService = new AuthService(req, res)
+  const usageService = new UsageService(req)
+  const session = await getSession(req)
+
+  const subscriptionService = new SubscriptionService()
 
   if (req.method === 'POST') {
     const commentId = req.query.commentId as string
@@ -18,7 +25,18 @@ export default async function handler(
       return
     }
 
+    // check usage
+    if (!await subscriptionService.approveCommentValidate(session.uid)) {
+      res.status(402).json({
+        error:
+          `You have reached the maximum number of approving comments on free plan (${usageLimitation['approve_comment']}/month). Please upgrade to Pro plan to approve more comments.`,
+      })
+      return
+    }
+
     await commentService.approve(commentId)
+    await usageService.incr(UsageLabel.ApproveComment)
+
     res.json({
       message: 'success',
     })
