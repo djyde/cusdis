@@ -76,7 +76,7 @@ export class SubscriptionService {
     return {
       isActived: await this.isActivated(userId),
       status: subscription?.status || '',
-      endAt: subscription?.endsAt.toISOString() || '',
+      endAt: subscription?.endsAt?.toISOString() || '',
       updatePaymentMethodUrl: subscription?.updatePaymentMethodUrl || ''
     }
   }
