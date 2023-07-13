@@ -33,10 +33,6 @@ export class WebhookService extends RequestScopeService {
       },
     })
 
-    const approveToken = await this.tokenService.genApproveToken(comment.id)
-    const approveLink = `${resolvedConfig.host}/open/approve?token=${approveToken}`
-    console.log(approveLink)
-
     if (project.enableWebhook && !comment.moderatorId && project.webhook) {
 
       const fullComment = await prisma.comment.findUnique({
