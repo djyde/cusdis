@@ -97,7 +97,7 @@ export class SubscriptionService {
       }),
     ])
 
-    if (projectCount < 0) {
+    if (projectCount < usageLimitation['create_site']) {
       return true
     }
 
