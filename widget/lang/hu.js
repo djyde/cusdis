@@ -1,4 +1,4 @@
-export default {
+window.CUSDIS_LOCALE {
   powered_by: 'A hozzászólásokat működteti: Cusdis',
   post_comment: 'Elküld',
   loading: 'betöltés...',
