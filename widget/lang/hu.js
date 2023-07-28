@@ -1,4 +1,4 @@
-window.CUSDIS_LOCALE {
+window.CUSDIS_LOCALE= {
   powered_by: 'A hozzászólásokat működteti: Cusdis',
   post_comment: 'Elküld',
   loading: 'betöltés...',
