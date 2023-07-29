@@ -17,7 +17,7 @@ export default async function handler(
 
   const tokenService = new TokenService()
 
-  if (req.method === 'GET') {
+  if (req.method === 'POST') {
     const { token } = req.query as {
       token?: string
     }
