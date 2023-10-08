@@ -267,7 +267,7 @@ function IndexPage({ session }: Props) {
           }}>
             <Title order={3}>Cloud Pro</Title>
             <Box>
-              <Badge>$5 / month</Badge>
+              <Badge>$12 / year</Badge>
             </Box>
             <List sx={{
             }} size="sm">
