@@ -12,7 +12,7 @@ This prevents Cusdis from appear everywhere-->
   data-host="https://cusdis.com"
   data-app-id="YOUR APP ID"
   data-page-id="{{ page.id }}"
-  data-page-url="{{ site.url }}{{ page.baseurl }}{{ page.url }}"
+  data-page-url="{{ page.url | absolute_url }}"
   data-page-title="{{ page.title }}"
 ></div>
 <script defer src="https://cusdis.com/js/cusdis.es.js"></script>
