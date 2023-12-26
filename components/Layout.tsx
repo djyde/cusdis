@@ -200,7 +200,7 @@ export function MainLayout(props: {
 `
 
     modals.openConfirmModal({
-      title: "Embeded Code",
+      title: "Embedded Code",
       closeOnConfirm: false,
       labels: {
         cancel: 'Cancel',
@@ -259,7 +259,7 @@ export function MainLayout(props: {
             // height: '100%'
           }}>
             <Button leftIcon={<AiOutlineCode />} onClick={openEmbededCodeModal} size="xs" variant={'outline'}>
-              Embeded code
+              Embedded code
             </Button>
           </Group>
         </Group>
