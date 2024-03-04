@@ -38,6 +38,7 @@ function createIframe(target) {
   // srcdoc dosen't work on IE11
   singleTonIframe.srcdoc = makeIframeContent(target)
   singleTonIframe.style.width = '100%'
+  singleTonIframe.style.height = '500px'
   singleTonIframe.style.border = '0'
 
   return singleTonIframe

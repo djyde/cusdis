@@ -8,6 +8,7 @@
 .DS_Store
 .AppleDouble
 .LSOverride
+.yarn
 
 # Icon must end with two \r
 Icon
