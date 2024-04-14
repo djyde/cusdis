@@ -15,8 +15,6 @@ If you like Cusdis, please consider sponsoring us to help us be sustainable.
 
 ### Principle Sponsor
 
-[![vercel](https://images.ctfassets.net/e5382hct74si/78Olo8EZRdUlcDUFQvnzG7/fa4cdb6dc04c40fceac194134788a0e2/1618983297-powered-by-vercel.svg)](https://vercel.com?utm_source=randysoft&utm_campaign=oss)
-
 [![Contributors](https://opencollective.com/cusdis/tiers/organization-support/0/avatar.svg)](https://opencollective.com/cusdis/tiers/organization-support/0/website)
 
 [Become a principle sponsor](https://opencollective.com/cusdis/contribute/organization-support-27992/checkout)
