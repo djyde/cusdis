@@ -15,6 +15,9 @@ If you like Cusdis, please consider sponsoring us to help us be sustainable.
 
 ### Principle Sponsor
 
+[![Slide 16_9 - 1](https://github.com/djyde/cusdis/assets/914329/0a773f41-6baf-4bdc-897e-e96f56991acc)](https://epubkit.app)
+
+
 [![Contributors](https://opencollective.com/cusdis/tiers/organization-support/0/avatar.svg)](https://opencollective.com/cusdis/tiers/organization-support/0/website)
 
 [Become a principle sponsor](https://opencollective.com/cusdis/contribute/organization-support-27992/checkout)
