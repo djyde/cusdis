@@ -91,45 +91,43 @@
 
 </script>
 
-{#if !error}
-  <div class:dark={theme === 'dark'}>
-    {#if message}
-      <div class="p-2 mb-4 bg-blue-500 text-white">
-        {message}
+<div class:dark={theme === 'dark'}>
+  {#if message}
+    <div class="p-2 mb-4 bg-blue-500 text-white">
+      {message}
+    </div>
+  {/if}
+
+  <Reply />
+
+  <div class="my-8" />
+
+  <div class="mt-4 px-1">
+    {#if loadingComments}
+      <div class="text-gray-900 dark:text-gray-100">
+        {t('loading')}...
       </div>
-    {/if}
-
-    <Reply />
-
-    <div class="my-8" />
-
-    <div class="mt-4 px-1">
-      {#if loadingComments}
-        <div class="text-gray-900 dark:text-gray-100">
-          {t('loading')}...
+    {:else if !error}
+      {#each commentsResult.data as comment (comment.id)}
+        <Comment {comment} firstFloor={true} />
+      {/each}
+      {#if commentsResult.pageCount > 1}
+        <div>
+          {#each Array(commentsResult.pageCount) as _, index}
+            <button
+              class="px-2 py-1 text-sm mr-2 dark:text-gray-200"
+              class:underline={page === index + 1}
+              on:click={(_) => onClickPage(index + 1)}>{index + 1}</button
+            >
+          {/each}
         </div>
-      {:else}
-        {#each commentsResult.data as comment (comment.id)}
-          <Comment {comment} firstFloor={true} />
-        {/each}
-        {#if commentsResult.pageCount > 1}
-          <div>
-            {#each Array(commentsResult.pageCount) as _, index}
-              <button
-                class="px-2 py-1 text-sm mr-2 dark:text-gray-200"
-                class:underline={page === index + 1}
-                on:click={(_) => onClickPage(index + 1)}>{index + 1}</button
-              >
-            {/each}
-          </div>
-        {/if}
       {/if}
-    </div>
-
-    <div class="my-8" />
-
-    <div class="text-center text-gray-500 dark:text-gray-100 text-xs">
-      <a class="underline " href="https://cusdis.com">{t('powered_by')}</a>
-    </div>
+    {/if}
   </div>
-{/if}
+
+  <div class="my-8" />
+
+  <div class="text-center text-gray-500 dark:text-gray-100 text-xs">
+    <a class="underline " href="https://cusdis.com">{t('powered_by')}</a>
+  </div>
+</div>
