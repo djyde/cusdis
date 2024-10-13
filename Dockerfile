@@ -1,4 +1,4 @@
-FROM node:16-alpine3.15 as builder
+FROM node:18-alpine3.15 as builder
 
 VOLUME [ "/data" ]
 
@@ -17,7 +17,7 @@ RUN npm install -g pnpm
 RUN pnpm i
 RUN npm run build:without-migrate
 
-FROM node:16-alpine3.15 as runner
+FROM node:18-alpine3.15 as runner
 
 ENV NODE_ENV=production
 ARG DB_TYPE=sqlite
