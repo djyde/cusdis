@@ -35,23 +35,23 @@ export class StatService {
       tags?: Record<string, string>
     },
   ) {
-    // if (sentry) {
-    //   const transaction = sentry.startTransaction({
-    //     op,
-    //     name,
-    //     tags: options?.tags,
-    //     description: options?.description,
-    //   })
-    //   return {
-    //     end() {
-    //       transaction.finish()
-    //     },
-    //   }
-    // } else {
-    //   return {
-    //     end() {},
-    //   }
-    // }
+    if (sentry) {
+      const transaction = sentry.startTransaction({
+        op,
+        name,
+        tags: options?.tags,
+        description: options?.description,
+      })
+      return {
+        end() {
+          transaction.finish()
+        },
+      }
+    } else {
+      return {
+        end() {},
+      }
+    }
   }
 }
 
