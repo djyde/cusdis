@@ -14,7 +14,7 @@ COPY package.json yarn.lock /app/
 WORKDIR /app
 
 RUN npm install -g pnpm
-RUN yarn install --frozen-lockfile && npx browserslist@latest --update-db
+RUN pnpm install --frozen-lockfile && pnpx browserslist@latest --update-db
 RUN npm run build:without-migrate
 
 FROM node:16-alpine3.15 as runner
