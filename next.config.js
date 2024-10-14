@@ -2,7 +2,7 @@ module.exports = {
   headers() {
     return [
       {
-        source: "/js/*",
+        source: "/js/:path*",
         headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
         ]
