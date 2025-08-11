@@ -38,3 +38,7 @@ resizeObserve.observe(target, {
   childList: true,
   subtree: true
 })
+
+// resize to fit reply textarea on drag
+// (textarea will still get its own scrollbar if typing overfills it)
+document.addEventListener('drag', requestResize, true)

@@ -43,7 +43,7 @@ function createIframe(target) {
   return singleTonIframe
 }
 
-function postMessage(event, data) {
+function postMessageToChild(event, data) {
   if (singleTonIframe) {
     singleTonIframe.contentWindow.postMessage(
       JSON.stringify({
@@ -66,7 +66,7 @@ function listenEvent(iframe, target) {
           case 'onload':
             {
               if (target.dataset.theme === 'auto') {
-                postMessage(
+                postMessageToChild(
                   'setTheme',
                   darkModeQuery.matches ? 'dark' : 'light',
                 )
@@ -88,7 +88,7 @@ function listenEvent(iframe, target) {
   function onChangeColorScheme(e) {
     const isDarkMode = e.matches
     if (target.dataset.theme === 'auto') {
-      postMessage('setTheme', isDarkMode ? 'dark' : 'light')
+      postMessageToChild('setTheme', isDarkMode ? 'dark' : 'light')
     }
   }
 
@@ -114,7 +114,7 @@ window.renderCusdis = render
 window.CUSDIS.renderTo = render
 
 window.CUSDIS.setTheme = function (theme) {
-  postMessage('setTheme', theme)
+  postMessageToChild('setTheme', theme)
 }
 
 function initial() {
