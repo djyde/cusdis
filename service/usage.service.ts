@@ -3,26 +3,26 @@ import { UsageLabel } from "../config.common";
 import { prisma } from "../utils.server";
 
 export class UsageService extends RequestScopeService {
-  async incr(label: UsageLabel) {
-    const session = await this.getSession()
+  async incr(label: UsageLabel, ownerId = null) {
+    const uid = ownerId || (await this.getSession()).uid
 
     await prisma.usage.upsert({
       where: {
         userId_label: {
-          userId: session.uid,
+          userId: uid,
           label,
-        }
+        },
       },
       create: {
-        userId: session.uid,
+        userId: uid,
         label,
-        count: 1
+        count: 1,
       },
       update: {
         count: {
-          increment: 1
-        }
-      }
+          increment: 1,
+        },
+      },
     })
   }
 }

@@ -83,7 +83,7 @@ export default async function handler(
       })
     }
 
-    await usageService.incr(UsageLabel.QuickApprove)
+    await usageService.incr(UsageLabel.QuickApprove, tokenBody.owner.id)
 
     res.json({
       message: 'success'
