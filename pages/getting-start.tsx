@@ -2,7 +2,7 @@ import { Box, Container, Stack, Title, Text, Button, TextInput, Image } from "@m
 import { notifications } from "@mantine/notifications"
 import router from "next/router"
 import React from "react"
-import { useMutation } from "react-query"
+import { useMutation } from "@tanstack/react-query"
 import { Head } from "../components/Head"
 import { ProjectService } from "../service/project.service"
 import { apiClient } from "../utils.client"
@@ -16,7 +16,9 @@ export const createProject = async (body: { title: string }) => {
 }
 
 function GettingStart() {
-  const createProjectMutation = useMutation(createProject)
+  const createProjectMutation = useMutation({
+    mutationFn: createProject
+  })
   const titleInputRef = React.useRef<HTMLInputElement>(null)
 
 
@@ -81,7 +83,7 @@ function GettingStart() {
           </Stack>
 
           <Box>
-            <Button onClick={_ => void onClickCreateProject()} loading={createProjectMutation.isLoading} color="blue">Create</Button>
+            <Button onClick={_ => void onClickCreateProject()} loading={createProjectMutation.isPending} color="blue">Create</Button>
           </Box>
         </Stack>
       </Container>

@@ -3,7 +3,7 @@ import { notifications } from "@mantine/notifications"
 import { Comment, Page, Project } from "@prisma/client"
 import { useRouter } from "next/router"
 import React from "react"
-import { useMutation } from "react-query"
+import { useMutation } from "@tanstack/react-query"
 import { Head } from "../../components/Head"
 import { CommentService } from "../../service/comment.service"
 import { SecretKey, TokenService } from "../../service/token.service"
@@ -35,7 +35,8 @@ function ApprovePage(props: {
 
   const [replyContent, setReplyContent] = React.useState('')
 
-  const appendReplyMutation = useMutation(appendReply, {
+  const appendReplyMutation = useMutation({
+    mutationFn: appendReply,
     onSuccess() {
       notifications.show({
         title: 'Success',
@@ -57,7 +58,8 @@ function ApprovePage(props: {
       })
     }
   })
-  const approveCommentMutation = useMutation(approveComment, {
+  const approveCommentMutation = useMutation({
+    mutationFn: approveComment,
     onSuccess() {
       notifications.show({
         title: 'Success',
@@ -102,11 +104,11 @@ function ApprovePage(props: {
 
           <Box>
             {
-              props.comment.approved ? <Button disabled>Approved</Button> : <Button onClick={_ => {
+              props.comment.approved ? <Button disabled>Approved</Button> :               <Button onClick={_ => {
                 approveCommentMutation.mutate({
                   token: router.query.token as string
                 })
-              }} loading={approveCommentMutation.isLoading} color="telegram">
+              }} loading={approveCommentMutation.isPending} color="telegram">
                 Approve
               </Button>
             }
@@ -123,7 +125,7 @@ function ApprovePage(props: {
                 token: router.query.token as string,
                 replyContent
               })
-            }} loading={appendReplyMutation.isLoading} mt={4}>Append reply</Button>
+            }} loading={appendReplyMutation.isPending} mt={4}>Append reply</Button>
           </Stack>
 
         </Stack>

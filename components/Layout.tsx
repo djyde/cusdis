@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useRouter } from "next/router"
 import { AiOutlineLogout, AiOutlineSetting, AiOutlineFileText, AiOutlineAlert, AiOutlinePlus, AiOutlineComment, AiOutlineCode, AiOutlineRight, AiOutlineDown, AiOutlineFile, AiOutlineQuestion, AiOutlineQuestionCircle } from 'react-icons/ai'
 import { signout, signOut } from "next-auth/client"
@@ -57,9 +57,10 @@ export function MainLayout(props: {
     },
   })
 
-  const downgradePlanMutation = useMutation(async () => {
-    await apiClient.delete('/subscription')
-  }, {
+  const downgradePlanMutation = useMutation({
+    mutationFn: async () => {
+      await apiClient.delete('/subscription')
+    },
     onSuccess() {
       notifications.show({
         title: 'Success',
@@ -76,7 +77,8 @@ export function MainLayout(props: {
     }
   })
 
-  const updateNewCommentNotification = useMutation(updateUserSettings, {
+  const updateNewCommentNotification = useMutation({
+    mutationFn: updateUserSettings,
     onSuccess() {
       notifications.show({
         title: 'Success',
@@ -92,7 +94,8 @@ export function MainLayout(props: {
       })
     }
   })
-  const updateUserSettingsMutation = useMutation(updateUserSettings, {
+  const updateUserSettingsMutation = useMutation({
+    mutationFn: updateUserSettings,
     onSuccess() {
       notifications.show({
         title: 'Success',
@@ -383,7 +386,7 @@ export function MainLayout(props: {
                           {!props.subscription.isActived || props.subscription.status === 'cancelled' ? (
                             <Button disabled size="xs">Current plan</Button>
                           ) : (
-                            <Button size="xs" variant={'outline'} loading={downgradePlanMutation.isLoading} onClick={_ => {
+                            <Button size="xs" variant={'outline'} loading={downgradePlanMutation.isPending} onClick={_ => {
                               if (window.confirm('Are you sure to downgrade?')) {
                                 downgradePlanMutation.mutate()
                               }
@@ -428,7 +431,7 @@ export function MainLayout(props: {
                 </Stack>
               </>
             )}
-            <Button loading={updateUserSettingsMutation.isLoading} onClick={onClickSaveUserSettings}>Save</Button>
+            <Button loading={updateUserSettingsMutation.isPending} onClick={onClickSaveUserSettings}>Save</Button>
             <Button onClick={_ => signOut()} variant={'outline'} color='red'>
               Logout
             </Button>

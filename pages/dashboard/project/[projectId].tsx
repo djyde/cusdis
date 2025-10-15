@@ -2,7 +2,7 @@ import { Comment, Page, Project } from '@prisma/client'
 import { session, signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import React, { useRef } from 'react'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { ProjectService } from '../../../service/project.service'
 import { CommentItem, CommentWrapper } from '../../../service/comment.service'
 import { apiClient } from '../../../utils.client'
@@ -67,7 +67,8 @@ function CommentToolbar(props: {
   const [replyContent, setReplyContent] = React.useState("")
   const [isOpenReplyForm, setIsOpenReplyForm] = React.useState(false)
 
-  const approveCommentMutation = useMutation(approveComment, {
+  const approveCommentMutation = useMutation({
+    mutationFn: approveComment,
     onSuccess() {
       props.refetch()
     },
@@ -84,13 +85,15 @@ function CommentToolbar(props: {
       })
     }
   })
-  const replyCommentMutation = useMutation(replyAsModerator, {
+  const replyCommentMutation = useMutation({
+    mutationFn: replyAsModerator,
     onSuccess() {
       setIsOpenReplyForm(false)
       props.refetch()
     }
   })
-  const deleteCommentMutation = useMutation(deleteComment, {
+  const deleteCommentMutation = useMutation({
+    mutationFn: deleteComment,
     onSuccess() {
       props.refetch()
     }
@@ -104,7 +107,7 @@ function CommentToolbar(props: {
             Approved
           </Button>
         ) : (
-          <Button loading={approveCommentMutation.isLoading} onClick={_ => {
+          <Button loading={approveCommentMutation.isPending} onClick={_ => {
             if (window.confirm("Are you sure you want to approve this comment?")) {
               approveCommentMutation.mutate({
                 commentId: props.comment.id
@@ -119,7 +122,7 @@ function CommentToolbar(props: {
         }} size="xs" variant={'subtle'}>
           Reply
         </Button>
-        <Button loading={deleteCommentMutation.isLoading} onClick={_ => {
+        <Button loading={deleteCommentMutation.isPending} onClick={_ => {
           if (window.confirm("Are you sure you want to delete this comment?")) {
             deleteCommentMutation.mutate({
               commentId: props.comment.id
@@ -141,7 +144,7 @@ function CommentToolbar(props: {
               // width: 512,
               // maxWidth: '100%'
             }} />
-          <Button loading={replyCommentMutation.isLoading} onClick={_ => {
+          <Button loading={replyCommentMutation.isPending} onClick={_ => {
             replyCommentMutation.mutate({
               parentId: props.comment.id,
               content: replyContent
@@ -172,7 +175,9 @@ function ProjectPage(props: {
   const [page, setPage] = React.useState(1)
   const router = useRouter()
 
-  const getCommentsQuery = useQuery(['getComments', { projectId: router.query.projectId as string, page }], getComments, {
+  const getCommentsQuery = useQuery({
+    queryKey: ['getComments', { projectId: router.query.projectId as string, page }],
+    queryFn: getComments,
   })
 
 

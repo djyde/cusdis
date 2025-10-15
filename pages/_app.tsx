@@ -1,5 +1,5 @@
 import { Provider } from 'next-auth/client'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';

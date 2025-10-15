@@ -4,7 +4,7 @@ import { Project } from "@prisma/client"
 import { useRouter } from "next/router"
 import React from "react"
 import { useForm } from "react-hook-form"
-import { useMutation } from "react-query"
+import { useMutation } from "@tanstack/react-query"
 import {  MainLayout } from "../../../../components/Layout"
 import { ProjectService } from "../../../../service/project.service"
 import { MainLayoutData, ViewDataService } from "../../../../service/viewData.service"
@@ -68,21 +68,25 @@ export default function Page(props: {
     })
   }, [])
 
-  const enableNotificationMutation = useMutation(updateProjectSettings, {
+  const enableNotificationMutation = useMutation({
+    mutationFn: updateProjectSettings,
     onSuccess: successCallback,
     onError: failCallback
   })
-  const enableWebhookMutation = useMutation(updateProjectSettings, {
+  const enableWebhookMutation = useMutation({
+    mutationFn: updateProjectSettings,
     onSuccess: successCallback,
     onError: failCallback
   })
-  const updateWebhookUrlMutation = useMutation(updateProjectSettings, {
+  const updateWebhookUrlMutation = useMutation({
+    mutationFn: updateProjectSettings,
     onSuccess: successCallback,
     onError: failCallback
   })
   const webhookInputRef = React.useRef<HTMLInputElement>(null)
 
-  const deleteProjectMutation = useMutation(deleteProject, {
+  const deleteProjectMutation = useMutation({
+    mutationFn: deleteProject,
     onSuccess() {
       location.href = "/dashboard"
     },
@@ -173,7 +177,7 @@ export default function Page(props: {
                         projectId
                       })
                     }
-                  }} loading={deleteProjectMutation.isLoading} color="red">Delete site</Button>
+                  }} loading={deleteProjectMutation.isPending} color="red">Delete site</Button>
                 </Stack>
               </Box>
             </Stack>
