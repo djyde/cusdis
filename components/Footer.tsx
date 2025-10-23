@@ -1,3 +1,5 @@
+'use client'
+
 import { Anchor, Box, Group, List, Stack, Text, Image, Center } from '@mantine/core'
 import * as React from 'react'
 import { VERSION } from '../utils.client'

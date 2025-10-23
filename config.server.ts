@@ -1,16 +1,20 @@
-import Providers, { AppProviders } from 'next-auth/providers'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import GitHubProvider from 'next-auth/providers/github'
+import GitLabProvider from 'next-auth/providers/gitlab'
+import GoogleProvider from 'next-auth/providers/google'
 import { prisma, resolvedConfig } from './utils.server'
+import type { AuthOptions } from 'next-auth'
 
 /**
  * Auth Providers
  * https://next-auth.js.org/configuration/providers
  */
 
-const providers: AppProviders = []
+const providers: AuthOptions['providers'] = []
 
 if (resolvedConfig.useLocalAuth) {
   providers.push(
-    Providers.Credentials({
+    CredentialsProvider({
       name: 'Username',
       credentials: {
         username: {
@@ -24,7 +28,11 @@ if (resolvedConfig.useLocalAuth) {
           placeholder: 'env: PASSWORD',
         },
       },
-      async authorize(credentials: { username: string; password: string }) {
+      async authorize(credentials) {
+        if (!credentials?.username || !credentials?.password) {
+          return null
+        }
+        
         if (
           credentials.username === process.env.USERNAME &&
           credentials.password === process.env.PASSWORD
@@ -53,28 +61,27 @@ if (resolvedConfig.useLocalAuth) {
 
 if (resolvedConfig.useGithub) {
   providers.push(
-    Providers.GitHub({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-      scope: 'read:user,user:email',
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
     }),
   )
 }
 
 if (resolvedConfig.useGitlab) {
   providers.push(
-    Providers.GitLab({
-      clientId: process.env.GITLAB_ID,
-      clientSecret: process.env.GITLAB_SECRET,
+    GitLabProvider({
+      clientId: process.env.GITLAB_ID!,
+      clientSecret: process.env.GITLAB_SECRET!,
     })
   )
 }
 
 if (resolvedConfig.google.id) {
   providers.push(
-    Providers.Google({
-      clientId: resolvedConfig.google.id,
-      clientSecret: resolvedConfig.google.secret,
+    GoogleProvider({
+      clientId: resolvedConfig.google.id!,
+      clientSecret: resolvedConfig.google.secret!,
     }),
   )
 }

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { UserSession } from './service'
-import { getSession as nextAuthGetSession } from 'next-auth/client'
+import { getServerSession } from 'next-auth'
 import * as Sentry from '@sentry/node'
 import { NextApiRequest, NextApiResponse } from 'next'
 import nc from 'next-connect'
@@ -122,5 +122,7 @@ export const apiHandler = () => {
 }
 
 export const getSession = async (req) => {
-  return (await nextAuthGetSession({ req })) as UserSession
+  // Dynamically import authOptions to avoid circular dependency
+  const { authOptions } = await import('./app/api/auth/[...nextauth]/route')
+  return (await getServerSession(authOptions)) as UserSession
 }

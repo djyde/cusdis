@@ -12,37 +12,38 @@ generator client {
   previewFeatures = ["referentialActions"]
 }
 
-// next-auth BEGIN
+// better-auth BEGIN
 
 model Account {
-  id                 Int       @id @default(autoincrement())
-  compoundId         String    @unique @map(name: "compound_id")
+  id                 String    @id @default(uuid())
   userId             String    @map(name: "user_id")
-  providerType       String    @map(name: "provider_type")
+  accountId          String    @map(name: "account_id")
   providerId         String    @map(name: "provider_id")
-  providerAccountId  String    @map(name: "provider_account_id")
-  refreshToken       String?   @map(name: "refresh_token")
-  accessToken        String?   @map(name: "access_token")
-  accessTokenExpires DateTime? @map(name: "access_token_expires")
+  accessToken        String?   @map(name: "access_token") @db.Text
+  refreshToken       String?   @map(name: "refresh_token") @db.Text
+  idToken            String?   @map(name: "id_token") @db.Text
+  accessTokenExpiresAt DateTime? @map(name: "access_token_expires_at")
+  refreshTokenExpiresAt DateTime? @map(name: "refresh_token_expires_at")
+  scope              String?
+  password           String?
   createdAt          DateTime  @default(now()) @map(name: "created_at")
   updatedAt          DateTime  @default(now()) @map(name: "updated_at")
 
-
-  @@index([providerAccountId], name: "providerAccountId")
-  @@index([providerId], name: "providerId")
-  @@index([userId], name: "userId")
+  @@index([userId])
   @@map(name: "accounts")
 }
 
 model Session {
-  id           Int      @id @default(autoincrement())
+  id           String   @id @default(uuid())
   userId       String   @map(name: "user_id")
-  expires      DateTime
-  sessionToken String   @unique @map(name: "session_token")
-  accessToken  String   @unique @map(name: "access_token")
+  expiresAt    DateTime @map(name: "expires_at")
+  token        String   @unique @map(name: "token")
+  ipAddress    String?  @map(name: "ip_address")
+  userAgent    String?  @map(name: "user_agent")
   createdAt    DateTime @default(now()) @map(name: "created_at")
   updatedAt    DateTime @default(now()) @map(name: "updated_at")
 
+  @@index([userId])
   @@map(name: "sessions")
 }
 
@@ -51,7 +52,7 @@ model User {
   name          String?
   displayName String?
   email         String?   @unique
-  emailVerified DateTime? @map(name: "email_verified")
+  emailVerified Boolean   @default(false) @map(name: "email_verified")
   image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
@@ -66,18 +67,18 @@ model User {
   @@map(name: "users")
 }
 
-model VerificationRequest {
-  id         Int      @id @default(autoincrement())
+model Verification {
+  id         String   @id @default(uuid())
   identifier String
-  token      String   @unique
-  expires    DateTime
+  value      String
+  expiresAt  DateTime @map(name: "expires_at")
   createdAt  DateTime @default(now()) @map(name: "created_at")
   updatedAt  DateTime @default(now()) @map(name: "updated_at")
 
-  @@map(name: "verification_requests")
+  @@map(name: "verifications")
 }
 
-// next-auth END
+// better-auth END
 
 model Project {
   id        String   @id @default(uuid())
