@@ -1,5 +1,14 @@
+import { timingSafeEqual } from 'crypto'
 import Providers, { AppProviders } from 'next-auth/providers'
 import { prisma, resolvedConfig } from './utils.server'
+
+function safeEqual(a: string, b: string): boolean {
+  try {
+    return timingSafeEqual(Buffer.from(a), Buffer.from(b))
+  } catch {
+    return false
+  }
+}
 
 /**
  * Auth Providers
@@ -27,7 +36,8 @@ if (resolvedConfig.useLocalAuth) {
       async authorize(credentials: { username: string; password: string }) {
         if (
           credentials.username === process.env.USERNAME &&
-          credentials.password === process.env.PASSWORD
+          process.env.PASSWORD &&
+          safeEqual(credentials.password, process.env.PASSWORD)
         ) {
           const user = await prisma.user.upsert({
             where: {
