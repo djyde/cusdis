@@ -34,6 +34,13 @@ To embed the comment widget to your web page, you need to put **the element and 
   - `light` (default)
   - `auto` Automatically set theme by `prefers-color-scheme`
   - `dark`
+- `data-style` Add your custom stylesheet directives into the iframe. Example:
+  - data-style="
+        #root { background-color: red !important; padding: 15px !important; border-radius: 8px !important; }
+        label, p { color: yellow !important; font-weight: 600 !important; }
+        input, textarea { background-color: white !important; }
+        button { background-color: blue !important; color: white !important; border: none !important; padding: 8px 16px !important; border-radius: 4px !important; cursor: pointer !important; }
+      "
 
 ## API
 

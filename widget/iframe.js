@@ -6,6 +6,14 @@ const parent = window.parent
 const target = document.querySelector('#root')
 
 const dataset = window.__DATA__
+// Inject custom styles passed via data-style attribute into the iframe
+if (dataset && typeof dataset.style === 'string' && dataset.style.trim()) {
+  const styleEl = document.createElement('style')
+  styleEl.type = 'text/css'
+  styleEl.appendChild(document.createTextNode(dataset.style))
+  document.head.appendChild(styleEl)
+}
+
 const widget = new Widget({
   target,
   props: {
