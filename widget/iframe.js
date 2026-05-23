@@ -13,6 +13,14 @@ const widget = new Widget({
   },
 })
 
+// Inject custom styles passed via data-style attribute into the iframe
+if (dataset && typeof dataset.style === 'string' && dataset.style.trim()) {
+  const styleEl = document.createElement('style')
+  styleEl.type = 'text/css'
+  styleEl.appendChild(document.createTextNode(dataset.style))
+  document.head.appendChild(styleEl)
+}
+
 function postMessage(event, data = {}) {
   parent.postMessage(
     JSON.stringify({
