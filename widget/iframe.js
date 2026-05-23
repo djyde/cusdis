@@ -6,13 +6,6 @@ const parent = window.parent
 const target = document.querySelector('#root')
 
 const dataset = window.__DATA__
-const widget = new Widget({
-  target,
-  props: {
-    attrs: dataset,
-  },
-})
-
 // Inject custom styles passed via data-style attribute into the iframe
 if (dataset && typeof dataset.style === 'string' && dataset.style.trim()) {
   const styleEl = document.createElement('style')
@@ -20,6 +13,13 @@ if (dataset && typeof dataset.style === 'string' && dataset.style.trim()) {
   styleEl.appendChild(document.createTextNode(dataset.style))
   document.head.appendChild(styleEl)
 }
+
+const widget = new Widget({
+  target,
+  props: {
+    attrs: dataset,
+  },
+})
 
 function postMessage(event, data = {}) {
   parent.postMessage(
