@@ -1,4 +1,3 @@
 {
-  "buildCommand": "npm run vercel-build",
-  "nodeVersion": "18.x"
+  "buildCommand": "npm run vercel-build"
 }
