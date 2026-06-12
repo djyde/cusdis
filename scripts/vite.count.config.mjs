@@ -1,7 +1,10 @@
-const path = require('path')
-const svelte = require('rollup-plugin-svelte')
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 
-module.exports = {
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+export default {
   root: 'widget',
   build: {
     lib: {
@@ -11,8 +14,7 @@ module.exports = {
       formats: ['umd'],
     },
     outDir: path.resolve(__dirname, '..', 'public', 'js'),
+    emptyOutDir: false,
   },
-  plugins: [
-    svelte({ emitCss: false }),
-  ],
+  plugins: [svelte({ emitCss: false })],
 }
