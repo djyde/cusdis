@@ -62,7 +62,14 @@ export class NotificationService extends RequestScopeService {
     })
 
     const notificationEmail =
-      project.owner.notificationEmail || project.owner.email
+      resolvedConfig.smtp.receiverEmail ||
+      project.owner.notificationEmail ||
+      project.owner.email
+
+    if (!notificationEmail) {
+      console.warn('[notification] no receiver email configured, skipping notification')
+      return
+    }
 
     if (project.owner.enableNewCommentNotification) {
       let unsubscribeToken = this.tokenService.genUnsubscribeNewCommentToken(
@@ -86,9 +93,10 @@ export class NotificationService extends RequestScopeService {
       }
 
       try {
-        this.emailService.send(msg)
+        await this.emailService.send(msg)
+        console.log('[notification] email sent to', notificationEmail)
       } catch (e) {
-        // TODO:
+        console.error('[notification] failed to send email:', e)
       }
     }
   }

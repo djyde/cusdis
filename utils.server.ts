@@ -31,14 +31,16 @@ export const resolvedConfig = {
   smtp: {
     host: process.env.SMTP_HOST as EnvVariable,
     port: Number((process.env.SMTP_PORT as EnvVariable) || '587'),
-    secure: Boolean((process.env.SMTP_SECURE as EnvVariable) || 'true'),
+    secure: process.env.SMTP_SECURE === 'true',
     auth: {
       user: process.env.SMTP_USER as EnvVariable,
       pass: process.env.SMTP_PASSWORD as EnvVariable,
     },
-    senderAddress:
-      (process.env.SMTP_SENDER as EnvVariable) ||
-      'Cusdis Notification<notification@cusdis.com>',
+    // "yc-blog <user@gmail.com>" format
+    senderAddress: process.env.SMTP_SENDER
+      ? `${process.env.SMTP_SENDER} <${process.env.SMTP_USER}>`
+      : `Cusdis <${process.env.SMTP_USER || 'notification@cusdis.com'}>`,
+    receiverEmail: process.env.RECEIVER_EMAIL as EnvVariable,
   },
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY as EnvVariable,
