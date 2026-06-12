@@ -1,4 +1,5 @@
-import path from 'path'
+const path = require('path')
+const svelte = require('rollup-plugin-svelte')
 
 module.exports = {
   root: 'widget',
@@ -10,8 +11,6 @@ module.exports = {
     outDir: path.resolve(__dirname, '..', 'widget', 'dist'),
   },
   plugins: [
-    require('rollup-plugin-svelte')({
-      emitCss: false,
-    }),
+    svelte({ emitCss: false }),
   ],
 }
