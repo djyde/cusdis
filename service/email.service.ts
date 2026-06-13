@@ -23,6 +23,13 @@ export class EmailService {
 
   async send(msg: { to: string; from: string; subject: string; html: string }) {
     if (this.isSMTPEnable()) {
+      console.log('[email] sending via SMTP', {
+        host: resolvedConfig.smtp.host,
+        port: resolvedConfig.smtp.port,
+        secure: resolvedConfig.smtp.secure,
+        user: resolvedConfig.smtp.auth.user,
+        passLength: resolvedConfig.smtp.auth.pass?.length,
+      })
       const transporter = nodemailer.createTransport({
         host: resolvedConfig.smtp.host,
         port: resolvedConfig.smtp.port,

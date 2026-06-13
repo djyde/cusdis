@@ -33,8 +33,10 @@ export const resolvedConfig = {
     port: Number((process.env.SMTP_PORT as EnvVariable) || '587'),
     secure: process.env.SMTP_SECURE === 'true',
     auth: {
-      user: process.env.SMTP_USER as EnvVariable,
-      pass: process.env.SMTP_PASSWORD as EnvVariable,
+      // trim accidental whitespace; Gmail app passwords are shown with
+      // spaces ("abcd efgh ijkl mnop") that must be removed
+      user: (process.env.SMTP_USER as EnvVariable)?.trim(),
+      pass: (process.env.SMTP_PASSWORD as EnvVariable)?.replace(/\s+/g, ''),
     },
     // "yc-blog <user@gmail.com>" format
     senderAddress: process.env.SMTP_SENDER
