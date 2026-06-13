@@ -1,3 +1,4 @@
 {
-  "buildCommand": "npm run vercel-build"
+  "buildCommand": "npm run vercel-build",
+  "regions": ["sin1"]
 }
