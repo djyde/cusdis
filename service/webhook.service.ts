@@ -64,7 +64,7 @@ export class WebhookService extends RequestScopeService {
       })
 
       try {
-        axios.post(project.webhook, {
+        await axios.post(project.webhook, {
           type: HookType.NewComment,
           data: {
             by_nickname: comment.by_nickname,
@@ -76,8 +76,9 @@ export class WebhookService extends RequestScopeService {
             approve_link: approveLink,
           },
         } as HookBody<NewCommentHookData>)
+        console.log('[webhook] sent to', project.webhook)
       } catch (e) {
-        
+        console.error('[webhook] failed:', e?.message || e)
       }
     }
   }

@@ -83,7 +83,13 @@ export default async function handler(
       })
     }
 
-    await usageService.incr(UsageLabel.QuickApprove)
+    // usage tracking relies on a logged-in session, but quick-approve
+    // happens from an email link with no session. Don't let it break the flow.
+    try {
+      await usageService.incr(UsageLabel.QuickApprove)
+    } catch (e) {
+      console.warn('[approve] usage incr skipped (no session):', e?.message || e)
+    }
 
     res.json({
       message: 'success'

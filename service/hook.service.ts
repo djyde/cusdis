@@ -9,7 +9,9 @@ export class HookService extends RequestScopeService {
   webhookService = new WebhookService(this.req)
 
   async addComment(comment: Comment, projectId: string) {
-    this.notificationService.addComment(comment, projectId)
-    this.webhookService.addComment(comment, projectId)
+    await Promise.allSettled([
+      this.notificationService.addComment(comment, projectId),
+      this.webhookService.addComment(comment, projectId),
+    ])
   }
 }

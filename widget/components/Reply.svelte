@@ -16,6 +16,7 @@
   const setMessage = getContext('setMessage')
   const { appId, pageId, pageUrl, pageTitle } = getContext('attrs')
   const refresh = getContext('refresh')
+  const addPending = getContext('addPending')
 
   async function addComment() {
     if (!content) {
@@ -40,6 +41,11 @@
         pageUrl,
         pageTitle,
       })
+      // show the just-posted comment locally as "pending approval";
+      // it'll be de-duplicated once approved and returned by the server
+      if (addPending && res.data && res.data.data) {
+        addPending(res.data.data)
+      }
       await refresh()
       teardown()
       setMessage(t('comment_has_been_sent'))

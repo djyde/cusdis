@@ -16,6 +16,10 @@ export default apiHandler()
     }),
   )
   .get(async (req, res) => {
+    // never cache the comment list, otherwise the browser/CDN serves a
+    // stale response and newly approved comments/replies don't show up
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+
     const commentService = new CommentService(req)
     const projectService = new ProjectService(req)
 

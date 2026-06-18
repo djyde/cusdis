@@ -23,6 +23,58 @@
     baseURL: attrs.host,
   })
 
+  // locally-stored pending (unapproved) comments, keyed per page
+  let pendingComments = []
+
+  function pendingKey() {
+    return `cusdis_pending:${attrs.appId}:${attrs.pageId}`
+  }
+
+  function loadPending() {
+    try {
+      pendingComments = JSON.parse(localStorage.getItem(pendingKey()) || '[]')
+    } catch (e) {
+      pendingComments = []
+    }
+  }
+
+  function savePending() {
+    try {
+      localStorage.setItem(pendingKey(), JSON.stringify(pendingComments))
+    } catch (e) {}
+  }
+
+  function addPending(comment) {
+    pendingComments = [
+      ...pendingComments,
+      {
+        id: comment.id,
+        by_nickname: comment.by_nickname,
+        content: comment.content,
+        createdAt: comment.createdAt,
+      },
+    ]
+    savePending()
+  }
+
+  function collectIds(comments, set = new Set()) {
+    for (const c of comments || []) {
+      set.add(c.id)
+      if (c.replies && c.replies.data) collectIds(c.replies.data, set)
+    }
+    return set
+  }
+
+  // once a pending comment shows up in the approved list from the server,
+  // drop it from localStorage so it isn't rendered twice
+  function dedupPending() {
+    if (!commentsResult || !commentsResult.data) return
+    const approvedIds = collectIds(commentsResult.data)
+    const before = pendingComments.length
+    pendingComments = pendingComments.filter((p) => !approvedIds.has(p.id))
+    if (pendingComments.length !== before) savePending()
+  }
+
   function setMessage(msg) {
     message = msg
   }
@@ -58,6 +110,7 @@
   setContext('attrs', attrs)
   setContext('refresh', getComments)
   setContext('setMessage', setMessage)
+  setContext('addPending', addPending)
 
   async function getComments(p = 1) {
     loadingComments = true
@@ -73,6 +126,7 @@
         },
       })
       commentsResult = res.data.data
+      dedupPending()
     } catch (e) {
       error = e
     } finally {
@@ -86,6 +140,7 @@
   }
 
   onMount(() => {
+    loadPending()
     getComments()
   })
 
@@ -111,6 +166,23 @@
       {:else}
         {#each commentsResult.data as comment (comment.id)}
           <Comment {comment} firstFloor={true} />
+        {/each}
+        {#each pendingComments as pending (pending.id)}
+          <div class="py-4 border-t border-gray-100 opacity-70">
+            <div class="flex items-center">
+              <span class="font-bold dark:text-gray-100">{pending.by_nickname}</span>
+              <span
+                class="ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded"
+                >{t('waiting_for_approval')}</span
+              >
+            </div>
+            <div
+              class="mt-2 text-gray-800 dark:text-gray-200"
+              style="white-space: pre-wrap;"
+            >
+              {pending.content}
+            </div>
+          </div>
         {/each}
         {#if commentsResult.pageCount > 1}
           <div>

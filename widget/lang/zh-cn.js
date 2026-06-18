@@ -17,4 +17,6 @@ window.CUSDIS_LOCALE = {
 
   comment_has_been_sent:
     '评论已发送，管理员审核通过后会展示',
+
+  waiting_for_approval: '等待审核中',
 }

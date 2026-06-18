@@ -17,4 +17,6 @@ export default {
 
   comment_has_been_sent:
     'Your comment has been sent. Please wait for approval.',
+
+  waiting_for_approval: 'Waiting for approval',
 }
