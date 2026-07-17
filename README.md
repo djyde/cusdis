@@ -3,7 +3,11 @@
 
 Cusdis is an open-source, lightweight (~5kb gzip), privacy-friendly alternative to Disqus.
 
-> Contact me if you want to buy/acquire this project 💖
+> !!! IMPORTANT
+> Cusdis is deprecated now. If you want to export your data. Please email hi@cusdis.com. Send us your signed email address and the export format you want.
+> Very sorry for this.
+
+
 
 ![](/public/images/landing.png)
 
